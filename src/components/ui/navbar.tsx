@@ -25,7 +25,7 @@ const Navbar = ({ isLoggedin }: Props) => {
   const menus = [
     { id: 1, href: "/", linkText: "Home" },
     { id: 2, href: "/collections", linkText: "Collections" },
-    { id: 3, href: "/subscription", linkText: "Subscriptions" },
+    { id: 3, href: "/subscriptions", linkText: "Subscriptions" },
     { id: 4, href: "/contact", linkText: "Contact" },
   ];
 
@@ -48,12 +48,12 @@ const Navbar = ({ isLoggedin }: Props) => {
 
   return (
     <div
-      className={`py-3 fixed top-0 z-50 text-primary  w-full h-[60px]  ${
+      className={`py-3 fixed top-0 z-50 md:pt-3   w-full h-[60px]  ${
         scrolling && "bg-white" // Add background when scrolling
       }  ${
         pathname === "/"
-          ? !scrolling && "md:mt-7" // Add margin on homepage when not scrolling
-          : " mt-0" // Default background for other pages
+          ? !scrolling && " text-primary" // Add margin on homepage when not scrolling
+          : " mt-0 text-white" // Default background for other pages
       } transition duration-300`}
     >
       <div className="container mx-auto">
@@ -97,25 +97,16 @@ const Navbar = ({ isLoggedin }: Props) => {
           {/* Mobile Responsive */}
           <div className="md:hidden flex items-center gap-x-4">
             <div>
-              {!isLoggedin && (
-                <Button
-                  className={cn(
-                    scrolling && "border-[1px] border-white/10", // Add border when scrolling
-                    "bg-tourHub-green-dark hover:bg-[#3a6f54]" // Change hover color for button
-                  )}
-                >
-                  Sign In
-                </Button>
-              )}
+              {!isLoggedin && <Button size="sm">Sign In</Button>}
               {isLoggedin && <p>Profile Image</p>}
             </div>
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="ghost" className="p-1">
+                <Button variant="ghost" className="p-1" size="icon">
                   <Menu />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="top" className="bg-[#047857] text-white">
+              <SheetContent side="top" className="bg-white text-primary">
                 <div className="flex flex-col items-center gap-y-8 mt-6">
                   {/* Login button for mobile */}
 
