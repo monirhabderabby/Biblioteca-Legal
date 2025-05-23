@@ -1,3 +1,4 @@
+import Navbar from "@/components/ui/navbar";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Raleway } from "next/font/google";
@@ -22,7 +23,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={cn(raleway.className)}>{children}</body>
+      <body className={cn(raleway.className, "bg-red-600")}>
+        <Navbar isLoggedin={false} />
+        {children}
+      </body>
     </html>
   );
 }
