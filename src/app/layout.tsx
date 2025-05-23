@@ -23,7 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={cn(raleway.className, "bg-red-600")}>
+      <body className={cn(raleway.className, "")}>
         <Navbar isLoggedin={false} />
         {children}
       </body>
