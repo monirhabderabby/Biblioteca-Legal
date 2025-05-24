@@ -1,3 +1,4 @@
+import DocumentCard from "@/components/shared/cards/document-card";
 import HeaderSection from "@/components/shared/sections/header";
 
 const Page = () => {
@@ -9,6 +10,12 @@ const Page = () => {
         description="Browse our comprehensive collection of laws, decrees, and legal
             documents"
       />
+
+      <div className="py-[100px] container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[30px]">
+        <DocumentCard />
+        <DocumentCard />
+        <DocumentCard />
+      </div>
     </div>
   );
 };

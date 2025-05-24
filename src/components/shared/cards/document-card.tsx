@@ -1,3 +1,5 @@
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Calendar, FileText } from "lucide-react";
 
 const DocumentCard = () => {
@@ -21,6 +23,14 @@ const DocumentCard = () => {
           Published: July 10, 2024
         </span>
       </div>
+
+      <div className="mt-[20px] flex flex-wrap gap-x-[10px] font-poppins font-normal">
+        <Badge className="font-light">Criminal Justice</Badge>
+        <Badge className="font-light">Legal Procedure</Badge>
+        <Badge className="font-light">Rights</Badge>
+      </div>
+
+      <Button className="w-full mt-[30px] ">View Document</Button>
     </div>
   );
 };

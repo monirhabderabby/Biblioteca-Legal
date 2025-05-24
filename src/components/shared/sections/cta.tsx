@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const CTA = () => {
   return (
@@ -13,13 +14,13 @@ const CTA = () => {
 
       <div className="w-full flex justify-center mt-[45px] gap-x-[30px]">
         <Button className="bg-white text-primary hover:bg-white/80 transition-all duration-300">
-          Register Now
+          <Link href="/sign-up">Register Now</Link>
         </Button>
         <Button
           variant="outline"
           className="bg-transparent text-white border-white hover:bg-white/5 hover:text-white transition-all duration-300"
         >
-          Login
+          <Link href="/login">Login</Link>
         </Button>
       </div>
     </div>

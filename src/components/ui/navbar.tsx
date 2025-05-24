@@ -48,13 +48,15 @@ const Navbar = ({ isLoggedin }: Props) => {
 
   return (
     <div
-      className={`py-3 fixed top-0 z-50 md:pt-3   w-full h-[60px]  ${
-        scrolling && "bg-white" // Add background when scrolling
-      }  ${
+      className={cn(
+        "py-3 fixed top-0 z-50 md:pt-3 w-full h-[60px] transition duration-300",
+        scrolling && "bg-white",
         pathname === "/"
-          ? !scrolling && " text-primary" // Add margin on homepage when not scrolling
-          : " mt-0 text-white" // Default background for other pages
-      } transition duration-300`}
+          ? "text-primary"
+          : scrolling
+          ? "text-primary"
+          : "text-white"
+      )}
     >
       <div className="container mx-auto">
         <div className="flex justify-between items-center">
@@ -85,7 +87,7 @@ const Navbar = ({ isLoggedin }: Props) => {
             //     "bg-tourHub-green-dark hover:bg-[#3a6f54]" // Change hover color for button
             //   )}
             >
-              Sign In
+              <Link href="/login">Login</Link>
             </Button>
             {false && (
               <div className="flex items-center mt-[3px]">
@@ -97,7 +99,7 @@ const Navbar = ({ isLoggedin }: Props) => {
           {/* Mobile Responsive */}
           <div className="md:hidden flex items-center gap-x-4">
             <div>
-              {!isLoggedin && <Button size="sm">Sign In</Button>}
+              {!isLoggedin && <Button size="sm">Login</Button>}
               {isLoggedin && <p>Profile Image</p>}
             </div>
             <Sheet>
