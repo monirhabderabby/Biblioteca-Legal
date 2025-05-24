@@ -18,7 +18,6 @@ import { Input } from "@/components/ui/input";
 import { loginFormSchema, LoginFormValues } from "@/schemas/auth";
 import Cookies from "js-cookie"; // Import js-cookie for cookie retrieval
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 
 // Retrieve cookies for email and "Remember Me"
 const rememberedEmail = Cookies.get("rememberMeEmail");
@@ -30,9 +29,6 @@ export default function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [pending, startTransition] = useTransition();
   const [isMounted, setMounted] = useState(false);
-
-  const searchParams = useSearchParams();
-  const callback = searchParams.get("callback") || undefined;
 
   useEffect(() => {
     setMounted(true);
@@ -185,7 +181,7 @@ export default function LoginForm() {
       <div className="text-center text-sm">
         <span className="text-gray-600">New to our platform?</span>{" "}
         <Link
-          href={callback ? `/sign-up?callback=${callback}` : "/signup"}
+          href="/sign-up"
           className="font-medium  text-primary hover:underline "
         >
           Sign Up Here

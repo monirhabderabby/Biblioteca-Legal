@@ -1,6 +1,5 @@
 import { logoSrc } from "@/helper/assets";
 import Image from "next/image";
-import { Suspense } from "react";
 import LoginForm from "./_components/login-form";
 
 export default function LoginPage() {
@@ -39,9 +38,8 @@ export default function LoginPage() {
           </div>
 
           {/* Login form component */}
-          <Suspense>
-            <LoginForm />
-          </Suspense>
+
+          <LoginForm />
         </div>
       </div>
     </div>
