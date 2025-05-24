@@ -8,6 +8,13 @@ const config: Config = {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
+    container: {
+      center: true,
+      padding: "1rem",
+      screens: {
+        "2xl": "1400px",
+      },
+    },
     extend: {
       colors: {
         background: "hsl(var(--background))",
@@ -67,6 +74,9 @@ const config: Config = {
           "50%": { "background-position": "100% 50%" },
           "100%": { "background-position": "0% 50%" },
         },
+      },
+      fontFamily: {
+        poppins: "var(--font-poppins)",
       },
       animation: {
         shine: "shine 3s ease-out infinite",
