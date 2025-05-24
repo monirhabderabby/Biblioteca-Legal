@@ -153,7 +153,7 @@ export default function RegistrationForm() {
             control={form.control}
             name="terms"
             render={({ field }) => (
-              <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border-0 ">
+              <FormItem className="flex  flex-row items-start space-x-3 space-y-0 rounded-md border-0 ">
                 <FormControl>
                   <Checkbox
                     checked={!!field.value}

@@ -1,6 +1,8 @@
 "use server";
 
+import OtpEmail from "@/email-templates/otp-share-template";
 import { prisma } from "@/lib/db";
+import { resend } from "@/lib/resend";
 import bcrypt from "bcryptjs";
 
 // Helper to generate a 6-digit OTP
@@ -9,6 +11,16 @@ function generateOtp(): string {
 }
 
 export async function sendOtp(email: string) {
+  const existUser = await prisma.user.findUnique({
+    where: { email },
+  });
+
+  if (!existUser) {
+    return {
+      success: false,
+      message: "No account found with this email address.",
+    };
+  }
   try {
     // Check if there is an existing reset request
     const exist = await prisma.resetReq.findFirst({
@@ -39,14 +51,14 @@ export async function sendOtp(email: string) {
     });
 
     // Send OTP via email
-    // await resend.emails.send({
-    //   from: "FreelancePM Club <support@thefreelancepmclub.com>",
-    //   to: [newReq.email as string],
-    //   subject: `Your Password Reset OTP: [${newReq.otp}]`,
-    //   react: OtpEmail({
-    //     otpCode: newReq.otp.toString(),
-    //   }),
-    // });
+    await resend.emails.send({
+      from: "Biblioteca Legal <support@bibliotecalegalhn.com>",
+      to: [newReq.email as string],
+      subject: `Your Password Reset OTP: [${newReq.otp}]`,
+      react: OtpEmail({
+        otpCode: newReq.otp.toString(),
+      }),
+    });
 
     return {
       success: true,

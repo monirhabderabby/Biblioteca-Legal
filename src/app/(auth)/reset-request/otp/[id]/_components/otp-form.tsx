@@ -104,8 +104,8 @@ const OTPForm = ({ otpId }: Props) => {
                 form.formState.errors.otp
                   ? "bg-red-200/50 border-red-500/50"
                   : form.watch("otp")[i]
-                  ? "border-orange-500 "
-                  : "border-[#121D42] bg-white"
+                    ? "border-primary "
+                    : "border-[#121D42] bg-white"
               }`}
             />
           ))}
