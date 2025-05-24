@@ -1,3 +1,4 @@
+import Footer from "@/components/ui/footer";
 import Navbar from "@/components/ui/navbar";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
@@ -35,6 +36,7 @@ export default function RootLayout({
         {children}
 
         <NextTopLoader showSpinner={false} color="#FFFFFF" />
+        <Footer />
       </body>
     </html>
   );
