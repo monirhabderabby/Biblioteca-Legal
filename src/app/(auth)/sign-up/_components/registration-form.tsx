@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { registeruser } from "@/actions/auth/registration";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
@@ -12,18 +12,46 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
+import { SubmitButton } from "@/components/ui/submit-button";
 import { registrationSchema, RegistrationSchemaType } from "@/schemas/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 export default function RegistrationForm() {
+  const [isRedirecting, setRedirecting] = useState(false);
+  const [isPending, startTransition] = useTransition();
+
+  const router = useRouter();
   const form = useForm<RegistrationSchemaType>({
     resolver: zodResolver(registrationSchema),
   });
 
   function onSubmit(values: RegistrationSchemaType) {
-    console.log(values);
+    startTransition(() => {
+      registeruser(values).then((res) => {
+        if (!res.success) {
+          toast.error(res.message);
+          return;
+        }
+
+        setRedirecting(true);
+
+        toast.success(res.message);
+        router.push("/login");
+      });
+    });
   }
+
+  useEffect(() => {
+    return () => {
+      setRedirecting(false);
+    };
+  }, []);
+
+  const isLoading = isPending || isRedirecting;
 
   return (
     <Form {...form}>
@@ -134,10 +162,8 @@ export default function RegistrationForm() {
                 </FormControl>
                 <div className="space-y-1 leading-none ">
                   <FormLabel>
-                    Use different settings for my mobile devices
+                    I accept the Terms of Service and Privacy Policy
                   </FormLabel>
-
-                  <FormMessage />
                 </div>
               </FormItem>
             )}
@@ -166,9 +192,7 @@ export default function RegistrationForm() {
           />
         </div>
         <div className="pt-[30px]">
-          <Button type="submit" className="w-full min-h-[40px]">
-            Sign-up
-          </Button>
+          <SubmitButton isLoading={isLoading}>Sign up</SubmitButton>
         </div>
       </form>
     </Form>

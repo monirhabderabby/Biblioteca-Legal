@@ -2,6 +2,7 @@ import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Poppins, Raleway } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
+import { Toaster } from "sonner";
 import "./globals.css";
 
 const raleway = Raleway({
@@ -31,7 +32,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={cn(raleway.className, poppins.variable, "")}>
         {children}
-
+        <Toaster richColors position="bottom-right" />
         <NextTopLoader showSpinner={false} color="#FFFFFF" />
       </body>
     </html>

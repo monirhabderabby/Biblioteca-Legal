@@ -46,6 +46,14 @@ export async function registeruser(data: RegistrationSchemaType) {
       },
     });
 
+    if (parsedData.promotion) {
+      await prisma.newsLetter.create({
+        data: {
+          email: parsedData.email,
+        },
+      });
+    }
+
     // send email to the student
     // await resend.emails.send({
     //   from: "FreelancePM Club <support@thefreelancepmclub.com>",
