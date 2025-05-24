@@ -14,7 +14,7 @@ export default function Home() {
       >
         <Button>Get Started</Button>
       </div>
-      <div className="py-[100px] container grid grid-cols-3 gap-[30px]">
+      <div className="py-[100px] container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[30px]">
         <DocumentCard />
         <DocumentCard />
         <DocumentCard />
