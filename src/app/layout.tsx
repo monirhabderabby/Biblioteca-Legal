@@ -2,6 +2,7 @@ import Navbar from "@/components/ui/navbar";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Poppins, Raleway } from "next/font/google";
+import NextTopLoader from "nextjs-toploader";
 import "./globals.css";
 
 const raleway = Raleway({
@@ -32,6 +33,8 @@ export default function RootLayout({
       <body className={cn(raleway.className, poppins.variable, "")}>
         <Navbar isLoggedin={false} />
         {children}
+
+        <NextTopLoader showSpinner={false} color="#FFFFFF" />
       </body>
     </html>
   );

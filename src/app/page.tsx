@@ -1,4 +1,3 @@
-import DocumentCard from "@/components/shared/cards/document-card";
 import CTA from "@/components/shared/sections/cta";
 import { Button } from "@/components/ui/button";
 
@@ -14,11 +13,7 @@ export default function Home() {
       >
         <Button>Get Started</Button>
       </div>
-      <div className="py-[100px] container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[30px]">
-        <DocumentCard />
-        <DocumentCard />
-        <DocumentCard />
-      </div>
+
       <CTA />
     </>
   );
