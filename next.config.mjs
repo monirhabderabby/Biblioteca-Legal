@@ -6,6 +6,10 @@ const nextConfig = {
         hostname: "files.edgestore.dev",
         protocol: "https",
       },
+      {
+        hostname: "res.cloudinary.com",
+        protocol: "https",
+      },
     ],
   },
 };
