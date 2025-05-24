@@ -75,6 +75,9 @@ const config: Config = {
           "100%": { "background-position": "0% 50%" },
         },
       },
+      fontFamily: {
+        poppins: "var(--font-poppins)",
+      },
       animation: {
         shine: "shine 3s ease-out infinite",
         "gradient-flow":
