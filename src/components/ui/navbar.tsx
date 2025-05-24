@@ -87,7 +87,7 @@ const Navbar = ({ isLoggedin }: Props) => {
             //     "bg-tourHub-green-dark hover:bg-[#3a6f54]" // Change hover color for button
             //   )}
             >
-              Sign In
+              <Link href="/login">Login</Link>
             </Button>
             {false && (
               <div className="flex items-center mt-[3px]">
@@ -99,7 +99,7 @@ const Navbar = ({ isLoggedin }: Props) => {
           {/* Mobile Responsive */}
           <div className="md:hidden flex items-center gap-x-4">
             <div>
-              {!isLoggedin && <Button size="sm">Sign In</Button>}
+              {!isLoggedin && <Button size="sm">Login</Button>}
               {isLoggedin && <p>Profile Image</p>}
             </div>
             <Sheet>

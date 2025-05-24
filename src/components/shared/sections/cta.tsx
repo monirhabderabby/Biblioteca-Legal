@@ -20,7 +20,7 @@ const CTA = () => {
           variant="outline"
           className="bg-transparent text-white border-white hover:bg-white/5 hover:text-white transition-all duration-300"
         >
-          Login
+          <Link href="/login">Login</Link>
         </Button>
       </div>
     </div>

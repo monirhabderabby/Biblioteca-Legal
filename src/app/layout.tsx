@@ -1,5 +1,3 @@
-import Footer from "@/components/ui/footer";
-import Navbar from "@/components/ui/navbar";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Poppins, Raleway } from "next/font/google";
@@ -32,11 +30,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={cn(raleway.className, poppins.variable, "")}>
-        <Navbar isLoggedin={false} />
         {children}
 
         <NextTopLoader showSpinner={false} color="#FFFFFF" />
-        <Footer />
       </body>
     </html>
   );
