@@ -1,7 +1,9 @@
 "use client";
 
 // Packages
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Menu } from "lucide-react";
+import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -12,6 +14,12 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { Button } from "../ui/button";
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from "../ui/sheet";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./dropdown-menu";
 
 interface Props {
   isLoggedin: boolean;
@@ -54,8 +62,8 @@ const Navbar = ({ isLoggedin }: Props) => {
         pathname === "/"
           ? "text-primary"
           : scrolling
-          ? "text-primary"
-          : "text-white"
+            ? "text-primary"
+            : "text-white"
       )}
     >
       <div className="container mx-auto">
@@ -81,18 +89,35 @@ const Navbar = ({ isLoggedin }: Props) => {
           </div>
           {/* Login button */}
           <div className="hidden md:block">
-            <Button
-            //   className={cn(
-            //     scrolling && "border-[1px] border-white/10", // Add border when scrolling
-            //     "bg-tourHub-green-dark hover:bg-[#3a6f54]" // Change hover color for button
-            //   )}
-            >
-              <Link href="/login">Login</Link>
-            </Button>
-            {false && (
-              <div className="flex items-center mt-[3px]">
-                Logged in profile
-              </div>
+            {isLoggedin ? (
+              <>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Avatar>
+                      <AvatarImage
+                        src="https://github.com/shadcn.png"
+                        alt="@shadcn"
+                      />
+                      <AvatarFallback>CN</AvatarFallback>
+                    </Avatar>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem>Account</DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={async () => {
+                        await signOut({ redirectTo: "/", redirect: true });
+                      }}
+                      className="cursor-pointer w-full"
+                    >
+                      Logout
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </>
+            ) : (
+              <Button>
+                <Link href="/login">Login</Link>
+              </Button>
             )}
           </div>
 
