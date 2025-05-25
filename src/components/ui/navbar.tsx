@@ -14,12 +14,7 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { Button } from "../ui/button";
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from "../ui/sheet";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "./dropdown-menu";
+import FramerDropdown from "./framer-dropdown";
 
 interface Props {
   isLoggedin: boolean;
@@ -91,8 +86,8 @@ const Navbar = ({ isLoggedin }: Props) => {
           <div className="hidden md:block">
             {isLoggedin ? (
               <>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
+                <FramerDropdown
+                  trigger={
                     <Avatar>
                       <AvatarImage
                         src="https://github.com/shadcn.png"
@@ -100,19 +95,23 @@ const Navbar = ({ isLoggedin }: Props) => {
                       />
                       <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuItem>Account</DropdownMenuItem>
-                    <DropdownMenuItem
+                  }
+                >
+                  <div>
+                    <Button className="w-full" variant="outline">
+                      Account
+                    </Button>
+                    <Button
                       onClick={async () => {
                         await signOut({ redirectTo: "/", redirect: true });
                       }}
                       className="cursor-pointer w-full"
+                      variant="outline"
                     >
                       Logout
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                    </Button>
+                  </div>
+                </FramerDropdown>
               </>
             ) : (
               <Button>

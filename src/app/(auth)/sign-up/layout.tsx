@@ -1,10 +1,12 @@
+import { auth } from "@/auth";
 import Navbar from "@/components/ui/navbar";
 import { ReactNode } from "react";
 
-const RegistrationLayout = ({ children }: { children: ReactNode }) => {
+const RegistrationLayout = async ({ children }: { children: ReactNode }) => {
+  const cu = await auth();
   return (
     <div>
-      <Navbar isLoggedin={false} />
+      <Navbar isLoggedin={!!cu} />
       {children}
     </div>
   );
