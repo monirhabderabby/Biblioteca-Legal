@@ -1,7 +1,12 @@
 import { Input } from "@/components/ui/input";
+import { Document } from "@prisma/client";
 import ManageDocumentCard from "./manage-document-card";
 
-const ManageDocumentContainer = () => {
+interface Props {
+  data: Document[];
+}
+
+const ManageDocumentContainer = ({ data }: Props) => {
   return (
     <div className="w-full">
       <div>
@@ -9,10 +14,9 @@ const ManageDocumentContainer = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-[30px] mt-10">
-        <ManageDocumentCard />
-        <ManageDocumentCard />
-        <ManageDocumentCard />
-        <ManageDocumentCard />
+        {data.map((item) => (
+          <ManageDocumentCard key={item.id} document={item} />
+        ))}
       </div>
     </div>
   );

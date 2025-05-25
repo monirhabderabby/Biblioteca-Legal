@@ -1,8 +1,10 @@
 import { Button } from "@/components/ui/button";
+import { prisma } from "@/lib/db";
 import Link from "next/link";
 import ManageDocumentContainer from "./_components/manage-document-container";
 
-const Page = () => {
+const Page = async () => {
+  const data = await prisma.document.findMany();
   return (
     <div>
       <div className="w-full flex justify-between mb-5">
@@ -13,7 +15,7 @@ const Page = () => {
           <Link href="/dashboard/documents/new">Add Documeent</Link>
         </Button>
       </div>
-      <ManageDocumentContainer />
+      <ManageDocumentContainer data={data} />
     </div>
   );
 };
