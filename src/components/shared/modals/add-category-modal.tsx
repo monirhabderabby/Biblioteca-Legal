@@ -1,5 +1,6 @@
 "use client";
 import { createCategory } from "@/actions/category/create";
+import { editCategory } from "@/actions/category/edit";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -18,37 +19,62 @@ import {
 import { Input } from "@/components/ui/input";
 import { categorySchema, CategorySchemaType } from "@/schemas/category";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Category } from "@prisma/client";
 import { Loader2 } from "lucide-react";
-import { ReactNode, useState, useTransition } from "react";
+import { ReactNode, useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 interface Props {
   trigger: ReactNode;
+  initialData?: Category;
 }
-export default function AddCategoryDialog({ trigger }: Props) {
+export default function AddCategoryDialog({ trigger, initialData }: Props) {
   const [open, setOpen] = useState(false);
   const [pending, startTransition] = useTransition();
 
   const form = useForm<CategorySchemaType>({
     resolver: zodResolver(categorySchema),
+    defaultValues: {
+      name: initialData?.name ?? "",
+    },
   });
 
   function onSubmit(values: CategorySchemaType) {
     startTransition(() => {
-      createCategory(values).then((res) => {
-        if (!res.success) {
-          toast.error(res.message);
-          return;
-        }
+      if (initialData) {
+        editCategory(initialData.id, values).then((res) => {
+          if (!res.success) {
+            toast.error(res.message);
+            return;
+          }
 
-        // handle success
-        toast.success(res.message);
-        form.reset();
-        setOpen(false);
-      });
+          // handle success
+          toast.success(res.message);
+          form.reset();
+          setOpen(false);
+        });
+      } else {
+        createCategory(values).then((res) => {
+          if (!res.success) {
+            toast.error(res.message);
+            return;
+          }
+
+          // handle success
+          toast.success(res.message);
+          form.reset();
+          setOpen(false);
+        });
+      }
     });
   }
+
+  useEffect(() => {
+    if (open && initialData) {
+      form.reset({ name: initialData.name });
+    }
+  }, [open, initialData, form]);
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
@@ -71,7 +97,11 @@ export default function AddCategoryDialog({ trigger }: Props) {
                       disabled={pending}
                     />
                   </FormControl>
-                  <FormDescription>Write a category name</FormDescription>
+                  <FormDescription>
+                    {initialData
+                      ? "Edit a category name"
+                      : "Write a category name"}
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -90,7 +120,8 @@ export default function AddCategoryDialog({ trigger }: Props) {
                 Cancel
               </Button>
               <Button type="submit" disabled={pending}>
-                Submit {pending && <Loader2 className="animate-spin" />}
+                {initialData ? "Save Now" : "Submit"}{" "}
+                {pending && <Loader2 className="animate-spin" />}
               </Button>
             </div>
           </form>

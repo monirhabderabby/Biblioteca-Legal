@@ -18,7 +18,9 @@ const DashboardLayout = async ({ children }: { children: ReactNode }) => {
         {/* Top Bar */}
         <Topbar name={cu.user.name as string} />
 
-        <div className="p-6">{children}</div>
+        <div className="p-6 bg-[#F5F7FA] min-h-[calc(100vh-80px)]">
+          {children}
+        </div>
       </div>
     </div>
   );
