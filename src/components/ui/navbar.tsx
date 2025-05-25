@@ -1,7 +1,9 @@
 "use client";
 
 // Packages
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Menu } from "lucide-react";
+import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -12,6 +14,7 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { Button } from "../ui/button";
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from "../ui/sheet";
+import FramerDropdown from "./framer-dropdown";
 
 interface Props {
   isLoggedin: boolean;
@@ -49,13 +52,13 @@ const Navbar = ({ isLoggedin }: Props) => {
   return (
     <div
       className={cn(
-        "py-3 fixed top-0 z-50 md:pt-3 w-full h-[60px] transition duration-300",
+        "py-3 fixed top-0 z-50 md:pt-3 w-full h-[80px] transition duration-300",
         scrolling && "bg-white",
         pathname === "/"
           ? "text-primary"
           : scrolling
-          ? "text-primary"
-          : "text-white"
+            ? "text-primary"
+            : "text-white"
       )}
     >
       <div className="container mx-auto">
@@ -81,18 +84,42 @@ const Navbar = ({ isLoggedin }: Props) => {
           </div>
           {/* Login button */}
           <div className="hidden md:block">
-            <Button
-            //   className={cn(
-            //     scrolling && "border-[1px] border-white/10", // Add border when scrolling
-            //     "bg-tourHub-green-dark hover:bg-[#3a6f54]" // Change hover color for button
-            //   )}
-            >
-              <Link href="/login">Login</Link>
-            </Button>
-            {false && (
-              <div className="flex items-center mt-[3px]">
-                Logged in profile
-              </div>
+            {isLoggedin ? (
+              <>
+                <FramerDropdown
+                  trigger={
+                    <Avatar>
+                      <AvatarImage
+                        src="https://github.com/shadcn.png"
+                        alt="@shadcn"
+                      />
+                      <AvatarFallback>CN</AvatarFallback>
+                    </Avatar>
+                  }
+                >
+                  <div>
+                    <Button
+                      className="w-full text-primary hover:text-primary/90"
+                      variant="outline"
+                    >
+                      Account
+                    </Button>
+                    <Button
+                      onClick={async () => {
+                        await signOut({ redirectTo: "/", redirect: true });
+                      }}
+                      className="cursor-pointer w-full text-primary hover:text-primary/90"
+                      variant="outline"
+                    >
+                      Logout
+                    </Button>
+                  </div>
+                </FramerDropdown>
+              </>
+            ) : (
+              <Button>
+                <Link href="/login">Login</Link>
+              </Button>
             )}
           </div>
 

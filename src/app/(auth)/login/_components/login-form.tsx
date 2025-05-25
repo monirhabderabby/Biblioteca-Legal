@@ -5,6 +5,7 @@ import { Eye, EyeOff, Lock, Mail, MoveLeft } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 
+import { loginAction } from "@/actions/auth/login";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -18,6 +19,8 @@ import { Input } from "@/components/ui/input";
 import { loginFormSchema, LoginFormValues } from "@/schemas/auth";
 import Cookies from "js-cookie"; // Import js-cookie for cookie retrieval
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 // Retrieve cookies for email and "Remember Me"
 const rememberedEmail = Cookies.get("rememberMeEmail");
@@ -29,6 +32,8 @@ export default function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [pending, startTransition] = useTransition();
   const [isMounted, setMounted] = useState(false);
+
+  const router = useRouter();
 
   useEffect(() => {
     setMounted(true);
@@ -49,19 +54,19 @@ export default function LoginForm() {
     console.log(data);
     setIsLoading(true);
     startTransition(() => {
-      //   loginAction(data).then((res) => {
-      //     if (!res?.success) {
-      //       toast.error(res?.message);
-      //       return;
-      //     }
-      //     // handle success
-      //     setIsLoading(true);
-      //     if (res.role === "user") {
-      //       router.push(callback ?? "/");
-      //     } else if (res.role === "admin") {
-      //       router.push("/dashboard");
-      //     }
-      //   });
+      loginAction(data).then((res) => {
+        if (!res?.success) {
+          toast.error(res?.message);
+          return;
+        }
+        // handle success
+        setIsLoading(true);
+        if (res.role === "user") {
+          router.push("/");
+        } else if (res.role === "admin") {
+          router.push("/dashboard");
+        }
+      });
     });
   }
 
@@ -171,8 +176,8 @@ export default function LoginForm() {
             {pending
               ? "Signing In..."
               : isLoading
-              ? "Just a second..."
-              : "Sign In"}
+                ? "Just a second..."
+                : "Sign In"}
           </Button>
         </form>
       </Form>

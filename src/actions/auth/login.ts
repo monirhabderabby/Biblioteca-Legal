@@ -1,5 +1,6 @@
 "use server";
 
+import { signIn } from "@/auth";
 import { prisma } from "@/lib/db";
 import { loginFormSchema, LoginFormValues } from "@/schemas/auth";
 import { Role } from "@prisma/client";
@@ -52,11 +53,11 @@ export async function loginAction(data: LoginFormValues) {
   }
 
   try {
-    // await signIn("credentials", {
-    //   email: parsedData.email,
-    //   password: parsedData.password,
-    //   redirect: false,
-    // });
+    await signIn("credentials", {
+      email: parsedData.email,
+      password: parsedData.password,
+      redirect: false,
+    });
 
     // Manage "Remember Me" cookies using the reusable function
     await manageRememberMeCookies(
