@@ -1,3 +1,4 @@
+import { Document } from "@prisma/client";
 import * as z from "zod";
 
 export const documentFormSchema = z.object({
@@ -20,3 +21,15 @@ export const documentFormSchema = z.object({
 });
 
 export type DocumentFormSchemaType = z.infer<typeof documentFormSchema>;
+
+export type DocumentsApiResponse = {
+  success: boolean;
+  message: string;
+  data: Document[];
+  meta: {
+    page: number;
+    pageSize: number;
+    totalPages: number;
+    totalCount: number;
+  };
+};

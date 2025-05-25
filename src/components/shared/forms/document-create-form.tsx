@@ -36,7 +36,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { documentFormSchema, DocumentFormSchemaType } from "@/schemas/document";
 import { Category } from "@prisma/client";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { toast } from "sonner";
@@ -44,6 +44,8 @@ import { toast } from "sonner";
 export function DocumentCreateForm() {
   const [pending, startTransition] = useTransition();
   const router = useRouter();
+
+  const queryClient = useQueryClient();
   const { data: categories } = useQuery<Category[]>({
     queryKey: ["categories"],
     queryFn: () => fetch("/api/categories").then((res) => res.json()),
@@ -66,6 +68,7 @@ export function DocumentCreateForm() {
         }
 
         // handle succees
+        queryClient.invalidateQueries({ queryKey: ["documents"] });
         toast.success(res.message);
         router.back();
       });
