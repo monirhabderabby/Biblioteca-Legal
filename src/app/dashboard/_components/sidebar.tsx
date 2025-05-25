@@ -45,7 +45,7 @@ const routes = [
     id: 5,
     label: "Category",
     icon: FileStack,
-    href: "/dashboard/coaching",
+    href: "/dashboard/categories",
   },
   {
     id: 8,
