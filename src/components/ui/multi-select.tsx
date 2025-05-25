@@ -24,6 +24,7 @@ interface MultiSelectorProps
   values: string[];
   onValuesChange: (value: string[]) => void;
   loop?: boolean;
+  renderValue?: (id: string) => string; // <-- Add this
 }
 
 interface MultiSelectContextProps {
@@ -38,6 +39,7 @@ interface MultiSelectContextProps {
   setActiveIndex: React.Dispatch<React.SetStateAction<number>>;
   ref: React.RefObject<HTMLInputElement>;
   handleSelect: (e: React.SyntheticEvent<HTMLInputElement>) => void;
+  renderValue?: (id: string) => string; // <-- Add this
 }
 
 const MultiSelectContext = createContext<MultiSelectContextProps | null>(null);
@@ -63,6 +65,7 @@ const MultiSelector = ({
   className,
   children,
   dir,
+  renderValue, // <-- Add this line
   ...props
 }: MultiSelectorProps) => {
   const [inputValue, setInputValue] = useState("");
@@ -199,6 +202,7 @@ const MultiSelector = ({
         setActiveIndex,
         ref: inputRef,
         handleSelect,
+        renderValue,
       }}
     >
       <Command
@@ -220,7 +224,7 @@ const MultiSelectorTrigger = forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, children, ...props }, ref) => {
-  const { value, onValueChange, activeIndex } = useMultiSelect();
+  const { value, onValueChange, activeIndex, renderValue } = useMultiSelect();
 
   const mousePreventDefault = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
@@ -248,7 +252,7 @@ const MultiSelectorTrigger = forwardRef<
           )}
           variant={"secondary"}
         >
-          <span className="text-xs">{item}</span>
+          <span className="text-xs">{renderValue?.(item) ?? item}</span>
           <button
             aria-label={`Remove ${item} option`}
             aria-roledescription="button to remove option"
@@ -271,7 +275,8 @@ MultiSelectorTrigger.displayName = "MultiSelectorTrigger";
 const MultiSelectorInput = forwardRef<
   React.ElementRef<typeof CommandPrimitive.Input>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input>
->(({ className, ...props }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+>(({ className, ...props }, ref) => {
   const {
     setOpen,
     inputValue,

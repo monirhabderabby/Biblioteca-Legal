@@ -128,8 +128,7 @@ model Document {
     id String @id @default(auto()) @map("_id") @db.ObjectId
     name String
     short_description String
-    law_number Int
-    published DateTime
+    law_number String
 
     categories CategoryEmbedded[]
 

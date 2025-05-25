@@ -10,12 +10,9 @@ export const documentFormSchema = z.object({
       message: "Document name must not exceed 100 characters.",
     }),
   categoryIds: z.array(z.string()).min(1, "Please select a category."),
-  short_description: z
-    .string()
-    .max(500, {
-      message: "Description must not exceed 500 characters.",
-    })
-    .optional(),
+  short_description: z.string().max(500, {
+    message: "Description must not exceed 500 characters.",
+  }),
   law_number: z.string(),
   publishedDate: z.date({
     required_error: "Please select a published date.",

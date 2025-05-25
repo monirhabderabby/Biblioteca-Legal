@@ -5,6 +5,7 @@ import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 
+import { createDocument } from "@/actions/document/create";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -30,13 +31,19 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { SubmitButton } from "@/components/ui/submit-button";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { documentFormSchema, DocumentFormSchemaType } from "@/schemas/document";
 import { Category } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { useTransition } from "react";
+import { toast } from "sonner";
 
 export function DocumentCreateForm() {
+  const [pending, startTransition] = useTransition();
+  const router = useRouter();
   const { data: categories } = useQuery<Category[]>({
     queryKey: ["categories"],
     queryFn: () => fetch("/api/categories").then((res) => res.json()),
@@ -51,7 +58,18 @@ export function DocumentCreateForm() {
 
   // Handle form submission
   function handleSubmit(data: DocumentFormSchemaType) {
-    console.log("Form submitted with data:", data);
+    startTransition(() => {
+      createDocument(data).then((res) => {
+        if (!res.success) {
+          toast.error(res.message);
+          return;
+        }
+
+        // handle succees
+        toast.success(res.message);
+        router.back();
+      });
+    });
   }
 
   return (
@@ -100,6 +118,10 @@ export function DocumentCreateForm() {
                     onValuesChange={field.onChange}
                     loop
                     className="w-full"
+                    renderValue={(id) => {
+                      const match = categories?.find((cat) => cat.id === id);
+                      return match ? match.name : id;
+                    }}
                   >
                     <MultiSelectorTrigger className="border border-input  ">
                       <MultiSelectorInput placeholder="Select category" />
@@ -109,7 +131,7 @@ export function DocumentCreateForm() {
                         {categories &&
                           categories.length > 0 &&
                           categories.map(({ id, name }) => (
-                            <MultiSelectorItem value={name} key={id}>
+                            <MultiSelectorItem value={id} key={id}>
                               {name}
                             </MultiSelectorItem>
                           ))}
@@ -233,13 +255,9 @@ export function DocumentCreateForm() {
           >
             Cancel
           </Button>
-          <Button
-            type="submit"
-            className="bg-gray-900 hover:bg-gray-800 text-white px-6"
-            disabled={form.formState.isSubmitting}
-          >
-            {form.formState.isSubmitting ? "Saving..." : "Save"}
-          </Button>
+          <SubmitButton isLoading={pending} className="w-fit">
+            Create
+          </SubmitButton>
         </div>
       </form>
     </Form>
