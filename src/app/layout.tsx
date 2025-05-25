@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import AppProvider from "@/provider/AppProvider";
 import type { Metadata } from "next";
 import { Poppins, Raleway } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
@@ -31,7 +32,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={cn(raleway.className, poppins.variable, "")}>
-        {children}
+        <AppProvider>{children}</AppProvider>
         <Toaster richColors position="bottom-right" />
         <NextTopLoader showSpinner={false} color="#FFFFFF" />
       </body>
