@@ -98,14 +98,17 @@ const Navbar = ({ isLoggedin }: Props) => {
                   }
                 >
                   <div>
-                    <Button className="w-full" variant="outline">
+                    <Button
+                      className="w-full text-primary hover:text-primary/90"
+                      variant="outline"
+                    >
                       Account
                     </Button>
                     <Button
                       onClick={async () => {
                         await signOut({ redirectTo: "/", redirect: true });
                       }}
-                      className="cursor-pointer w-full"
+                      className="cursor-pointer w-full text-primary hover:text-primary/90"
                       variant="outline"
                     >
                       Logout
