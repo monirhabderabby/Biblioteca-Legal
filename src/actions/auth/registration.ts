@@ -1,7 +1,9 @@
 "use server";
 import bcrypt from "bcryptjs";
 
+import EmailVerification from "@/email-templates/email-verification";
 import { prisma } from "@/lib/db";
+import { resend } from "@/lib/resend";
 import { registrationSchema, RegistrationSchemaType } from "@/schemas/auth";
 
 export async function registeruser(data: RegistrationSchemaType) {
@@ -55,15 +57,15 @@ export async function registeruser(data: RegistrationSchemaType) {
     }
 
     // send email to the student
-    // await resend.emails.send({
-    //   from: "FreelancePM Club <support@thefreelancepmclub.com>",
-    //   to: [newUser.email as string],
-    //   subject: "Please verify your email address",
-    //   react: EmailVerification({
-    //     username: newUser?.name ?? "",
-    //     verificationUrl: `${process.env.AUTH_URL}/email-verification/${newUser.id}`,
-    //   }),
-    // });
+    await resend.emails.send({
+      from: "Biblioteca Legal <support@bibliotecalegalhn.com>",
+      to: [newUser.email as string],
+      subject: "Please verify your email address",
+      react: EmailVerification({
+        username: newUser?.first_name ?? "",
+        verificationUrl: `${process.env.AUTH_URL}/email-verification/${newUser.id}`,
+      }),
+    });
 
     return {
       success: true,

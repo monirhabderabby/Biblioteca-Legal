@@ -52,7 +52,7 @@ const Navbar = ({ isLoggedin }: Props) => {
   return (
     <div
       className={cn(
-        "py-3 fixed top-0 z-50 md:pt-3 w-full h-[60px] transition duration-300",
+        "py-3 fixed top-0 z-50 md:pt-3 w-full h-[80px] transition duration-300",
         scrolling && "bg-white",
         pathname === "/"
           ? "text-primary"
