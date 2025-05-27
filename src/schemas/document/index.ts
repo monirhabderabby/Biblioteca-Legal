@@ -51,3 +51,14 @@ export const chapterTitleSchema = z.object({
 });
 
 export type ChapterTitleSchemaType = z.infer<typeof chapterTitleSchema>;
+
+export const articleSchema = z.object({
+  content: z.string().min(1, {
+    message: "Content is required.",
+  }),
+  chapterId: z.string().min(1, {
+    message: "Document ID is required.",
+  }),
+});
+
+export type articleSchemaType = z.infer<typeof articleSchema>;

@@ -1,8 +1,9 @@
-import AddDocumentSectionTitleModal from "@/components/shared/modals/add-document-section-ttile-modal";
+import AddArticleModal from "@/components/shared/modals/add-article-modal";
 import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/db";
 import moment from "moment";
 import { notFound } from "next/navigation";
+import ArticleContainer from "./_components/article-container";
 
 const Page = async ({
   params,
@@ -14,6 +15,20 @@ const Page = async ({
   const document = await prisma.document.findFirst({
     where: {
       id: documentId,
+    },
+  });
+
+  const section = await prisma.section.findFirst({
+    where: {
+      id: params.sectionId,
+      documentId: documentId,
+    },
+  });
+
+  const chapter = await prisma.chapter.findFirst({
+    where: {
+      id: params.chapterId,
+      sectionId: params.sectionId,
     },
   });
 
@@ -30,28 +45,42 @@ const Page = async ({
             {document.short_description}
           </p>
           <p className=" leading-[120%]">
-            Law No. <span className="font-medium">{document.law_number}</span>
+            Law No. <span className="font-semibold">{document.law_number}</span>
           </p>
           <p>
             Published:{" "}
-            <span className="font-medium">
+            <span className="font-semibold">
               {moment(document.createdAt).format("MMMM D, YYYY")}
+            </span>
+          </p>
+          <p>
+            Title Name:{" "}
+            <span className="font-semibold">
+              {section?.title || "No title available"}
+            </span>
+          </p>
+          <p>
+            Chapter Title:{" "}
+            <span className="font-semibold">
+              {chapter?.title || "No title available"}
             </span>
           </p>
         </div>
         <div className="flex items-center gap-x-[30px]">
-          <AddDocumentSectionTitleModal
-            trigger={<Button>Add Title</Button>}
+          <AddArticleModal
+            trigger={<Button>Add Article</Button>}
+            chapterId={params.chapterId}
             documentId={params.documentId}
+            sectionId={params.sectionId}
           />
-          <Button
-            variant="outline"
-            className="text-primary hover:text-primary/80"
-          >
-            Publish
-          </Button>
         </div>
       </section>
+
+      <ArticleContainer
+        chapterId={params.chapterId}
+        sectionId={params.sectionId}
+        documentId={params.documentId}
+      />
     </div>
   );
 };

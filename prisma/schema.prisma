@@ -153,6 +153,19 @@ model Chapter {
   sectionId String  @db.ObjectId
   section   Section @relation(fields: [sectionId], references: [id], onDelete: Cascade)
 
+  articles Article[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Article {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  content String
+
+  chapterId String  @db.ObjectId
+  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
