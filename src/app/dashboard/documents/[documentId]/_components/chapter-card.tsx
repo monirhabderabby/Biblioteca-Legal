@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { CardTitle } from "@/components/ui/card";
 import { Chapter } from "@prisma/client";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 
@@ -67,7 +68,11 @@ const ChapterCard = ({ chapter, index, sectionId, documentId }: Props) => {
             variant="outline"
             className="text-primary hover:text-primary/80"
           >
-            Manage Chapter
+            <Link
+              href={`/dashboard/documents/${documentId}/${sectionId}/${chapter.id}`}
+            >
+              Manage Chapter
+            </Link>
           </Button>
         </div>
       </div>
