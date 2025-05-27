@@ -102,8 +102,8 @@ const Sidebar = () => {
         {/* Logout Button */}
         <div className="border-t p-3">
           <Button
-            variant="destructive"
-            className="w-full justify-start gap-3"
+            variant="outline"
+            className="w-full justify-start gap-3 text-primary hover:text-primary/80"
             onClick={async () => {
               await signOut({ redirectTo: "/", redirect: true });
             }}

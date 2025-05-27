@@ -1,12 +1,13 @@
 "use client";
 
 import AddDocumentChapterTitleModal from "@/components/shared/modals/add-document-chapter-title";
+import AddDocumentSectionTitleModal from "@/components/shared/modals/add-document-section-ttile-modal";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { SectionWithChapters } from "@/types";
 import { AnimatePresence, motion } from "framer-motion";
-import { Plus } from "lucide-react";
+import { Pencil, Plus } from "lucide-react";
 import { useState } from "react";
 import ChapterTitleContainer from "./chapter-title-container";
 
@@ -30,15 +31,31 @@ const SectionCard = ({ section, index, documentId }: Props) => {
           <CardTitle onClick={toggle} className="cursor-pointer">
             {index + 1}. {section.title}
           </CardTitle>
-          <AddDocumentChapterTitleModal
-            documentId={documentId}
-            sectionId={section.id}
-            trigger={
-              <Button onClick={(e) => e.stopPropagation()}>
-                <Plus /> Add Chapter
-              </Button>
-            }
-          />
+          <div className="flex items-center gap-x-3">
+            <AddDocumentChapterTitleModal
+              documentId={documentId}
+              sectionId={section.id}
+              trigger={
+                <Button onClick={(e) => e.stopPropagation()}>
+                  <Plus /> Add Chapter
+                </Button>
+              }
+            />
+
+            <AddDocumentSectionTitleModal
+              trigger={
+                <Button
+                  size="icon"
+                  variant="outline"
+                  className="text-primary hover:text-primary/80"
+                >
+                  <Pencil />
+                </Button>
+              }
+              documentId={documentId}
+              initialData={section}
+            />
+          </div>
         </div>
       </CardHeader>
 

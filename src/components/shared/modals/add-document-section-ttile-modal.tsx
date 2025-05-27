@@ -1,5 +1,6 @@
 "use client";
 import { createDocumentSectionTitle } from "@/actions/document/section/create";
+import { editDocumentSectionTitle } from "@/actions/document/section/edit";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -18,7 +19,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { sectionTitleSchema, SectionTitleSchemaType } from "@/schemas/document";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Category } from "@prisma/client";
+import { Section } from "@prisma/client";
 import { Loader2 } from "lucide-react";
 import { ReactNode, useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
@@ -26,7 +27,7 @@ import { toast } from "sonner";
 
 interface Props {
   trigger: ReactNode;
-  initialData?: Category;
+  initialData?: Section;
   documentId: string;
 }
 export default function AddDocumentSectionTitleModal({
@@ -40,32 +41,46 @@ export default function AddDocumentSectionTitleModal({
   const form = useForm<SectionTitleSchemaType>({
     resolver: zodResolver(sectionTitleSchema),
     defaultValues: {
-      name: initialData?.name ?? "",
+      name: initialData?.title ?? "",
       documentId: documentId, // Ensure the documentId is set
     },
   });
 
   function onSubmit(values: SectionTitleSchemaType) {
     startTransition(() => {
-      createDocumentSectionTitle(values).then((res) => {
-        if (!res.success) {
-          toast.error(res.message);
-          return;
-        }
+      if (initialData) {
+        editDocumentSectionTitle(values, initialData.id).then((res) => {
+          if (!res.success) {
+            toast.error(res.message);
+            return;
+          }
 
-        // handle success
-        toast.success(res.message);
-        form.reset();
-        setOpen(false);
-      });
+          // handle success
+          toast.success(res.message);
+          form.reset();
+          setOpen(false);
+        });
+      } else {
+        createDocumentSectionTitle(values).then((res) => {
+          if (!res.success) {
+            toast.error(res.message);
+            return;
+          }
+
+          // handle success
+          toast.success(res.message);
+          form.reset();
+          setOpen(false);
+        });
+      }
     });
   }
 
   useEffect(() => {
     if (open && initialData) {
-      form.reset({ name: initialData.name });
+      form.reset({ name: initialData.title, documentId: documentId });
     }
-  }, [open, initialData, form]);
+  }, [open, initialData, form, documentId]);
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
