@@ -15,21 +15,43 @@ export async function GET(req: NextRequest) {
 
     // Search
     const query = searchParams.get("search")?.toLowerCase() || "";
+    const category = searchParams.get("category") || undefined;
 
-    const whereClause = query
-      ? {
-          OR: [
-            { name: { contains: query, mode: "insensitive" as const } },
-            {
-              short_description: {
-                contains: query,
-                mode: "insensitive" as const,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const whereClause: any = {};
+
+    if (query) {
+      whereClause.OR = [
+        { name: { contains: query, mode: "insensitive" as const } },
+        { law_number: { contains: query, mode: "insensitive" as const } },
+        {
+          sections: {
+            some: {
+              title: { contains: query, mode: "insensitive" as const },
+            },
+          },
+        },
+        {
+          sections: {
+            some: {
+              chapters: {
+                some: {
+                  title: { contains: query, mode: "insensitive" as const },
+                },
               },
             },
-            { law_number: { contains: query, mode: "insensitive" as const } },
-          ],
-        }
-      : {};
+          },
+        },
+      ];
+    }
+
+    if (category && category !== "all") {
+      whereClause.categories = {
+        some: {
+          id: category,
+        },
+      };
+    }
 
     // Fetch total count
     const totalCount = await prisma.document.count({ where: whereClause });
