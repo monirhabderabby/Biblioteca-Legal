@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Document } from "@prisma/client";
 import { Calendar, FileText } from "lucide-react";
 import moment from "moment";
+import Link from "next/link";
 
 interface Props {
   document?: Document;
@@ -37,7 +38,13 @@ const ManageDocumentCard = ({ document }: Props) => {
         ))}
       </div>
 
-      <Button className="w-full mt-[30px] ">Manage Document</Button>
+      {document && (
+        <Button className="w-full mt-[30px] " asChild>
+          <Link className="w-full" href={`/dashboard/documents/${document.id}`}>
+            Manage Document
+          </Link>
+        </Button>
+      )}
     </div>
   );
 };
