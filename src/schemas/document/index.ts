@@ -36,6 +36,29 @@ export type DocumentsApiResponse = {
 
 export const sectionTitleSchema = z.object({
   name: z.string().min(1),
+  documentId: z.string().min(1, {
+    message: "Document ID is required.",
+  }),
 });
 
 export type SectionTitleSchemaType = z.infer<typeof sectionTitleSchema>;
+
+export const chapterTitleSchema = z.object({
+  title: z.string().min(1),
+  sectionId: z.string().min(1, {
+    message: "Document ID is required.",
+  }),
+});
+
+export type ChapterTitleSchemaType = z.infer<typeof chapterTitleSchema>;
+
+export const articleSchema = z.object({
+  content: z.string().min(1, {
+    message: "Content is required.",
+  }),
+  chapterId: z.string().min(1, {
+    message: "Document ID is required.",
+  }),
+});
+
+export type articleSchemaType = z.infer<typeof articleSchema>;

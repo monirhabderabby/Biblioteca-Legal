@@ -1,0 +1,59 @@
+"use client";
+import { deleteDocument } from "@/actions/document/delete";
+import AlertModal from "@/components/ui/alert-modal";
+import { Button } from "@/components/ui/button";
+import { Trash } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState, useTransition } from "react";
+import { toast } from "sonner";
+
+interface Props {
+  documentId: string;
+}
+
+const DocumentHeaderAction = ({ documentId }: Props) => {
+  const [open, setOpen] = useState(false);
+  const [pending, startTransition] = useTransition();
+  const router = useRouter();
+
+  const onDelete = () => {
+    startTransition(() => {
+      deleteDocument(documentId).then((res) => {
+        if (!res.success) {
+          toast.error(res.message);
+          return;
+        }
+
+        // handle success
+        toast.success(res.message);
+        setOpen(false);
+        router.back();
+      });
+    });
+  };
+
+  return (
+    <>
+      <div className="flex items-center gap-x-[20px]">
+        <Button
+          variant="outline"
+          className="text-primary hover:text-primary/80"
+        >
+          Publish
+        </Button>
+        <Button variant="destructive" size="icon" onClick={() => setOpen(true)}>
+          <Trash />
+        </Button>
+      </div>
+
+      <AlertModal
+        isOpen={open}
+        loading={pending}
+        onClose={() => setOpen(false)}
+        onConfirm={onDelete}
+      />
+    </>
+  );
+};
+
+export default DocumentHeaderAction;

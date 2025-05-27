@@ -1,6 +1,6 @@
 "use client";
-import { createDocumentSectionTitle } from "@/actions/document/section/create";
-import { editDocumentSectionTitle } from "@/actions/document/section/edit";
+import { createDocumentChapterTitle } from "@/actions/document/section/chapter/create";
+import { editDocumentChapterTitle } from "@/actions/document/section/chapter/edit";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -17,9 +17,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { sectionTitleSchema, SectionTitleSchemaType } from "@/schemas/document";
+import { chapterTitleSchema, ChapterTitleSchemaType } from "@/schemas/document";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Section } from "@prisma/client";
+import { Chapter } from "@prisma/client";
 import { Loader2 } from "lucide-react";
 import { ReactNode, useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
@@ -27,41 +27,48 @@ import { toast } from "sonner";
 
 interface Props {
   trigger: ReactNode;
-  initialData?: Section;
-  documentId: string;
+  initialData?: Chapter;
+  sectionId: string;
+  documentId: string; // Optional, if needed for context
 }
-export default function AddDocumentSectionTitleModal({
+export default function AddDocumentChapterTitleModal({
   trigger,
   initialData,
-  documentId,
+  sectionId,
+  documentId, // Ensure this is passed if needed for the action
 }: Props) {
   const [open, setOpen] = useState(false);
   const [pending, startTransition] = useTransition();
 
-  const form = useForm<SectionTitleSchemaType>({
-    resolver: zodResolver(sectionTitleSchema),
+  const form = useForm<ChapterTitleSchemaType>({
+    resolver: zodResolver(chapterTitleSchema),
     defaultValues: {
-      name: initialData?.title ?? "",
-      documentId: documentId, // Ensure the documentId is set
+      title: initialData?.title ?? "",
+      sectionId: sectionId, // Ensure the documentId is set
     },
   });
 
-  function onSubmit(values: SectionTitleSchemaType) {
+  console.log(form.watch());
+
+  function onSubmit(values: ChapterTitleSchemaType) {
+    console.log(values);
     startTransition(() => {
       if (initialData) {
-        editDocumentSectionTitle(values, initialData.id).then((res) => {
-          if (!res.success) {
-            toast.error(res.message);
-            return;
-          }
+        editDocumentChapterTitle(values, initialData.id, documentId).then(
+          (res) => {
+            if (!res.success) {
+              toast.error(res.message);
+              return;
+            }
 
-          // handle success
-          toast.success(res.message);
-          form.reset();
-          setOpen(false);
-        });
+            // handle success
+            toast.success(res.message);
+            form.reset();
+            setOpen(false);
+          }
+        );
       } else {
-        createDocumentSectionTitle(values).then((res) => {
+        createDocumentChapterTitle(values, documentId).then((res) => {
           if (!res.success) {
             toast.error(res.message);
             return;
@@ -78,9 +85,9 @@ export default function AddDocumentSectionTitleModal({
 
   useEffect(() => {
     if (open && initialData) {
-      form.reset({ name: initialData.title, documentId: documentId });
+      form.reset({ title: initialData.title, sectionId: sectionId });
     }
-  }, [open, initialData, form, documentId]);
+  }, [open, initialData, form, sectionId]);
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
@@ -90,7 +97,7 @@ export default function AddDocumentSectionTitleModal({
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 s">
             <FormField
               control={form.control}
-              name="name"
+              name="title"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Title Name</FormLabel>
@@ -100,13 +107,17 @@ export default function AddDocumentSectionTitleModal({
                       placeholder=""
                       type="text"
                       {...field}
+                      onChange={(e) => {
+                        e.stopPropagation();
+                        field.onChange(e);
+                      }}
                       disabled={pending}
                     />
                   </FormControl>
                   <FormDescription>
                     {initialData
-                      ? "Edit a section title "
-                      : "Write a section title"}
+                      ? "Edit a chapter title "
+                      : "Write a chapter title"}
                   </FormDescription>
                   <FormMessage />
                 </FormItem>

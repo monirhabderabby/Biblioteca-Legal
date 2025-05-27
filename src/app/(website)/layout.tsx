@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import Footer from "@/components/ui/footer";
 import Navbar from "@/components/ui/navbar";
+import NextTopLoader from "nextjs-toploader";
 import { ReactNode } from "react";
 
 const WebsiteLayout = async ({ children }: { children: ReactNode }) => {
@@ -11,6 +12,7 @@ const WebsiteLayout = async ({ children }: { children: ReactNode }) => {
 
       {children}
       <Footer />
+      <NextTopLoader showSpinner={false} color="#FFFFFF" />
     </div>
   );
 };

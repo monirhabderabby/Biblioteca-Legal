@@ -1,6 +1,6 @@
 "use client";
-import { createDocumentSectionTitle } from "@/actions/document/section/create";
-import { editDocumentSectionTitle } from "@/actions/document/section/edit";
+import { createArticle } from "@/actions/document/section/article/create";
+import { editArticle } from "@/actions/document/section/article/edit";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -10,46 +10,54 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { sectionTitleSchema, SectionTitleSchemaType } from "@/schemas/document";
+import { articleSchema, articleSchemaType } from "@/schemas/document";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Section } from "@prisma/client";
+import { Article } from "@prisma/client";
 import { Loader2 } from "lucide-react";
 import { ReactNode, useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import RichTextEditor from "../sections/RichTextEditor";
 
 interface Props {
   trigger: ReactNode;
-  initialData?: Section;
+  initialData?: Article;
+  chapterId: string;
   documentId: string;
+  sectionId: string;
 }
-export default function AddDocumentSectionTitleModal({
+export default function AddArticleModal({
   trigger,
   initialData,
+  chapterId,
   documentId,
+  sectionId,
 }: Props) {
   const [open, setOpen] = useState(false);
   const [pending, startTransition] = useTransition();
 
-  const form = useForm<SectionTitleSchemaType>({
-    resolver: zodResolver(sectionTitleSchema),
+  const form = useForm<articleSchemaType>({
+    resolver: zodResolver(articleSchema),
     defaultValues: {
-      name: initialData?.title ?? "",
-      documentId: documentId, // Ensure the documentId is set
+      content: initialData ? initialData.content : "",
+      chapterId: initialData ? initialData.chapterId : chapterId,
     },
   });
 
-  function onSubmit(values: SectionTitleSchemaType) {
+  function onSubmit(values: articleSchemaType) {
     startTransition(() => {
       if (initialData) {
-        editDocumentSectionTitle(values, initialData.id).then((res) => {
+        editArticle({
+          articleId: initialData.id,
+          data: values,
+          documentId: documentId,
+          sectionId: sectionId,
+        }).then((res) => {
           if (!res.success) {
             toast.error(res.message);
             return;
@@ -61,7 +69,7 @@ export default function AddDocumentSectionTitleModal({
           setOpen(false);
         });
       } else {
-        createDocumentSectionTitle(values).then((res) => {
+        createArticle(values, documentId, sectionId).then((res) => {
           if (!res.success) {
             toast.error(res.message);
             return;
@@ -78,36 +86,31 @@ export default function AddDocumentSectionTitleModal({
 
   useEffect(() => {
     if (open && initialData) {
-      form.reset({ name: initialData.title, documentId: documentId });
+      form.reset({
+        content: initialData.content,
+        chapterId: chapterId,
+      });
     }
-  }, [open, initialData, form, documentId]);
+  }, [open, initialData, form, chapterId]);
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>
-      <AlertDialogContent>
+      <AlertDialogContent className="min-w-[800px]">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 s">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 ">
             <FormField
               control={form.control}
-              name="name"
+              name="content"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Title Name</FormLabel>
+                  <FormLabel>Content</FormLabel>
                   <FormControl>
-                    <Input
-                      className="w-full"
-                      placeholder=""
-                      type="text"
-                      {...field}
-                      disabled={pending}
+                    <RichTextEditor
+                      content={field.value}
+                      onChange={(content) => field.onChange(content)}
                     />
                   </FormControl>
-                  <FormDescription>
-                    {initialData
-                      ? "Edit a section title "
-                      : "Write a section title"}
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

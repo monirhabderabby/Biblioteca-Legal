@@ -9,6 +9,8 @@ import { prisma } from "@/lib/db";
 import moment from "moment";
 import dynamic from "next/dynamic";
 import { notFound } from "next/navigation";
+import DocumentHeaderAction from "./_components/document-header-action";
+import SectionTitleContainer from "./_components/section-title-container";
 
 const Page = async ({ params }: { params: { documentId: string } }) => {
   const document = await prisma.document.findFirst({
@@ -18,8 +20,18 @@ const Page = async ({ params }: { params: { documentId: string } }) => {
   });
 
   if (!document) notFound();
+
+  const allSections = await prisma.section.findMany({
+    where: {
+      documentId: document.id,
+    },
+    include: {
+      chapters: true,
+    },
+  });
+
   return (
-    <div>
+    <div className="space-y-[30px]">
       <section className="flex justify-between items-start">
         <div className="space-y-[15px]">
           <h1 className="font-bold text-[24px] leading-[120%]">
@@ -38,16 +50,20 @@ const Page = async ({ params }: { params: { documentId: string } }) => {
             </span>
           </p>
         </div>
-        <div className="flex items-center gap-x-[30px]">
-          <AddDocumentSectionTitleModal trigger={<Button>Add Title</Button>} />
-          <Button
-            variant="outline"
-            className="text-primary hover:text-primary/80"
-          >
-            Publish
-          </Button>
-        </div>
+        <DocumentHeaderAction documentId={params.documentId} />
       </section>
+
+      <div className="w-full flex justify-end">
+        <AddDocumentSectionTitleModal
+          trigger={<Button>Add Title</Button>}
+          documentId={params.documentId}
+        />
+      </div>
+
+      <SectionTitleContainer
+        sections={allSections ?? []}
+        documentId={params.documentId}
+      />
     </div>
   );
 };
