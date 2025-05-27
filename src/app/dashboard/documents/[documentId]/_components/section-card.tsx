@@ -52,7 +52,11 @@ const SectionCard = ({ section, index, documentId }: Props) => {
             className="overflow-hidden"
           >
             <CardContent className="pt-5">
-              <ChapterTitleContainer data={section.chapters} />
+              <ChapterTitleContainer
+                data={section.chapters}
+                sectionId={section.id}
+                documentId={documentId}
+              />
             </CardContent>
           </motion.div>
         )}

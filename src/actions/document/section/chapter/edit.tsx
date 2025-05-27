@@ -5,8 +5,10 @@ import { prisma } from "@/lib/db";
 import { chapterTitleSchema, ChapterTitleSchemaType } from "@/schemas/document";
 import { revalidatePath } from "next/cache";
 
-export async function createDocumentChapterTitle(
+// Edit Document Chapter Title Server Action
+export async function editDocumentChapterTitle(
   data: ChapterTitleSchemaType,
+  chapterId: string,
   documentId: string
 ) {
   const cu = await auth();
@@ -27,8 +29,11 @@ export async function createDocumentChapterTitle(
   }
 
   try {
-    // Create a new section in the database
-    const section = await prisma.chapter.create({
+    // Update the chapter in the database
+    const updatedChapter = await prisma.chapter.update({
+      where: {
+        id: chapterId,
+      },
       data: {
         title: parsedData.data.title,
         sectionId: parsedData.data.sectionId,
@@ -36,16 +41,17 @@ export async function createDocumentChapterTitle(
     });
 
     revalidatePath(`/dashboard/documents/${documentId}`);
+
     return {
       success: true,
-      message: "Section created successfully",
-      section,
+      message: "Chapter updated successfully",
+      chapter: updatedChapter,
     };
   } catch (error) {
-    console.error("Error creating section:", error);
+    console.error("Error updating chapter:", error);
     return {
       success: false,
-      message: "Failed to create section",
+      message: "Failed to update chapter",
     };
   }
 }

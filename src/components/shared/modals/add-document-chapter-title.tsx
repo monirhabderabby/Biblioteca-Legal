@@ -1,5 +1,6 @@
 "use client";
 import { createDocumentChapterTitle } from "@/actions/document/section/chapter/create";
+import { editDocumentChapterTitle } from "@/actions/document/section/chapter/edit";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -47,27 +48,46 @@ export default function AddDocumentChapterTitleModal({
     },
   });
 
-  function onSubmit(values: ChapterTitleSchemaType) {
-    startTransition(() => {
-      createDocumentChapterTitle(values, documentId).then((res) => {
-        if (!res.success) {
-          toast.error(res.message);
-          return;
-        }
+  console.log(form.watch());
 
-        // handle success
-        toast.success(res.message);
-        form.reset();
-        setOpen(false);
-      });
+  function onSubmit(values: ChapterTitleSchemaType) {
+    console.log(values);
+    startTransition(() => {
+      if (initialData) {
+        editDocumentChapterTitle(values, initialData.id, documentId).then(
+          (res) => {
+            if (!res.success) {
+              toast.error(res.message);
+              return;
+            }
+
+            // handle success
+            toast.success(res.message);
+            form.reset();
+            setOpen(false);
+          }
+        );
+      } else {
+        createDocumentChapterTitle(values, documentId).then((res) => {
+          if (!res.success) {
+            toast.error(res.message);
+            return;
+          }
+
+          // handle success
+          toast.success(res.message);
+          form.reset();
+          setOpen(false);
+        });
+      }
     });
   }
 
   useEffect(() => {
     if (open && initialData) {
-      form.reset({ title: initialData.title });
+      form.reset({ title: initialData.title, sectionId: sectionId });
     }
-  }, [open, initialData, form]);
+  }, [open, initialData, form, sectionId]);
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
@@ -107,8 +127,7 @@ export default function AddDocumentChapterTitleModal({
               <Button
                 variant="outline"
                 className="text-primary hover:text-primary/80"
-                onClick={(e) => {
-                  e.stopPropagation();
+                onClick={() => {
                   form.reset();
                   setOpen(false);
                 }}
