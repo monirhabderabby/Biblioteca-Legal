@@ -33,3 +33,9 @@ export type DocumentsApiResponse = {
     totalCount: number;
   };
 };
+
+export const sectionTitleSchema = z.object({
+  name: z.string().min(1),
+});
+
+export type SectionTitleSchemaType = z.infer<typeof sectionTitleSchema>;
