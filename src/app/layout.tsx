@@ -34,7 +34,7 @@ export default function RootLayout({
       <body className={cn(raleway.className, poppins.variable, "")}>
         <AppProvider>{children}</AppProvider>
         <Toaster richColors position="bottom-right" />
-        <NextTopLoader showSpinner={false} color="#FFFFFF" />
+        <NextTopLoader showSpinner={false} color="#1E2A38" />
       </body>
     </html>
   );

@@ -12,9 +12,19 @@ interface Props {
 const ManageDocumentCard = ({ document }: Props) => {
   return (
     <div className="w-full bg-white max-w-[422px] rounded-[8px] border-[1px] p-[20px] border-[#000000]/20">
-      <h2 className="text-primary font-bold text-[24px] leading-[120%]">
-        {document?.name}
-      </h2>
+      <div className="flex justify-between">
+        <h2 className="text-primary font-bold text-[24px] leading-[120%]">
+          {document?.name}
+        </h2>
+
+        {/* <Button
+          variant="outline"
+          className="text-primary hover:text-primary/80 shadow-none"
+          size="icon"
+        >
+          <EllipsisVertical />
+        </Button> */}
+      </div>
       <p className="mt-[15px] text-primary font-semibold text-[14px] leading-[120%] tracking-[0%]">
         {document?.short_description}
       </p>
