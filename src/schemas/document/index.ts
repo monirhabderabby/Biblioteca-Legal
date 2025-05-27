@@ -36,6 +36,9 @@ export type DocumentsApiResponse = {
 
 export const sectionTitleSchema = z.object({
   name: z.string().min(1),
+  documentId: z.string().min(1, {
+    message: "Document ID is required.",
+  }),
 });
 
 export type SectionTitleSchemaType = z.infer<typeof sectionTitleSchema>;

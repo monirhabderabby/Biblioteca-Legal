@@ -1,6 +1,5 @@
 "use client";
-import { createCategory } from "@/actions/category/create";
-import { editCategory } from "@/actions/category/edit";
+import { createDocumentSectionTitle } from "@/actions/document/section/create";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -28,10 +27,12 @@ import { toast } from "sonner";
 interface Props {
   trigger: ReactNode;
   initialData?: Category;
+  documentId: string;
 }
 export default function AddDocumentSectionTitleModal({
   trigger,
   initialData,
+  documentId,
 }: Props) {
   const [open, setOpen] = useState(false);
   const [pending, startTransition] = useTransition();
@@ -40,36 +41,23 @@ export default function AddDocumentSectionTitleModal({
     resolver: zodResolver(sectionTitleSchema),
     defaultValues: {
       name: initialData?.name ?? "",
+      documentId: documentId, // Ensure the documentId is set
     },
   });
 
   function onSubmit(values: SectionTitleSchemaType) {
     startTransition(() => {
-      if (initialData) {
-        editCategory(initialData.id, values).then((res) => {
-          if (!res.success) {
-            toast.error(res.message);
-            return;
-          }
+      createDocumentSectionTitle(values).then((res) => {
+        if (!res.success) {
+          toast.error(res.message);
+          return;
+        }
 
-          // handle success
-          toast.success(res.message);
-          form.reset();
-          setOpen(false);
-        });
-      } else {
-        createCategory(values).then((res) => {
-          if (!res.success) {
-            toast.error(res.message);
-            return;
-          }
-
-          // handle success
-          toast.success(res.message);
-          form.reset();
-          setOpen(false);
-        });
-      }
+        // handle success
+        toast.success(res.message);
+        form.reset();
+        setOpen(false);
+      });
     });
   }
 
