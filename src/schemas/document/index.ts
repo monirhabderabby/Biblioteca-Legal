@@ -42,3 +42,12 @@ export const sectionTitleSchema = z.object({
 });
 
 export type SectionTitleSchemaType = z.infer<typeof sectionTitleSchema>;
+
+export const chapterTitleSchema = z.object({
+  title: z.string().min(1),
+  sectionId: z.string().min(1, {
+    message: "Document ID is required.",
+  }),
+});
+
+export type ChapterTitleSchemaType = z.infer<typeof chapterTitleSchema>;

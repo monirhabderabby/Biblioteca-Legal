@@ -24,9 +24,11 @@ const Page = async ({ params }: { params: { documentId: string } }) => {
     where: {
       documentId: document.id,
     },
+    include: {
+      chapters: true,
+    },
   });
 
-  console.log(allSections);
   return (
     <div className="space-y-[60px]">
       <section className="flex justify-between items-start">
@@ -61,7 +63,10 @@ const Page = async ({ params }: { params: { documentId: string } }) => {
         </div>
       </section>
 
-      <SectionTitleContainer sections={allSections ?? []} />
+      <SectionTitleContainer
+        sections={allSections ?? []}
+        documentId={params.documentId}
+      />
     </div>
   );
 };
