@@ -24,10 +24,10 @@ enum Gender {
 }
 
 model User {
-  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  id            String            @id @default(auto()) @map("_id") @db.ObjectId
   first_name    String
   last_name     String
-  email         String    @unique
+  email         String            @unique
   emailVerified DateTime?
   image         String?
   phone         String?
@@ -36,11 +36,12 @@ model User {
   address       String?
   country       String?
   career        String?
-  role          Role      @default(user)
+  role          Role              @default(user)
   password      String
   accounts      Account[]
   sessions      Session[]
-  isActive      Boolean   @default(false)
+  articleMeta   UserArticleMeta[]
+  isActive      Boolean           @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -129,7 +130,7 @@ model Document {
 
   categories CategoryEmbedded[]
   sections   Section[]
-  published Boolean @default(false)
+  published  Boolean            @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -167,6 +168,27 @@ model Article {
   chapterId String  @db.ObjectId
   chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
 
+  userMeta UserArticleMeta[] // Optional reverse relation
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model UserArticleMeta {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  userId String @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  articleId String  @db.ObjectId
+  article   Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+
+  selectedColor String? // e.g., "yellow", "blue", etc.
+  isBookmarked  Boolean @default(false)
+  comment       String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, articleId]) // Prevent duplicate entries per user/article
 }
