@@ -50,7 +50,10 @@ const Page = async ({ params }: { params: { documentId: string } }) => {
             </span>
           </p>
         </div>
-        <DocumentHeaderAction documentId={params.documentId} />
+        <DocumentHeaderAction
+          documentId={params.documentId}
+          document={document}
+        />
       </section>
 
       <div className="w-full flex justify-end">

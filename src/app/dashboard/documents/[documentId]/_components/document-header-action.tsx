@@ -1,7 +1,9 @@
 "use client";
 import { deleteDocument } from "@/actions/document/delete";
+import { updateDocumentStatus } from "@/actions/document/update";
 import AlertModal from "@/components/ui/alert-modal";
 import { Button } from "@/components/ui/button";
+import { Document } from "@prisma/client";
 import { Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
@@ -9,9 +11,10 @@ import { toast } from "sonner";
 
 interface Props {
   documentId: string;
+  document: Document;
 }
 
-const DocumentHeaderAction = ({ documentId }: Props) => {
+const DocumentHeaderAction = ({ documentId, document }: Props) => {
   const [open, setOpen] = useState(false);
   const [pending, startTransition] = useTransition();
   const router = useRouter();
@@ -32,14 +35,31 @@ const DocumentHeaderAction = ({ documentId }: Props) => {
     });
   };
 
+  const statusChange = () => {
+    startTransition(() => {
+      updateDocumentStatus(documentId).then((res) => {
+        if (!res.success) {
+          toast.error(res.message);
+          return;
+        }
+
+        // handle success
+        toast.success(res.message);
+        router.refresh();
+      });
+    });
+  };
+
   return (
     <>
       <div className="flex items-center gap-x-[20px]">
         <Button
           variant="outline"
           className="text-primary hover:text-primary/80"
+          onClick={statusChange}
+          disabled={pending}
         >
-          Publish
+          {document.published ? "Unpublish" : "Publish"}
         </Button>
         <Button variant="destructive" size="icon" onClick={() => setOpen(true)}>
           <Trash />
