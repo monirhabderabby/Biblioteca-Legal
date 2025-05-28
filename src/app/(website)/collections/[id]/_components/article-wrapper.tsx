@@ -7,7 +7,7 @@ interface Props {
 
 const ArticleWrapper = ({ data }: Props) => {
   return (
-    <div>
+    <div className="space-y-5">
       {data.map((item, i) => (
         <ArticleCard data={item} index={i} key={item.id} />
       ))}
