@@ -42,6 +42,8 @@ const ArticleContainer = ({ documentId, isLoggedin }: Props) => {
 
   let content;
 
+  console.log(data?.data);
+
   if (isLoading) {
     content = (
       <div className="min-h-[400px] w-full flex justify-center items-center text-primary gap-x-3">
@@ -59,14 +61,20 @@ const ArticleContainer = ({ documentId, isLoggedin }: Props) => {
   } else {
     content = (
       <div className=" space-y-[100px] mb-[200px]">
-        {data.data.map((section, i) => (
-          <div key={section.id}>
-            <ArticleHeader
-              sectionTitle={section.title}
-              chapterTitle={section.chapters[i].title}
-            />
-
-            <ArticleWrapper data={section.chapters[i].articles} />
+        {data.data.map((section) => (
+          <div key={section.id} className="space-y-[80px]">
+            {section.chapters.map((chapter) => (
+              <div key={chapter.id}>
+                <ArticleHeader
+                  sectionTitle={section.title}
+                  chapterTitle={chapter.title}
+                />
+                <ArticleWrapper
+                  data={chapter.articles}
+                  isLoggedin={isLoggedin}
+                />
+              </div>
+            ))}
           </div>
         ))}
       </div>

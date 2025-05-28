@@ -21,6 +21,7 @@ import CommentPopover from "./tool/comment-provider";
 interface Props {
   data: Article;
   index: number;
+  isLoggedin: boolean;
 }
 
 interface ApiRes {
@@ -41,7 +42,7 @@ const getBackgroundClass = (colorName: string) => {
   return colors[colorName] || "bg-white";
 };
 
-const ArticleCard = ({ data, index }: Props) => {
+const ArticleCard = ({ data, index, isLoggedin }: Props) => {
   const [pending, startTransition] = useTransition();
   const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
   const [selectedColor, setSelectedColor] = useState<string>("");
@@ -171,7 +172,7 @@ const ArticleCard = ({ data, index }: Props) => {
             <Button
               className="bg-[#1E2A384D]/30 hover:bg-[#1E2A384D]/40 w-fit text-black"
               onClick={() => setIsColorPickerOpen(true)}
-              disabled={isLoading || pending}
+              disabled={isLoading || pending || !isLoggedin}
             >
               Article {index + 1}
             </Button>
