@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 import { Article, UserArticleMeta } from "@prisma/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
-import { MessageSquare } from "lucide-react";
+import { Bookmark, MessageSquare } from "lucide-react";
 import { useEffect, useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
 import ColorPicker from "./tool/color-picker";
@@ -46,7 +46,8 @@ const ArticleCard = ({ data, index }: Props) => {
   const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
   const [selectedColor, setSelectedColor] = useState<string>("");
   const [isCommentOpen, setIsCommentOpen] = useState(false);
-  const [comment, setComment] = useState("gfgfgf");
+  const [comment, setComment] = useState("");
+  const [bookmarked, setBookmarked] = useState(false);
 
   const cardRef = useRef<HTMLDivElement>(null);
   const commentInputRef = useRef<HTMLTextAreaElement>(null);
@@ -63,6 +64,7 @@ const ArticleCard = ({ data, index }: Props) => {
     if (articleMeta?.success && articleMeta?.data) {
       setSelectedColor(articleMeta.data.selectedColor!);
       setComment(articleMeta.data.comment ?? "");
+      setBookmarked(articleMeta.data.isBookmarked);
     }
   }, [articleMeta]);
 
@@ -76,6 +78,25 @@ const ArticleCard = ({ data, index }: Props) => {
       updateArticleMeta({
         articleId: data.id,
         selectedColor: color,
+      }).then((res) => {
+        if (!res.success) {
+          toast.error(res.message);
+
+          return;
+        }
+
+        // handle success
+        queryClient.invalidateQueries({ queryKey: ["meta", data.id] });
+        setIsColorPickerOpen(false);
+      });
+    });
+  };
+
+  const onBookmark = () => {
+    startTransition(() => {
+      updateArticleMeta({
+        articleId: data.id,
+        isBookmarked: !bookmarked,
       }).then((res) => {
         if (!res.success) {
           toast.error(res.message);
@@ -156,7 +177,18 @@ const ArticleCard = ({ data, index }: Props) => {
             </Button>
 
             {!isColorPickerOpen && !isCommentOpen && (
-              <div>
+              <div className="flex items-center gap-x-3">
+                {articleMeta?.data?.isBookmarked && (
+                  <Button
+                    size="icon"
+                    variant="outline"
+                    className="text-primary border-primary/50"
+                    onClick={onBookmark}
+                    disabled={pending || isLoading}
+                  >
+                    <Bookmark className="fill-[#1E2A38]   " />
+                  </Button>
+                )}
                 {articleMeta?.data?.comment && (
                   <Popover>
                     <PopoverTrigger asChild>
@@ -179,11 +211,13 @@ const ArticleCard = ({ data, index }: Props) => {
             <AnimatePresence>
               {isColorPickerOpen && (
                 <ColorPicker
+                  isBookmarked={bookmarked}
                   selectedColor={selectedColor}
                   onColorSelect={(color) => {
                     setSelectedColor(color); // update UI
                     onColorUpdate(color); // update server
                   }}
+                  onBookmark={onBookmark}
                   onOpenComment={() => setIsCommentOpen(true)}
                 />
               )}

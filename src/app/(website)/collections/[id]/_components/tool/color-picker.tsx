@@ -14,6 +14,8 @@ interface Props {
   selectedColor: string;
   onColorSelect: (color: string) => void;
   onOpenComment: () => void;
+  onBookmark: () => void;
+  isBookmarked: boolean;
 }
 
 const colorOptions: ColorOption[] = [
@@ -53,6 +55,8 @@ const ColorPicker = ({
   selectedColor,
   onColorSelect,
   onOpenComment,
+  onBookmark,
+  isBookmarked,
 }: Props) => (
   <motion.div
     className="absolute left-24 top-0 bg-white rounded-lg shadow-lg p-2 z-20 flex items-center gap-2 border"
@@ -94,8 +98,9 @@ const ColorPicker = ({
       animate={{ scale: 1 }}
       exit={{ scale: 0 }}
       transition={{ duration: 0.2 }}
+      onClick={onBookmark}
     >
-      <Bookmark size={16} />
+      <Bookmark size={16} className={cn(isBookmarked && "fill-[#1E2A38] ")} />
     </motion.button>
   </motion.div>
 );
