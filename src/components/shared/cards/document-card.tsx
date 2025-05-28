@@ -42,7 +42,7 @@ const DocumentCard = ({ document }: Props) => {
 
       {document && (
         <Button className="w-full mt-[30px] " asChild>
-          <Link className="w-full" href={`/dashboard/documents/${document.id}`}>
+          <Link className="w-full" href={`/collections/${document.id}`}>
             View Document
           </Link>
         </Button>
