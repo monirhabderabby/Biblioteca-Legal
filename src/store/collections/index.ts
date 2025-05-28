@@ -20,3 +20,13 @@ const useCollectionSearchStore = create<SearchState>((set) => ({
 }));
 
 export default useCollectionSearchStore;
+
+export interface ArticleSearchState {
+  query: string;
+  setQuery: (query: string) => void;
+}
+
+export const useArticleSearchStore = create<ArticleSearchState>((set) => ({
+  query: "",
+  setQuery: (query) => set({ query }),
+}));

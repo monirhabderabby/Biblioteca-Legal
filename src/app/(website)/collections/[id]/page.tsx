@@ -1,5 +1,7 @@
+import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
 import { notFound } from "next/navigation";
+import ArticleContainer from "./_components/article-container";
 import CollectionHeader from "./_components/collection-header";
 
 const Page = async ({ params }: { params: { id: string } }) => {
@@ -9,11 +11,15 @@ const Page = async ({ params }: { params: { id: string } }) => {
     },
   });
 
+  const cu = await auth();
+
   if (!document) notFound();
 
   return (
-    <div className="mt-10">
-      <CollectionHeader />
+    <div className="">
+      <CollectionHeader document={document} />
+
+      <ArticleContainer documentId={params.id} isLoggedin={!!cu} />
     </div>
   );
 };

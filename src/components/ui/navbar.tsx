@@ -56,9 +56,11 @@ const Navbar = ({ isLoggedin }: Props) => {
         scrolling && "bg-white",
         pathname === "/"
           ? "text-primary"
-          : scrolling
-            ? "text-primary"
-            : "text-white"
+          : pathname.startsWith("/collections/")
+            ? "text-black"
+            : scrolling
+              ? "text-primary"
+              : "text-white"
       )}
     >
       <div className="container mx-auto">
