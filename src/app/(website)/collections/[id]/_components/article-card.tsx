@@ -2,11 +2,17 @@ import { updateArticleMeta } from "@/actions/article-meta/update";
 import ContentViewer from "@/app/dashboard/documents/[documentId]/[sectionId]/[chapterId]/_components/contentViwer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import useOutsideClick from "@/hooks/useOutsideClick";
 import { cn } from "@/lib/utils";
 import { Article, UserArticleMeta } from "@prisma/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
+import { MessageSquare } from "lucide-react";
 import { useEffect, useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
 import ColorPicker from "./tool/color-picker";
@@ -40,7 +46,7 @@ const ArticleCard = ({ data, index }: Props) => {
   const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
   const [selectedColor, setSelectedColor] = useState<string>("");
   const [isCommentOpen, setIsCommentOpen] = useState(false);
-  const [comment, setComment] = useState("");
+  const [comment, setComment] = useState("gfgfgf");
 
   const cardRef = useRef<HTMLDivElement>(null);
   const commentInputRef = useRef<HTMLTextAreaElement>(null);
@@ -55,12 +61,15 @@ const ArticleCard = ({ data, index }: Props) => {
 
   useEffect(() => {
     if (articleMeta?.success && articleMeta?.data) {
-      console.log(articleMeta);
       setSelectedColor(articleMeta.data.selectedColor!);
+      setComment(articleMeta.data.comment ?? "");
     }
   }, [articleMeta]);
 
-  useOutsideClick(cardRef, () => setIsColorPickerOpen(false));
+  useOutsideClick(cardRef, () => {
+    setIsColorPickerOpen(false);
+    setIsCommentOpen(false);
+  });
 
   const onColorUpdate = (color: string) => {
     startTransition(() => {
@@ -76,6 +85,46 @@ const ArticleCard = ({ data, index }: Props) => {
 
         // handle success
         queryClient.invalidateQueries({ queryKey: ["meta", data.id] });
+        setIsColorPickerOpen(false);
+      });
+    });
+  };
+
+  const onCommentSubmit = () => {
+    startTransition(() => {
+      updateArticleMeta({
+        articleId: data.id,
+        comment: comment,
+      }).then((res) => {
+        if (!res.success) {
+          toast.error(res.message);
+
+          return;
+        }
+
+        // handle success
+        queryClient.invalidateQueries({ queryKey: ["meta", data.id] });
+        setIsCommentOpen(false);
+        setIsColorPickerOpen(false);
+      });
+    });
+  };
+
+  const onCommentDelete = () => {
+    startTransition(() => {
+      updateArticleMeta({
+        articleId: data.id,
+        comment: "",
+      }).then((res) => {
+        if (!res.success) {
+          toast.error(res.message);
+
+          return;
+        }
+
+        // handle success
+        queryClient.invalidateQueries({ queryKey: ["meta", data.id] });
+        setIsCommentOpen(false);
         setIsColorPickerOpen(false);
       });
     });
@@ -106,6 +155,27 @@ const ArticleCard = ({ data, index }: Props) => {
               Article {index + 1}
             </Button>
 
+            {!isColorPickerOpen && !isCommentOpen && (
+              <div>
+                {articleMeta?.data?.comment && (
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        size="icon"
+                        variant="outline"
+                        className="text-primary border-primary/50"
+                      >
+                        <MessageSquare className="fill-[#1E2A38]  hover:scale-100 " />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-fit">
+                      {articleMeta.data.comment}
+                    </PopoverContent>
+                  </Popover>
+                )}
+              </div>
+            )}
+
             <AnimatePresence>
               {isColorPickerOpen && (
                 <ColorPicker
@@ -122,10 +192,12 @@ const ArticleCard = ({ data, index }: Props) => {
             <AnimatePresence>
               {isCommentOpen && (
                 <CommentPopover
+                  loading={pending || isLoading}
                   comment={comment}
                   setComment={setComment}
-                  onClose={() => setIsCommentOpen(false)}
+                  onDelete={onCommentDelete}
                   inputRef={commentInputRef}
+                  onSubmit={onCommentSubmit}
                 />
               )}
             </AnimatePresence>

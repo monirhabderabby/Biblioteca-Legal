@@ -1,16 +1,28 @@
 // components/CommentPopover.tsx
 
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { motion } from "framer-motion";
+import { Trash } from "lucide-react";
 import { RefObject } from "react";
 
 interface Props {
   comment: string;
   setComment: (val: string) => void;
-  onClose: () => void;
+  onDelete: () => void;
+  onSubmit: () => void;
   inputRef: RefObject<HTMLTextAreaElement>;
+  loading: boolean;
 }
 
-const CommentPopover = ({ comment, setComment, onClose, inputRef }: Props) => (
+const CommentPopover = ({
+  comment,
+  setComment,
+  onDelete,
+  inputRef,
+  onSubmit,
+  loading,
+}: Props) => (
   <motion.div
     className="absolute right-0 top-full mt-2 bg-white rounded-lg shadow-lg p-3 z-20 w-64 border"
     initial={{ opacity: 0, y: -10 }}
@@ -19,18 +31,28 @@ const CommentPopover = ({ comment, setComment, onClose, inputRef }: Props) => (
     transition={{ duration: 0.2 }}
   >
     <div className="flex flex-col gap-2">
-      <textarea
+      <Textarea
         ref={inputRef}
         className="w-full p-2 border rounded-md text-sm resize-none"
         rows={3}
         placeholder="Add your comment..."
         value={comment}
+        disabled={loading}
         onChange={(e) => setComment(e.target.value)}
       />
-      <div className="flex justify-end">
+      <div className="flex justify-end gap-x-3">
+        <Button
+          size="icon"
+          variant="destructive"
+          onClick={onDelete}
+          disabled={loading}
+        >
+          <Trash />
+        </Button>
         <button
           className="bg-gray-800 text-white px-3 py-1 rounded-md text-sm hover:bg-gray-700"
-          onClick={onClose}
+          onClick={onSubmit}
+          disabled={loading}
         >
           Save
         </button>
