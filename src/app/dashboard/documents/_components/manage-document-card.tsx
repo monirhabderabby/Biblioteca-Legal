@@ -16,14 +16,6 @@ const ManageDocumentCard = ({ document }: Props) => {
         <h2 className="text-primary font-bold text-[24px] leading-[120%]">
           {document?.name}
         </h2>
-
-        {/* <Button
-          variant="outline"
-          className="text-primary hover:text-primary/80 shadow-none"
-          size="icon"
-        >
-          <EllipsisVertical />
-        </Button> */}
       </div>
       <p className="mt-[15px] text-primary font-semibold text-[14px] leading-[120%] tracking-[0%]">
         {document?.short_description}

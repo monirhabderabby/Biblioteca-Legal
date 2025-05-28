@@ -4,6 +4,8 @@ import { create } from "zustand";
 export interface SearchState {
   query: string;
   category: string;
+  page: number;
+  setPage: (page: number) => void;
   setQuery: (query: string) => void;
   setCategory: (category: string) => void;
 }
@@ -11,7 +13,8 @@ export interface SearchState {
 const useCollectionSearchStore = create<SearchState>((set) => ({
   query: "",
   category: "all",
-
+  page: 1,
+  setPage: (page) => set({ page }),
   setQuery: (query) => set({ query }),
   setCategory: (category) => set({ category }),
 }));
