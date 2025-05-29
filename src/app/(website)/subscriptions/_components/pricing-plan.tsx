@@ -4,14 +4,12 @@ import { Check, X } from "lucide-react";
 
 export default function PricingComparison() {
   const features = [
-    { name: "Up to 5 team members", starter: true, business: true },
-    { name: "10GB cloud storage", starter: true, business: true },
-    { name: "Basic analytics dashboard", starter: true, business: true },
-    { name: "Email support", starter: true, business: true },
-    { name: "Advanced reporting", starter: false, business: true },
-    { name: "Priority support", starter: false, business: true },
-    { name: "Custom integrations", starter: false, business: true },
-    { name: "Unlimited team members", starter: false, business: true },
+    { name: "Unlimited Access to Documents", starter: true, business: true },
+    { name: "Update and News", starter: true, business: true },
+    { name: "Multi Device Access", starter: true, business: false },
+    { name: "Smart Reading Tools", starter: true, business: true },
+    { name: "Multi User Access", starter: false, business: true },
+    { name: "Tiered Pricing Packages", starter: false, business: true },
   ];
 
   return (
@@ -24,7 +22,7 @@ export default function PricingComparison() {
               User base
             </CardTitle>
             <div className="flex items-baseline justify-start">
-              <span className="text-4xl font-bold text-primary">$29</span>
+              <span className="text-4xl font-bold text-primary">$150</span>
               <span className="text-gray-500 ml-1">/month</span>
             </div>
           </CardHeader>
@@ -63,12 +61,8 @@ export default function PricingComparison() {
             <CardTitle className="text-xl font-semibold text-white mb-2">
               Company base
             </CardTitle>
-            <div className="flex items-baseline justify-start">
-              <span className="text-4xl font-bold text-white">$99</span>
-              <span className="text-slate-300 ml-1">/month</span>
-            </div>
           </CardHeader>
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-6 ">
             <Button className="w-full bg-white hover:bg-white/80 text-slate-900">
               Contact us
             </Button>

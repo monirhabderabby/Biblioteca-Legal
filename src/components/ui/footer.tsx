@@ -114,7 +114,7 @@ export default function Footer() {
         {/* Copyright */}
         <div className="border-t border-slate-700 mt-8 pt-8">
           <p className="text-center text-slate-400 text-sm">
-            © 2025 E-LEGIS All rights reserved.
+            © 2025 BIBLIOTECA LEGAL All rights reserved.
           </p>
         </div>
       </div>
