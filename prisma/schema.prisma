@@ -200,51 +200,39 @@ model UserArticleMeta {
   @@unique([userId, articleId]) // Prevent duplicate entries per user/article
 }
 
-model SubscriptionPlan {
-  id       String   @id @default(auto()) @map("_id") @db.ObjectId
-  name     String   @unique
-  price    Int
-  interval String   @default("monthly")
-  features String[]
-
-  userSubscriptions    UserSubscription[]
-  companySubscriptions CompanySubscription[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
 model Company {
   id        String @id @default(auto()) @map("_id") @db.ObjectId
   name      String
   location  String
   employees User[]
 
-  subscription CompanySubscription?
+  subscriptions CompanySubscription[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model CompanySubscription {
-  id                 String           @id @default(auto()) @map("_id") @db.ObjectId
-  companyId          String           @unique @db.ObjectId
-  planId             String           @db.ObjectId
+  id                 String   @id @default(auto()) @map("_id") @db.ObjectId
+  companyId          String   @db.ObjectId
+  company            Company  @relation(fields: [companyId], references: [id])
+  sub_id             String
+  txn_id             String
+  isActive           Boolean  @default(true)
   currentPeriodStart DateTime
   currentPeriodEnd   DateTime
-  company            Company          @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  plan               SubscriptionPlan @relation(fields: [planId], references: [id])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
 
 model UserSubscription {
-  id                 String           @id @default(auto()) @map("_id") @db.ObjectId
-  userId             String           @unique @db.ObjectId
-  planId             String           @db.ObjectId
+  id                 String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId             String   @unique @db.ObjectId
+  txn_id             String   @unique
+  sub_id             String
+  isActive           Boolean  @default(false)
   currentPeriodStart DateTime
   currentPeriodEnd   DateTime
-  user               User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  plan               SubscriptionPlan @relation(fields: [planId], references: [id])
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

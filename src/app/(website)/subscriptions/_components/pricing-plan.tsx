@@ -37,9 +37,20 @@ export default function PricingComparison() {
 
         // handle success
         toast.success(res.message);
-        if (res.txn_id) {
+        if (res.customerId) {
           paddle.Checkout.open({
-            transactionId: res.txn_id,
+            items: [
+              {
+                priceId: "pri_01jwbf7deypnwz4jya27m0nzjq",
+                quantity: 1,
+              },
+            ],
+            customer: {
+              id: res.customerId,
+            },
+            customData: {
+              userId: res.userId,
+            },
           });
         }
       });

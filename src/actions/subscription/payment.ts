@@ -2,7 +2,6 @@
 
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
-import { paddle } from "@/lib/paddle";
 import { paddleCustomerCreate } from ".";
 
 export async function makeSubscribe() {
@@ -54,27 +53,28 @@ export async function makeSubscribe() {
     }
   }
 
-  const txn = await paddle.transactions.create({
-    items: [
-      {
-        quantity: 1,
-        price: {
-          name: "User base",
-          unitPrice: {
-            currencyCode: "USD",
-            amount: "150000",
-          },
-          description: "dynamically generated description",
-          productId: "pro_01jwbf686w3y85w5twkxkbv9a9",
-        },
-      },
-    ],
-    customerId: paddleCustomerId,
-  });
+  // const txn = await paddle.transactions.create({
+  //   items: [
+  //     {
+  //       quantity: 1,
+  //       price: {
+  //         name: "User base",
+  //         unitPrice: {
+  //           currencyCode: "USD",
+  //           amount: "3000",
+  //         },
+  //         description: "dynamically generated description",
+  //         productId: "pro_01jwbf686w3y85w5twkxkbv9a9",
+  //       },
+  //     },
+  //   ],
+  //   customerId: paddleCustomerId,
+  // });
 
   return {
     success: true,
     message: "Paddle Trasaction is ready",
-    txn_id: txn.id,
+    customerId: paddleCustomerId,
+    userId: user.id,
   };
 }
