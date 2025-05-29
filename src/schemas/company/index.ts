@@ -7,3 +7,10 @@ export const companySchema = z.object({
 });
 
 export type CompanySchemaType = z.infer<typeof companySchema>;
+
+export const employeeAdd = z.object({
+  email: z.string().email().min(1),
+  companyId: z.string().min(1),
+});
+
+export type EmployeeAddSchemaType = z.infer<typeof employeeAdd>;
