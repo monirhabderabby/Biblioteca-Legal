@@ -3,7 +3,6 @@
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
 import { companySchema, CompanySchemaType } from "@/schemas/company";
-import { revalidatePath } from "next/cache";
 
 export async function createCompanies(data: CompanySchemaType) {
   const cu = await auth();
@@ -65,8 +64,6 @@ export async function createCompanies(data: CompanySchemaType) {
     const notFoundEmails = employees.filter(
       (email) => !foundEmails.includes(email)
     );
-
-    revalidatePath("/dashboard/companies");
 
     return {
       success: true,

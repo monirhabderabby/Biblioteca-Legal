@@ -19,6 +19,7 @@ import { TagsInput } from "@/components/ui/tags-input";
 import { companySchema, CompanySchemaType } from "@/schemas/company";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Company } from "@prisma/client";
+import { useQueryClient } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { ReactNode, useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
@@ -31,6 +32,7 @@ interface Props {
 export default function AddCompanyModal({ trigger, initialData }: Props) {
   const [open, setOpen] = useState(false);
   const [pending, startTransition] = useTransition();
+  const queryClient = useQueryClient();
 
   const form = useForm<CompanySchemaType>({
     resolver: zodResolver(companySchema),
@@ -58,6 +60,8 @@ export default function AddCompanyModal({ trigger, initialData }: Props) {
         toast.success(res.message, {
           description: res.description,
         });
+
+        queryClient.invalidateQueries({ queryKey: ["companies"] });
 
         setOpen(false);
       });

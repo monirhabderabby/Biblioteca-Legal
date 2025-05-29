@@ -1,5 +1,6 @@
 import AddCompanyModal from "@/components/shared/modals/add-company-modal";
 import { Button } from "@/components/ui/button";
+import CompanyCardsContainer from "./_components/company-cards-container";
 
 const Page = () => {
   return (
@@ -13,6 +14,8 @@ const Page = () => {
           trigger={<Button className="h-[45px]">Add Company</Button>}
         />
       </div>
+
+      <CompanyCardsContainer />
     </div>
   );
 };
