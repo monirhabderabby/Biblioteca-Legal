@@ -1,11 +1,13 @@
+import AddEmployeeModal from "@/components/shared/modals/add-company-employee-modal";
 import { Button } from "@/components/ui/button";
 import { User } from "@prisma/client";
 import EmployeeCard from "./employee-card";
 
 interface Props {
   users: User[] | [];
+  companyId: string;
 }
-const EmployeeContainer = ({ users }: Props) => {
+const EmployeeContainer = ({ users, companyId }: Props) => {
   return (
     <div>
       <div className="flex items-center justify-between">
@@ -13,7 +15,10 @@ const EmployeeContainer = ({ users }: Props) => {
           Employee Lists ({users.length})
         </h1>
 
-        <Button>Add Employee</Button>
+        <AddEmployeeModal
+          trigger={<Button>Add Employee</Button>}
+          companyId={companyId}
+        />
       </div>
 
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5 mt-10">
@@ -25,9 +30,11 @@ const EmployeeContainer = ({ users }: Props) => {
               "https://files.edgestore.dev/ln9m9j3kr2yibrue/public/_public/08ce8d0c-d7ec-40bc-9beb-6972163e3e9b.jpg"
             }
             firstName={item.first_name}
+            email={item.email}
             lastName={item.last_name}
             emailVerified={!!item.emailVerified}
-            onRemove={() => {}}
+            userId={item.id}
+            companyId={companyId}
           />
         ))}
       </div>
