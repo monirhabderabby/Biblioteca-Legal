@@ -4,11 +4,14 @@ import { deleteCompany } from "@/actions/companies/delete";
 import AlertModal from "@/components/ui/alert-modal";
 import { Button } from "@/components/ui/button";
 import { Trash } from "lucide-react";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import { CompanyWithEmployees } from "../page";
-import EmployeeContainer from "./employee-container";
+const EmployeeContainer = dynamic(() => import("./employee-container"), {
+  ssr: false,
+});
 
 interface Props {
   data: CompanyWithEmployees;
