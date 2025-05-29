@@ -1,8 +1,12 @@
 import CTA from "@/components/shared/sections/cta";
 import HeaderSection from "@/components/shared/sections/header";
+import { getCurrentUserSubscription } from "@/helper/subscription";
 import PricingComparison from "./_components/pricing-plan";
 
-const Page = () => {
+const Page = async () => {
+  const currentSubscription = await getCurrentUserSubscription();
+
+  console.log("currentSubscription", currentSubscription);
   return (
     <div>
       <HeaderSection

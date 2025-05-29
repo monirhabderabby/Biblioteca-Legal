@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import Link from "next/link";
 
 export interface Company {
   id: string;
@@ -33,7 +34,11 @@ const CompanyCard = ({ data }: Props) => {
       </CardContent>
 
       <CardFooter>
-        <Button className="w-full">Manage Company</Button>
+        <Button className="w-full" asChild>
+          <Link href={`/dashboard/companies/${data.id}`} className="w-full">
+            Manage Company
+          </Link>
+        </Button>
       </CardFooter>
     </Card>
   );
