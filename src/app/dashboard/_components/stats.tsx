@@ -5,6 +5,7 @@ import { prisma } from "@/lib/db";
 
 const Stats = async () => {
   const totalUsers = await prisma.user.count();
+  const totalDocuments = await prisma.document.count();
   return (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
       <Card>
@@ -41,7 +42,9 @@ const Stats = async () => {
             <p className="text-sm font-medium text-muted-foreground">
               Total Documents
             </p>
-            <h3 className="mt-2 text-3xl font-bold text-primary">{0} </h3>
+            <h3 className="mt-2 text-3xl font-bold text-primary">
+              {totalDocuments}{" "}
+            </h3>
           </div>
           <div className="rounded-full bg-blue-50 p-3">
             <FileText className="h-6 w-6 text-primary" />

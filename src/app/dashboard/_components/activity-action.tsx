@@ -55,10 +55,10 @@ const ActivityAction = async () => {
           </div>
           <div className="mt-4 space-y-3">
             <Button className="w-full bg-primary h-[40px] md:h-[45px]" asChild>
-              <Link href="/dashboard/job-board/new">Add new Document</Link>
+              <Link href="/dashboard/documents/new">Add new Document</Link>
             </Button>
             <Button className="w-full bg-primary h-[40px] md:h-[45px]" asChild>
-              <Link href="/dashboard/job-board/new">Manage Users</Link>
+              <Link href="/dashboard/users">Manage Users</Link>
             </Button>
           </div>
         </CardContent>
