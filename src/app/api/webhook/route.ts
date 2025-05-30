@@ -44,9 +44,19 @@ export async function POST(req: NextRequest) {
         case EventName.SubscriptionCreated:
           // WHY? > When a customer starts a subscription
           // When ? > To create the user’s subscription record in your system (e.g., store plan, status, billing dates).
-          await prisma.userSubscription.create({
-            data: {
+          await prisma.userSubscription.upsert({
+            where: {
               userId: userId,
+            },
+            create: {
+              userId: userId,
+              currentPeriodStart: startsAt,
+              currentPeriodEnd: endsAt,
+              txn_id: txnId,
+              sub_id: subscriptionId,
+              isActive: true,
+            },
+            update: {
               currentPeriodStart: startsAt,
               currentPeriodEnd: endsAt,
               txn_id: txnId,
@@ -96,6 +106,7 @@ export async function POST(req: NextRequest) {
           });
           break;
         case EventName.SubscriptionUpdated:
+          console.log("subscription updated called");
           await prisma.userSubscription.update({
             where: {
               userId,

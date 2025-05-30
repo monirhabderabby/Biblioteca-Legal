@@ -3,11 +3,16 @@ import { makeSubscribe } from "@/actions/subscription/payment";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Paddle, initializePaddle } from "@paddle/paddle-js";
+import { CompanySubscription, UserSubscription } from "@prisma/client";
 import { Check, Loader2, X } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";
 import { toast } from "sonner";
 
-export default function PricingComparison() {
+interface Props {
+  subscription?: UserSubscription | CompanySubscription;
+}
+
+export default function PricingComparison({ subscription }: Props) {
   const [pending, startTransition] = useTransition();
   const [paddle, setPaddle] = useState<Paddle>();
   const features = [
@@ -19,6 +24,17 @@ export default function PricingComparison() {
     { name: "Tiered Pricing Packages", starter: false, business: true },
   ];
 
+  const now = new Date();
+
+  const isSubscribed =
+    subscription?.isActive && new Date(subscription.currentPeriodEnd) > now;
+
+  const userButtonLabel = !subscription
+    ? "Get Started"
+    : isSubscribed
+      ? "Subscribed"
+      : "Renew";
+
   useEffect(() => {
     initializePaddle({
       environment: "sandbox",
@@ -27,7 +43,16 @@ export default function PricingComparison() {
   }, []);
 
   const onUserSubscription = () => {
-    if (!paddle) return toast.warning("paddle is not initialized");
+    if (isSubscribed) {
+      toast.info("You are already subscribed.");
+      return;
+    }
+
+    if (!paddle) {
+      toast.warning("Paddle is not initialized");
+      return;
+    }
+
     startTransition(() => {
       makeSubscribe().then((res) => {
         if (!res.success) {
@@ -35,8 +60,8 @@ export default function PricingComparison() {
           return;
         }
 
-        // handle success
         toast.success(res.message);
+
         if (res.customerId) {
           paddle.Checkout.open({
             items: [
@@ -74,12 +99,13 @@ export default function PricingComparison() {
           <CardContent className="space-y-6">
             <Button
               className="w-full bg-gray-900 hover:bg-gray-800 text-white relative"
-              disabled={pending}
+              disabled={pending || isSubscribed}
               onClick={onUserSubscription}
             >
-              Get Started Now{" "}
+              {userButtonLabel}
               {pending && <Loader2 className="animate-spin absolute right-3" />}
             </Button>
+
             <div className="space-y-3">
               {features.map((feature, index) => (
                 <div key={index} className="flex items-center gap-3">

@@ -6,7 +6,6 @@ import PricingComparison from "./_components/pricing-plan";
 const Page = async () => {
   const currentSubscription = await getCurrentUserSubscription();
 
-  console.log("currentSubscription", currentSubscription);
   return (
     <div>
       <HeaderSection
@@ -15,7 +14,7 @@ const Page = async () => {
         description="Join our platform to access comprehensive legal resources"
       />
 
-      <PricingComparison />
+      <PricingComparison subscription={currentSubscription?.subscription} />
 
       <CTA />
     </div>
