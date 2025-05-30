@@ -216,10 +216,9 @@ model CompanySubscription {
   id                 String   @id @default(auto()) @map("_id") @db.ObjectId
   companyId          String   @db.ObjectId
   company            Company  @relation(fields: [companyId], references: [id])
-  sub_id             String
   txn_id             String
   isActive           Boolean  @default(true)
-  currentPeriodStart DateTime
+  currentPeriodStart DateTime @default(now())
   currentPeriodEnd   DateTime
 }
 

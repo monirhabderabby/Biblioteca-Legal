@@ -19,10 +19,16 @@ const Page = async ({ params }: { params: { id: string } }) => {
     },
   });
 
+  const companySubscription = await prisma.companySubscription.findFirst({
+    where: {
+      companyId: params.id,
+    },
+  });
+
   if (!company) notFound();
   return (
     <div>
-      <CompanyHeader data={company} />
+      <CompanyHeader data={company} subscription={companySubscription} />
     </div>
   );
 };
