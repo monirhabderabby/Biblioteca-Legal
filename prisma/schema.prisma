@@ -214,7 +214,7 @@ model Company {
 
 model CompanySubscription {
   id                 String   @id @default(auto()) @map("_id") @db.ObjectId
-  companyId          String   @db.ObjectId
+  companyId          String   @unique @db.ObjectId
   company            Company  @relation(fields: [companyId], references: [id])
   txn_id             String
   isActive           Boolean  @default(true)
