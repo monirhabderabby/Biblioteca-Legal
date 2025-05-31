@@ -14,3 +14,14 @@ export const employeeAdd = z.object({
 });
 
 export type EmployeeAddSchemaType = z.infer<typeof employeeAdd>;
+
+export const companySubscriptionSchema = z.object({
+  txn_id: z.string().min(1),
+  companyId: z.string().min(1),
+  currentPeriodStart: z.date(),
+  currentPeriodEnd: z.date(),
+});
+
+export type CompanySubscriptionSchemaType = z.infer<
+  typeof companySubscriptionSchema
+>;

@@ -1,25 +1,47 @@
 "use client";
 
 import { deleteCompany } from "@/actions/companies/delete";
+import {
+  pauseCompanySubscription,
+  resumeCompanySubscription,
+} from "@/actions/subscription/company";
 import AlertModal from "@/components/ui/alert-modal";
 import { Button } from "@/components/ui/button";
+import { CompanySubscription } from "@prisma/client";
 import { Trash } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import { CompanyWithEmployees } from "../page";
+const AddCompanySubscribeModal = dynamic(
+  () => import("@/components/shared/modals/add-company-subscribe-modal"),
+  {
+    ssr: false,
+  }
+);
 const EmployeeContainer = dynamic(() => import("./employee-container"), {
   ssr: false,
 });
 
 interface Props {
   data: CompanyWithEmployees;
+  subscription: CompanySubscription | null;
 }
-const CompanyHeader = ({ data }: Props) => {
+const CompanyHeader = ({ data, subscription }: Props) => {
   const [open, setOpen] = useState(false);
   const [pending, startTranistion] = useTransition();
   const router = useRouter();
+
+  const now = new Date();
+
+  const shouldPauseSubscription =
+    subscription?.isActive && new Date(subscription.currentPeriodEnd) > now;
+
+  const shouldResumeSubscription =
+    subscription &&
+    !subscription.isActive &&
+    new Date(subscription.currentPeriodEnd) > now;
 
   const onRemoveCompany = () => {
     startTranistion(() => {
@@ -36,6 +58,34 @@ const CompanyHeader = ({ data }: Props) => {
       });
     });
   };
+
+  const onPause = () => {
+    startTranistion(() => {
+      pauseCompanySubscription(data.id).then((res) => {
+        if (!res.success) {
+          toast.error(res.message);
+          return;
+        }
+
+        // handle success
+        toast.success(res.message);
+      });
+    });
+  };
+
+  const onResume = () => {
+    startTranistion(() => {
+      resumeCompanySubscription(data.id).then((res) => {
+        if (!res.success) {
+          toast.error(res.message);
+          return;
+        }
+
+        toast.success(res.message);
+      });
+    });
+  };
+
   return (
     <>
       <div>
@@ -49,7 +99,43 @@ const CompanyHeader = ({ data }: Props) => {
             >
               <Trash />
             </Button>
-            <Button>Subscribe</Button>
+
+            {shouldPauseSubscription ? (
+              <Button
+                onClick={onPause}
+                disabled={pending}
+                className="bg-rose-500 hover:bg-rose-500/80"
+              >
+                Pause
+              </Button>
+            ) : shouldResumeSubscription ? (
+              <Button
+                onClick={onResume}
+                disabled={pending}
+                className="bg-green-500 hover:bg-green-500/80"
+              >
+                Resume
+              </Button>
+            ) : (
+              <AddCompanySubscribeModal
+                trigger={
+                  <Button>
+                    {(() => {
+                      if (!subscription) return "Subscribe";
+
+                      if (subscription.isActive) {
+                        const endsAt = new Date(subscription.currentPeriodEnd);
+                        return endsAt < now ? "Renew" : "Pause";
+                      }
+
+                      return "Subscribe";
+                    })()}
+                  </Button>
+                }
+                initialData={subscription!}
+                companyId={data.id}
+              />
+            )}
           </div>
         </div>
         <div className="mt-[20px] space-y-[10px] mb-10">

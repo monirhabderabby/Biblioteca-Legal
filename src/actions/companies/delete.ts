@@ -95,6 +95,21 @@ export async function deleteCompany(companyId: string) {
       data: { companyId: null },
     });
 
+    // Find the company subscription by companyId
+    const subscription = await prisma.companySubscription.findUnique({
+      where: {
+        companyId: company.id,
+      },
+    });
+
+    if (subscription) {
+      await prisma.companySubscription.delete({
+        where: {
+          id: subscription.id,
+        },
+      });
+    }
+
     // 2. Delete the company
     await prisma.company.delete({
       where: { id: companyId },
