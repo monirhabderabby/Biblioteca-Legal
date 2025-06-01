@@ -11,7 +11,12 @@ import dynamic from "next/dynamic";
 import { notFound } from "next/navigation";
 import DocumentHeaderAction from "./_components/document-header-action";
 import SectionSearch from "./_components/section-search";
-import SectionTitleContainer from "./_components/section-title-container";
+const SectionTitleContainer = dynamic(
+  () => import("./_components/section-title-container"),
+  {
+    ssr: false,
+  }
+);
 
 const Page = async ({ params }: { params: { documentId: string } }) => {
   const document = await prisma.document.findFirst({
