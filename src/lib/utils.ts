@@ -32,7 +32,3 @@ export function generatePassword(
 
   return prefix + password;
 }
-
-// Example usage:
-console.log(generatePassword());
-// Output: Bib followed by 12 random characters

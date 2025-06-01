@@ -10,6 +10,7 @@ import moment from "moment";
 import dynamic from "next/dynamic";
 import { notFound } from "next/navigation";
 import DocumentHeaderAction from "./_components/document-header-action";
+import SectionSearch from "./_components/section-search";
 import SectionTitleContainer from "./_components/section-title-container";
 
 const Page = async ({ params }: { params: { documentId: string } }) => {
@@ -56,7 +57,8 @@ const Page = async ({ params }: { params: { documentId: string } }) => {
         />
       </section>
 
-      <div className="w-full flex justify-end">
+      <div className="w-full flex justify-end gap-x-5">
+        <SectionSearch />
         <AddDocumentSectionTitleModal
           trigger={<Button>Add Title</Button>}
           documentId={params.documentId}
