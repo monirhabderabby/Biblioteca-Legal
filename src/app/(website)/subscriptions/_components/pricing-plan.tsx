@@ -1,20 +1,19 @@
 "use client";
-import { makeSubscribe } from "@/actions/subscription/payment";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Paddle, initializePaddle } from "@paddle/paddle-js";
 import { CompanySubscription, UserSubscription } from "@prisma/client";
-import { Check, Loader2, X } from "lucide-react";
-import { useEffect, useState, useTransition } from "react";
-import { toast } from "sonner";
+import { Check, X } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface Props {
   subscription?: UserSubscription | CompanySubscription;
 }
 
 export default function PricingComparison({ subscription }: Props) {
-  const [pending, startTransition] = useTransition();
-  const [paddle, setPaddle] = useState<Paddle>();
+  // const [pending, startTransition] = useTransition();
+  // const [paddle, setPaddle] = useState<Paddle>();
+
+  const router = useRouter();
   const features = [
     { name: "Unlimited Access to Documents", starter: true, business: true },
     { name: "Update and News", starter: true, business: true },
@@ -35,52 +34,52 @@ export default function PricingComparison({ subscription }: Props) {
       ? "Subscribed"
       : "Renew";
 
-  useEffect(() => {
-    initializePaddle({
-      environment: "sandbox",
-      token: process.env.NEXT_PUBLIC_PADDLE_TOKEN!,
-    }).then((paddle) => setPaddle(paddle));
-  }, []);
+  // useEffect(() => {
+  //   initializePaddle({
+  //     environment: "sandbox",
+  //     token: process.env.NEXT_PUBLIC_PADDLE_TOKEN!,
+  //   }).then((paddle) => setPaddle(paddle));
+  // }, []);
 
-  const onUserSubscription = () => {
-    if (isSubscribed) {
-      toast.info("You are already subscribed.");
-      return;
-    }
+  // const onUserSubscription = () => {
+  //   if (isSubscribed) {
+  //     toast.info("You are already subscribed.");
+  //     return;
+  //   }
 
-    if (!paddle) {
-      toast.warning("Paddle is not initialized");
-      return;
-    }
+  //   if (!paddle) {
+  //     toast.warning("Paddle is not initialized");
+  //     return;
+  //   }
 
-    startTransition(() => {
-      makeSubscribe().then((res) => {
-        if (!res.success) {
-          toast.error(res.message);
-          return;
-        }
+  //   startTransition(() => {
+  //     makeSubscribe().then((res) => {
+  //       if (!res.success) {
+  //         toast.error(res.message);
+  //         return;
+  //       }
 
-        toast.success(res.message);
+  //       toast.success(res.message);
 
-        if (res.customerId) {
-          paddle.Checkout.open({
-            items: [
-              {
-                priceId: "pri_01jwbf7deypnwz4jya27m0nzjq",
-                quantity: 1,
-              },
-            ],
-            customer: {
-              id: res.customerId,
-            },
-            customData: {
-              userId: res.userId,
-            },
-          });
-        }
-      });
-    });
-  };
+  //       if (res.customerId) {
+  //         paddle.Checkout.open({
+  //           items: [
+  //             {
+  //               priceId: "pri_01jwbf7deypnwz4jya27m0nzjq",
+  //               quantity: 1,
+  //             },
+  //           ],
+  //           customer: {
+  //             id: res.customerId,
+  //           },
+  //           customData: {
+  //             userId: res.userId,
+  //           },
+  //         });
+  //       }
+  //     });
+  //   });
+  // };
 
   return (
     <div className="container mx-auto py-[100px]">
@@ -99,11 +98,11 @@ export default function PricingComparison({ subscription }: Props) {
           <CardContent className="space-y-6">
             <Button
               className="w-full bg-gray-900 hover:bg-gray-800 text-white relative"
-              disabled={pending || isSubscribed}
-              onClick={onUserSubscription}
+              disabled={isSubscribed}
+              onClick={() => router.push("/sign-up")}
             >
               {userButtonLabel}
-              {pending && <Loader2 className="animate-spin absolute right-3" />}
+              {/* {pending && <Loader2 className="animate-spin absolute right-3" />} */}
             </Button>
 
             <div className="space-y-3">

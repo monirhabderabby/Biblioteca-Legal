@@ -3,6 +3,7 @@
 
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
+import { paddle } from "@/lib/paddle";
 
 export async function getCurrentUserSubscription() {
   const cu = await auth();
@@ -48,3 +49,20 @@ export async function getCurrentUserSubscription() {
 
   return null; // No valid subscription found
 }
+
+interface PaddleCustomerCreateProps {
+  email: string;
+  customerName: string;
+}
+
+export const paddleCustomerCreate = async ({
+  email,
+  customerName,
+}: PaddleCustomerCreateProps) => {
+  const customer = await paddle.customers.create({
+    email,
+    name: customerName,
+  });
+
+  return customer.id;
+};

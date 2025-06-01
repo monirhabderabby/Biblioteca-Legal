@@ -1,3 +1,4 @@
+import { registeruser } from "@/actions/auth/registration";
 import { prisma } from "@/lib/db";
 import { paddle } from "@/lib/paddle";
 import { EventName } from "@paddle/paddle-node-sdk";
@@ -36,14 +37,20 @@ export async function POST(req: NextRequest) {
       const data: any = eventData.data;
       const startsAt = data.currentBillingPeriod.startsAt;
       const endsAt = data.currentBillingPeriod.endsAt;
-      const userId = data.customData.userId;
+
       const txnId = data.transactionId;
       const subscriptionId = data.id;
+      const formValues = data.customData.user;
 
       switch (eventData.eventType) {
         case EventName.SubscriptionCreated:
           // WHY? > When a customer starts a subscription
           // When ? > To create the user’s subscription record in your system (e.g., store plan, status, billing dates).
+
+          const user = await registeruser(formValues);
+          const userId = user.data?.id;
+
+          if (!userId) return;
           await prisma.userSubscription.upsert({
             where: {
               userId: userId,
@@ -68,7 +75,6 @@ export async function POST(req: NextRequest) {
         case EventName.SubscriptionActivated:
           // Why? > When the subscription becomes active (e.g., after payment or pause).
           // When ? > To unlock access to paid features. Can also be used to confirm that the subscription is live.
-          console.log("subscription activated");
 
           break;
 
