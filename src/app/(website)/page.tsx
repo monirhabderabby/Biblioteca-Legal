@@ -28,15 +28,15 @@ export default async function Home() {
 
           <div className="space-x-[40px] mt-[40px] md:mt-[60px]">
             {isLoggedin ? (
-              <Button size="lg">
+              <Button size="lg" asChild>
                 <Link href="/collections">View Collection</Link>
               </Button>
             ) : (
               <>
-                <Button size="lg">
+                <Button size="lg" asChild>
                   <Link href="/sign-up">Register</Link>
                 </Button>
-                <Button variant="outline" size="lg">
+                <Button variant="outline" size="lg" asChild>
                   <Link href="/login">Login</Link>
                 </Button>
               </>

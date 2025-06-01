@@ -119,8 +119,10 @@ const Navbar = ({ isLoggedin }: Props) => {
                 </FramerDropdown>
               </>
             ) : (
-              <Button>
-                <Link href="/login">Login</Link>
+              <Button asChild>
+                <Link href="/login" className="w-full h-full">
+                  Login
+                </Link>
               </Button>
             )}
           </div>
