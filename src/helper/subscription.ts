@@ -4,8 +4,12 @@
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
 import { paddle } from "@/lib/paddle";
+import { CompanySubscription, UserSubscription } from "@prisma/client";
 
-export async function getCurrentUserSubscription() {
+export async function getCurrentUserSubscription(): Promise<{
+  type: "user" | "company";
+  subscription: UserSubscription | CompanySubscription;
+} | null> {
   const cu = await auth();
 
   if (!cu?.user?.id) {

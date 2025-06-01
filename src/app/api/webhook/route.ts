@@ -37,7 +37,6 @@ export async function POST(req: NextRequest) {
       const data: any = eventData.data;
       const startsAt = data.currentBillingPeriod.startsAt;
       const endsAt = data.currentBillingPeriod.endsAt;
-
       const txnId = data.transactionId;
       const subscriptionId = data.id;
       const formValues = data.customData.user;
@@ -79,13 +78,15 @@ export async function POST(req: NextRequest) {
           break;
 
         case EventName.SubscriptionCanceled:
-          await prisma.userSubscription.update({
+          const subscription = await prisma.userSubscription.findUnique({
             where: {
-              userId,
+              sub_id: subscriptionId,
             },
-            data: {
-              isActive: false,
-            },
+          });
+          if (!subscription) break;
+          await prisma.userSubscription.update({
+            where: { userId: subscription.userId },
+            data: { isActive: false },
           });
 
           break;

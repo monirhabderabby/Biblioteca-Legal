@@ -99,7 +99,12 @@ export default function PricingComparison({ subscription }: Props) {
             <Button
               className="w-full bg-gray-900 hover:bg-gray-800 text-white relative"
               disabled={isSubscribed}
-              onClick={() => router.push("/sign-up")}
+              onClick={() => {
+                if (userButtonLabel === "Get Started") {
+                  router.push("/sign-up");
+                }
+                // Add additional logic for "Renew" here if needed
+              }}
             >
               {userButtonLabel}
               {/* {pending && <Loader2 className="animate-spin absolute right-3" />} */}
