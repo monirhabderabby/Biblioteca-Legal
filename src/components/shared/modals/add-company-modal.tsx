@@ -15,7 +15,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { TagsInput } from "@/components/ui/tags-input";
+import { Textarea } from "@/components/ui/textarea";
 import { companySchema, CompanySchemaType } from "@/schemas/company";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Company } from "@prisma/client";
@@ -39,17 +39,12 @@ export default function AddCompanyModal({ trigger, initialData }: Props) {
     defaultValues: {
       name: initialData?.name ?? "",
       location: initialData?.location ?? "",
-      employees: [],
     },
   });
 
   function onSubmit(values: CompanySchemaType) {
     startTransition(() => {
-      createCompanies({
-        name: values.name,
-        location: values.location,
-        employees: values.employees,
-      }).then((res) => {
+      createCompanies(values).then((res) => {
         if (!res.success) {
           toast.error(res.message);
           return;
@@ -89,7 +84,7 @@ export default function AddCompanyModal({ trigger, initialData }: Props) {
                   <FormControl>
                     <Input
                       className="w-full"
-                      placeholder=""
+                      placeholder="Enter Company Name"
                       type="text"
                       {...field}
                       disabled={pending}
@@ -108,7 +103,7 @@ export default function AddCompanyModal({ trigger, initialData }: Props) {
                   <FormControl>
                     <Input
                       className="w-full"
-                      placeholder=""
+                      placeholder="Enter company location"
                       type="text"
                       {...field}
                       disabled={pending}
@@ -120,22 +115,42 @@ export default function AddCompanyModal({ trigger, initialData }: Props) {
             />
             <FormField
               control={form.control}
-              name="employees"
+              name="contact_email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Employees email</FormLabel>
+                  <FormLabel>Company Owner Email</FormLabel>
                   <FormControl>
-                    <TagsInput
-                      value={field.value}
-                      className="min-h-[40px]"
-                      onValueChange={field.onChange}
-                      placeholder="Enter your employees email"
+                    <Input
+                      className="w-full"
+                      placeholder="Enter Contact email"
+                      type="email"
+                      {...field}
+                      disabled={pending}
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="overview"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Overview</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      className="w-full min-h-[160px]"
+                      placeholder="Company overview"
+                      {...field}
+                      disabled={pending}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <div className="flex justify-end gap-x-4">
               <Button
                 variant="outline"

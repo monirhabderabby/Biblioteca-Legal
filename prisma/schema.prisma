@@ -204,6 +204,8 @@ model Company {
   id        String @id @default(auto()) @map("_id") @db.ObjectId
   name      String
   location  String
+  contact_email String 
+  overview String 
   employees User[]
 
   subscriptions CompanySubscription[]

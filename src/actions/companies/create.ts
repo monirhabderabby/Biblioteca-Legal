@@ -31,7 +31,7 @@ export async function createCompanies(data: CompanySchemaType) {
     };
   }
 
-  const { name, location, employees } = parsedData.data;
+  const { name, location, contact_email, overview } = parsedData.data;
 
   try {
     // 1. Create the company
@@ -39,44 +39,16 @@ export async function createCompanies(data: CompanySchemaType) {
       data: {
         name,
         location,
+        contact_email,
+        overview,
       },
     });
-
-    // 2. Find users with matching emails
-    const users = await prisma.user.findMany({
-      where: {
-        email: {
-          in: employees,
-        },
-      },
-      select: {
-        id: true,
-        email: true,
-      },
-    });
-
-    // 3. Assign each found user to the new company
-    const updatePromises = users.map((user) =>
-      prisma.user.update({
-        where: { id: user.id },
-        data: { companyId: company.id },
-      })
-    );
-
-    await Promise.all(updatePromises);
-
-    // 4. Identify emails that were not found
-    const foundEmails = users.map((u) => u.email);
-    const notFoundEmails = employees.filter(
-      (email) => !foundEmails.includes(email)
-    );
 
     return {
       success: true,
       message: "Company Created",
-      description: `${users.length} user(s) assigned, ${notFoundEmails.length} email(s) skipped.`,
+      description: `The ${company.name} has been successfully created with the provided details.`,
       company,
-      skippedEmails: notFoundEmails, // Optional extra info
     };
   } catch (error) {
     console.error("Error creating company or assigning users:", error);
