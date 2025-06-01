@@ -45,8 +45,8 @@ const ArticleViewer = ({
     });
   };
   return (
-    <>
-      <Card className="shadow-none" key={data.id}>
+    <div>
+      <Card className="shadow-none bg-transparent" key={data.id}>
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle>Artitlce {index + 1}</CardTitle>
@@ -87,7 +87,7 @@ const ArticleViewer = ({
         onClose={() => setOpen(false)}
         onConfirm={onDelete}
       />
-    </>
+    </div>
   );
 };
 
