@@ -1,12 +1,8 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getPaddleCustomerId } from "@/helper/subscription";
-import { initializePaddle, Paddle } from "@paddle/paddle-js";
 import { Check, X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { startTransition, useEffect, useState } from "react";
-import { toast } from "sonner";
 
 interface Sub {
   currentPeriodStart: Date;
@@ -21,10 +17,7 @@ interface Props {
   sub_type: "user" | "company";
 }
 
-export default function PricingComparison({ subscription, sub_type }: Props) {
-  // const [pending, startTransition] = useTransition();
-  const [paddle, setPaddle] = useState<Paddle>();
-
+export default function PricingComparison({ subscription }: Props) {
   const router = useRouter();
   const features = [
     { name: "Unlimited Access to Documents", starter: true, business: true },
@@ -46,63 +39,6 @@ export default function PricingComparison({ subscription, sub_type }: Props) {
       ? "Subscribed"
       : "Renew";
 
-  useEffect(() => {
-    initializePaddle({
-      environment: "sandbox",
-      token: process.env.NEXT_PUBLIC_PADDLE_TOKEN!,
-    }).then((paddle) => setPaddle(paddle));
-  }, []);
-
-  const onNewSubscribe = () => {
-    if (isSubscribed) {
-      toast.info("You are already subscribed.");
-      return;
-    }
-
-    if (!paddle) {
-      toast.warning("Paddle is not initialized");
-      return;
-    }
-
-    startTransition(() => {
-      startTransition(async () => {
-        const customerId = await getPaddleCustomerId(
-          subscription?.userId as string
-        );
-        if (!customerId) {
-          toast.error("user not found to create paddle customer id");
-          return;
-        }
-        paddle.Checkout.open({
-          items: [
-            {
-              priceId: "pri_01jwbf7deypnwz4jya27m0nzjq",
-              quantity: 1,
-            },
-          ],
-          customer: {
-            id: customerId,
-          },
-          customData: {
-            userId: subscription?.userId,
-          },
-        });
-      });
-    });
-  };
-
-  const renewSubscription = () => {
-    if (isSubscribed) {
-      toast.info("You are already subscribed.");
-      return;
-    }
-
-    if (!paddle) {
-      toast.warning("Paddle is not initialized");
-      return;
-    }
-  };
-
   return (
     <div className="container mx-auto py-[100px]">
       <div className="flex flex-col md:flex-row justify-center gap-10">
@@ -120,20 +56,8 @@ export default function PricingComparison({ subscription, sub_type }: Props) {
           <CardContent className="space-y-6">
             <Button
               className="w-full bg-gray-900 hover:bg-gray-800 text-white relative"
-              disabled={isSubscribed}
-              onClick={() => {
-                if (userButtonLabel === "Get Started") {
-                  router.push("/sign-up");
-                } else if (
-                  userButtonLabel === "Renew" &&
-                  sub_type === "company"
-                ) {
-                  onNewSubscribe();
-                } else if (userButtonLabel === "Renew" && sub_type === "user") {
-                  renewSubscription();
-                }
-                // Add additional logic for "Renew" here if needed
-              }}
+              disabled={isSubscribed || userButtonLabel === "Renew"}
+              onClick={() => router.push("/sign-up")}
             >
               {userButtonLabel}
               {/* {pending && <Loader2 className="animate-spin absolute right-3" />} */}
