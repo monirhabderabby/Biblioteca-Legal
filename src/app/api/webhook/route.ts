@@ -4,11 +4,11 @@ import { paddle } from "@/lib/paddle";
 import { EventName } from "@paddle/paddle-node-sdk";
 import { NextRequest, NextResponse } from "next/server";
 
+const secretKey = process.env.PADDLE_WEBHOOK_SECRET!;
+
 export async function POST(req: NextRequest) {
   const rawRequestBody = await req.text();
   const paddleSignature = req.headers.get("paddle-signature");
-
-  const secretKey = process.env.PADDLE_WEBHOOK_SECRET;
 
   // (Optional) Check if header and secret key are present and return error if not
   if (!paddleSignature) {
@@ -117,16 +117,27 @@ export async function POST(req: NextRequest) {
           console.log("subscription updated called");
           await prisma.userSubscription.update({
             where: {
-              userId,
+              sub_id: subscriptionId,
             },
             data: {
               isActive: true,
               currentPeriodEnd: endsAt,
               currentPeriodStart: startsAt,
-              sub_id: subscriptionId,
               txn_id: txnId,
             },
           });
+          break;
+
+        case EventName.SubscriptionPastDue:
+          await prisma.userSubscription.update({
+            where: {
+              sub_id: subscriptionId,
+            },
+            data: {
+              isActive: false,
+            },
+          });
+
           break;
 
         default:

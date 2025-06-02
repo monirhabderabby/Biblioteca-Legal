@@ -91,6 +91,18 @@ export default function PricingComparison({ subscription, sub_type }: Props) {
     });
   };
 
+  const renewSubscription = () => {
+    if (isSubscribed) {
+      toast.info("You are already subscribed.");
+      return;
+    }
+
+    if (!paddle) {
+      toast.warning("Paddle is not initialized");
+      return;
+    }
+  };
+
   return (
     <div className="container mx-auto py-[100px]">
       <div className="flex flex-col md:flex-row justify-center gap-10">
@@ -117,6 +129,8 @@ export default function PricingComparison({ subscription, sub_type }: Props) {
                   sub_type === "company"
                 ) {
                   onNewSubscribe();
+                } else if (userButtonLabel === "Renew" && sub_type === "user") {
+                  renewSubscription();
                 }
                 // Add additional logic for "Renew" here if needed
               }}
