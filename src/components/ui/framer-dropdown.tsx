@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 interface DropdownProps {
   trigger: React.ReactNode;
-  children: React.ReactNode;
+  children: (close: () => void) => React.ReactNode;
 }
 
 export default function FramerDropdown({ trigger, children }: DropdownProps) {
@@ -20,6 +20,8 @@ export default function FramerDropdown({ trigger, children }: DropdownProps) {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  const closeDropdown = () => setIsOpen(false);
 
   return (
     <div className="relative inline-block" ref={ref}>
@@ -42,7 +44,7 @@ export default function FramerDropdown({ trigger, children }: DropdownProps) {
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
           >
-            {children}
+            {children(closeDropdown)}
           </motion.div>
         )}
       </AnimatePresence>
