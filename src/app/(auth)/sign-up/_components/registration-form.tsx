@@ -1,5 +1,4 @@
 "use client";
-import { registeruser } from "@/actions/auth/registration";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
@@ -13,9 +12,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
 import { SubmitButton } from "@/components/ui/submit-button";
+import { paddleCustomerCreate } from "@/helper/subscription";
 import { registrationSchema, RegistrationSchemaType } from "@/schemas/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
+import { initializePaddle, Paddle } from "@paddle/paddle-js";
 import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -23,25 +23,55 @@ import { toast } from "sonner";
 export default function RegistrationForm() {
   const [isRedirecting, setRedirecting] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const [paddle, setPaddle] = useState<Paddle>();
 
-  const router = useRouter();
   const form = useForm<RegistrationSchemaType>({
     resolver: zodResolver(registrationSchema),
   });
 
   function onSubmit(values: RegistrationSchemaType) {
-    startTransition(() => {
-      registeruser(values).then((res) => {
-        if (!res.success) {
-          toast.error(res.message);
-          return;
-        }
+    if (!paddle) {
+      toast.warning("Paddle is not initialized");
+      return;
+    }
 
-        setRedirecting(true);
+    startTransition(async () => {
+      // registeruser(values).then((res) => {
+      //   if (!res.success) {
+      //     toast.error(res.message);
+      //     return;
+      //   }
 
-        toast.success(res.message);
-        router.push("/sign-up/confirmation");
+      //   setRedirecting(true);
+
+      //   toast.success(res.message);
+      //   router.push("/sign-up/confirmation");
+      // });
+
+      const customerId = await paddleCustomerCreate({
+        email: values.email,
+        customerName: `${values.first_name} ${values.last_name}`,
       });
+
+      if (customerId) {
+        paddle.Checkout.open({
+          items: [
+            {
+              priceId: "pri_01jwbf7deypnwz4jya27m0nzjq",
+              quantity: 1,
+            },
+          ],
+          customer: {
+            id: customerId,
+          },
+          customData: {
+            user: values,
+          },
+          settings: {
+            successUrl: `https://www.youtube.com/watch?v=WC-g0JtEIwM&list=PLHiZ4m8vCp9PHnOIT7gd30PCBoYCpGoQM`,
+          },
+        });
+      }
     });
   }
 
@@ -49,6 +79,13 @@ export default function RegistrationForm() {
     return () => {
       setRedirecting(false);
     };
+  }, []);
+
+  useEffect(() => {
+    initializePaddle({
+      environment: "sandbox",
+      token: process.env.NEXT_PUBLIC_PADDLE_TOKEN!,
+    }).then((paddle) => setPaddle(paddle));
   }, []);
 
   const isLoading = isPending || isRedirecting;

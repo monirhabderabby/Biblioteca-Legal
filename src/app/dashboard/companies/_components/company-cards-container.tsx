@@ -13,6 +13,7 @@ export interface Company {
   name: string;
   location: string;
   totalEmployees: number;
+  contact_email: string;
   createdAt: string; // ISO date string
   updatedAt: string; // ISO date string
 }

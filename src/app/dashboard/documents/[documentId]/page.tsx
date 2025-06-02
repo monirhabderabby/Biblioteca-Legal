@@ -10,7 +10,13 @@ import moment from "moment";
 import dynamic from "next/dynamic";
 import { notFound } from "next/navigation";
 import DocumentHeaderAction from "./_components/document-header-action";
-import SectionTitleContainer from "./_components/section-title-container";
+import SectionSearch from "./_components/section-search";
+const SectionTitleContainer = dynamic(
+  () => import("./_components/section-title-container"),
+  {
+    ssr: false,
+  }
+);
 
 const Page = async ({ params }: { params: { documentId: string } }) => {
   const document = await prisma.document.findFirst({
@@ -56,7 +62,8 @@ const Page = async ({ params }: { params: { documentId: string } }) => {
         />
       </section>
 
-      <div className="w-full flex justify-end">
+      <div className="w-full flex justify-end gap-x-5">
+        <SectionSearch />
         <AddDocumentSectionTitleModal
           trigger={<Button>Add Title</Button>}
           documentId={params.documentId}

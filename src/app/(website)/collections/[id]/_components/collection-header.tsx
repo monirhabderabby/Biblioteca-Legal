@@ -18,7 +18,7 @@ const CollectionHeader = ({ document }: Props) => {
       </h1>
 
       <Input
-        placeholder="Search by chapter title, article title, section title..."
+        placeholder="Search by  section title or chapter title..."
         className="max-w-[600px] mx-auto"
         value={query}
         onChange={(e) => setQuery(e.target.value)}

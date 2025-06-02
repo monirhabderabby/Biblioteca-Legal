@@ -34,6 +34,12 @@ const Page = async ({
 
   if (!document) notFound();
 
+  const articles = await prisma.article.findMany({
+    where: {
+      chapterId: params.chapterId,
+    },
+  });
+
   return (
     <div>
       <section className="flex justify-between items-start">
@@ -80,6 +86,7 @@ const Page = async ({
         chapterId={params.chapterId}
         sectionId={params.sectionId}
         documentId={params.documentId}
+        articles={articles}
       />
     </div>
   );

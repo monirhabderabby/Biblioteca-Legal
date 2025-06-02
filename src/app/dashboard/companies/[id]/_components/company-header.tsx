@@ -144,9 +144,14 @@ const CompanyHeader = ({ data, subscription }: Props) => {
             <span>{data.location}</span>
           </p>
           <p className="text-[18px]">
+            <span className="font-semibold">Contact Email: </span>{" "}
+            <span>{data.contact_email}</span>
+          </p>
+          <p className="text-[18px]">
             <span className="font-semibold">Employees Number: </span>{" "}
             <span>{data.employees.length}</span>
           </p>
+          <p>{data.overview}</p>
         </div>
 
         <EmployeeContainer users={data.employees} companyId={data.id} />

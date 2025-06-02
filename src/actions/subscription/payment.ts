@@ -1,8 +1,8 @@
 "use server";
 
 import { auth } from "@/auth";
+import { paddleCustomerCreate } from "@/helper/subscription";
 import { prisma } from "@/lib/db";
-import { paddleCustomerCreate } from ".";
 
 export async function makeSubscribe() {
   const cu = await auth();
@@ -35,7 +35,6 @@ export async function makeSubscribe() {
     try {
       paddleCustomerId = await paddleCustomerCreate({
         email: user.email!,
-        id: user.id,
         customerName: `${user.first_name} ${user.last_name}`,
       });
 

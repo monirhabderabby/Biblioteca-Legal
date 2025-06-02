@@ -45,6 +45,7 @@ export async function GET(req: NextRequest) {
       name: company.name,
       location: company.location,
       totalEmployees: company.employees.length,
+      contact_email: company.contact_email,
       createdAt: company.createdAt,
       updatedAt: company.updatedAt,
     }));

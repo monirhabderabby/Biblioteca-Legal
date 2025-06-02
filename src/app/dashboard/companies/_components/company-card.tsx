@@ -7,6 +7,7 @@ export interface Company {
   name: string;
   location: string;
   totalEmployees: number;
+  contact_email: string;
   createdAt: string; // ISO date string
   updatedAt: string; // ISO date string
 }
@@ -26,6 +27,10 @@ const CompanyCard = ({ data }: Props) => {
         <div className="flex justify-between text-[18px]">
           <span className="text-primary font-bold">Location: </span>{" "}
           <span>{data.location}</span>
+        </div>
+        <div className="flex justify-between text-[18px]">
+          <span className="text-primary font-bold">Contact Email: </span>{" "}
+          <span>{data.contact_email}</span>
         </div>
         <div className="flex justify-between text-[18px]">
           <span className="text-primary font-bold">Employees Number: </span>{" "}

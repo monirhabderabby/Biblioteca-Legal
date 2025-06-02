@@ -1,20 +1,31 @@
 "use client";
-import { makeSubscribe } from "@/actions/subscription/payment";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Paddle, initializePaddle } from "@paddle/paddle-js";
-import { CompanySubscription, UserSubscription } from "@prisma/client";
-import { Check, Loader2, X } from "lucide-react";
-import { useEffect, useState, useTransition } from "react";
+import { getPaddleCustomerId } from "@/helper/subscription";
+import { initializePaddle, Paddle } from "@paddle/paddle-js";
+import { Check, X } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { startTransition, useEffect, useState } from "react";
 import { toast } from "sonner";
 
-interface Props {
-  subscription?: UserSubscription | CompanySubscription;
+interface Sub {
+  currentPeriodStart: Date;
+  currentPeriodEnd: Date;
+  sub_id?: string;
+  isActive: boolean;
+  userId: string;
 }
 
-export default function PricingComparison({ subscription }: Props) {
-  const [pending, startTransition] = useTransition();
+interface Props {
+  subscription?: Sub;
+  sub_type: "user" | "company";
+}
+
+export default function PricingComparison({ subscription, sub_type }: Props) {
+  // const [pending, startTransition] = useTransition();
   const [paddle, setPaddle] = useState<Paddle>();
+
+  const router = useRouter();
   const features = [
     { name: "Unlimited Access to Documents", starter: true, business: true },
     { name: "Update and News", starter: true, business: true },
@@ -42,7 +53,7 @@ export default function PricingComparison({ subscription }: Props) {
     }).then((paddle) => setPaddle(paddle));
   }, []);
 
-  const onUserSubscription = () => {
+  const onNewSubscribe = () => {
     if (isSubscribed) {
       toast.info("You are already subscribed.");
       return;
@@ -54,30 +65,28 @@ export default function PricingComparison({ subscription }: Props) {
     }
 
     startTransition(() => {
-      makeSubscribe().then((res) => {
-        if (!res.success) {
-          toast.error(res.message);
+      startTransition(async () => {
+        const customerId = await getPaddleCustomerId(
+          subscription?.userId as string
+        );
+        if (!customerId) {
+          toast.error("user not found to create paddle customer id");
           return;
         }
-
-        toast.success(res.message);
-
-        if (res.customerId) {
-          paddle.Checkout.open({
-            items: [
-              {
-                priceId: "pri_01jwbf7deypnwz4jya27m0nzjq",
-                quantity: 1,
-              },
-            ],
-            customer: {
-              id: res.customerId,
+        paddle.Checkout.open({
+          items: [
+            {
+              priceId: "pri_01jwbf7deypnwz4jya27m0nzjq",
+              quantity: 1,
             },
-            customData: {
-              userId: res.userId,
-            },
-          });
-        }
+          ],
+          customer: {
+            id: customerId,
+          },
+          customData: {
+            userId: subscription?.userId,
+          },
+        });
       });
     });
   };
@@ -99,11 +108,21 @@ export default function PricingComparison({ subscription }: Props) {
           <CardContent className="space-y-6">
             <Button
               className="w-full bg-gray-900 hover:bg-gray-800 text-white relative"
-              disabled={pending || isSubscribed}
-              onClick={onUserSubscription}
+              disabled={isSubscribed}
+              onClick={() => {
+                if (userButtonLabel === "Get Started") {
+                  router.push("/sign-up");
+                } else if (
+                  userButtonLabel === "Renew" &&
+                  sub_type === "company"
+                ) {
+                  onNewSubscribe();
+                }
+                // Add additional logic for "Renew" here if needed
+              }}
             >
               {userButtonLabel}
-              {pending && <Loader2 className="animate-spin absolute right-3" />}
+              {/* {pending && <Loader2 className="animate-spin absolute right-3" />} */}
             </Button>
 
             <div className="space-y-3">
