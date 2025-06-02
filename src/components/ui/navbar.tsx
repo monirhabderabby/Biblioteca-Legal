@@ -99,23 +99,30 @@ const Navbar = ({ isLoggedin }: Props) => {
                     </Avatar>
                   }
                 >
-                  <div>
-                    <Button
-                      className="w-full text-primary hover:text-primary/90"
-                      variant="outline"
-                    >
-                      Account
-                    </Button>
-                    <Button
-                      onClick={async () => {
-                        await signOut({ redirectTo: "/", redirect: true });
-                      }}
-                      className="cursor-pointer w-full text-primary hover:text-primary/90"
-                      variant="outline"
-                    >
-                      Logout
-                    </Button>
-                  </div>
+                  {(close) => (
+                    <div>
+                      <Button
+                        className="w-full text-primary hover:text-primary/90 border-none"
+                        variant="outline"
+                        asChild
+                        onClick={close}
+                      >
+                        <Link href="/account" className="w-full">
+                          Account
+                        </Link>
+                      </Button>
+                      <Button
+                        onClick={async () => {
+                          close(); // Close before signing out
+                          await signOut({ redirectTo: "/", redirect: true });
+                        }}
+                        className="cursor-pointer w-full text-primary hover:text-primary/90 border-none"
+                        variant="outline"
+                      >
+                        Logout
+                      </Button>
+                    </div>
+                  )}
                 </FramerDropdown>
               </>
             ) : (
