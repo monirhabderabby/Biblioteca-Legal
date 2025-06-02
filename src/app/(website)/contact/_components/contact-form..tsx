@@ -1,5 +1,6 @@
 "use client";
 
+import { createContact } from "@/actions/contact/create";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -10,35 +11,14 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { contactFormSchema, ContactFormValues } from "@/schemas/contact";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTransition } from "react";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
-
-const contactFormSchema = z.object({
-  name: z
-    .string()
-    .min(2, {
-      message: "Name must be at least 2 characters.",
-    })
-    .max(50, {
-      message: "Name must not be longer than 50 characters.",
-    }),
-  email: z.string().email({
-    message: "Please enter a valid email address.",
-  }),
-  message: z
-    .string()
-    .min(10, {
-      message: "Message must be at least 10 characters.",
-    })
-    .max(500, {
-      message: "Message must not be longer than 500 characters.",
-    }),
-});
-
-type ContactFormValues = z.infer<typeof contactFormSchema>;
+import { toast } from "sonner";
 
 export default function ContactForm() {
+  const [pending, startTransition] = useTransition();
   const form = useForm<ContactFormValues>({
     resolver: zodResolver(contactFormSchema),
     defaultValues: {
@@ -49,14 +29,25 @@ export default function ContactForm() {
   });
 
   async function onSubmit(data: ContactFormValues) {
-    console.log(data);
+    startTransition(() => {
+      createContact(data).then((res) => {
+        if (!res.success) {
+          toast.error(res.message);
+          return;
+        }
+
+        // handle success
+        toast.success(res.message);
+        form.reset();
+      });
+    });
   }
 
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-[30px] max-w-[500px] mx-auto border-[1px] border-black/10 px-[15px] py-[15px]"
+        className="space-y-[30px] max-w-[600px] mx-auto border-[1px] border-black/10 px-[15px] py-[15px]"
       >
         <FormField
           control={form.control}
@@ -113,9 +104,9 @@ export default function ContactForm() {
         <Button
           type="submit"
           className="w-full bg-slate-800 hover:bg-slate-700 text-white py-3 text-base font-medium"
-          disabled={form.formState.isSubmitting}
+          disabled={pending}
         >
-          {form.formState.isSubmitting ? "Sending..." : "Send Message"}
+          {pending ? "Sending..." : "Send Message"}
         </Button>
       </form>
     </Form>
