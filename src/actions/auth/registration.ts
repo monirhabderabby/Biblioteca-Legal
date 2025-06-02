@@ -47,6 +47,7 @@ export async function registeruser(
         first_name: parsedData.first_name, // Assuming name is part of registrationSchema
         last_name: parsedData.last_name,
         paddleCustomerId,
+        emailVerified: new Date(),
       },
     });
 
