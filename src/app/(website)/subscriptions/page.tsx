@@ -14,7 +14,10 @@ const Page = async () => {
         description="Join our platform to access comprehensive legal resources"
       />
 
-      <PricingComparison subscription={currentSubscription?.subscription} />
+      <PricingComparison
+        subscription={currentSubscription?.subscription}
+        sub_type={currentSubscription?.type as "user" | "company"}
+      />
 
       <CTA />
     </div>

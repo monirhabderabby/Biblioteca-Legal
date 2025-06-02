@@ -1,17 +1,29 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CompanySubscription, UserSubscription } from "@prisma/client";
+import { getPaddleCustomerId } from "@/helper/subscription";
+import { initializePaddle, Paddle } from "@paddle/paddle-js";
 import { Check, X } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { startTransition, useEffect, useState } from "react";
+import { toast } from "sonner";
 
-interface Props {
-  subscription?: UserSubscription | CompanySubscription;
+interface Sub {
+  currentPeriodStart: Date;
+  currentPeriodEnd: Date;
+  sub_id?: string;
+  isActive: boolean;
+  userId: string;
 }
 
-export default function PricingComparison({ subscription }: Props) {
+interface Props {
+  subscription?: Sub;
+  sub_type: "user" | "company";
+}
+
+export default function PricingComparison({ subscription, sub_type }: Props) {
   // const [pending, startTransition] = useTransition();
-  // const [paddle, setPaddle] = useState<Paddle>();
+  const [paddle, setPaddle] = useState<Paddle>();
 
   const router = useRouter();
   const features = [
@@ -34,52 +46,50 @@ export default function PricingComparison({ subscription }: Props) {
       ? "Subscribed"
       : "Renew";
 
-  // useEffect(() => {
-  //   initializePaddle({
-  //     environment: "sandbox",
-  //     token: process.env.NEXT_PUBLIC_PADDLE_TOKEN!,
-  //   }).then((paddle) => setPaddle(paddle));
-  // }, []);
+  useEffect(() => {
+    initializePaddle({
+      environment: "sandbox",
+      token: process.env.NEXT_PUBLIC_PADDLE_TOKEN!,
+    }).then((paddle) => setPaddle(paddle));
+  }, []);
 
-  // const onUserSubscription = () => {
-  //   if (isSubscribed) {
-  //     toast.info("You are already subscribed.");
-  //     return;
-  //   }
+  const onNewSubscribe = () => {
+    if (isSubscribed) {
+      toast.info("You are already subscribed.");
+      return;
+    }
 
-  //   if (!paddle) {
-  //     toast.warning("Paddle is not initialized");
-  //     return;
-  //   }
+    if (!paddle) {
+      toast.warning("Paddle is not initialized");
+      return;
+    }
 
-  //   startTransition(() => {
-  //     makeSubscribe().then((res) => {
-  //       if (!res.success) {
-  //         toast.error(res.message);
-  //         return;
-  //       }
-
-  //       toast.success(res.message);
-
-  //       if (res.customerId) {
-  //         paddle.Checkout.open({
-  //           items: [
-  //             {
-  //               priceId: "pri_01jwbf7deypnwz4jya27m0nzjq",
-  //               quantity: 1,
-  //             },
-  //           ],
-  //           customer: {
-  //             id: res.customerId,
-  //           },
-  //           customData: {
-  //             userId: res.userId,
-  //           },
-  //         });
-  //       }
-  //     });
-  //   });
-  // };
+    startTransition(() => {
+      startTransition(async () => {
+        const customerId = await getPaddleCustomerId(
+          subscription?.userId as string
+        );
+        if (!customerId) {
+          toast.error("user not found to create paddle customer id");
+          return;
+        }
+        paddle.Checkout.open({
+          items: [
+            {
+              priceId: "pri_01jwbf7deypnwz4jya27m0nzjq",
+              quantity: 1,
+            },
+          ],
+          customer: {
+            id: customerId,
+          },
+          customData: {
+            userId: subscription?.userId,
+          },
+        });
+      });
+    });
+  };
 
   return (
     <div className="container mx-auto py-[100px]">
@@ -102,6 +112,11 @@ export default function PricingComparison({ subscription }: Props) {
               onClick={() => {
                 if (userButtonLabel === "Get Started") {
                   router.push("/sign-up");
+                } else if (
+                  userButtonLabel === "Renew" &&
+                  sub_type === "company"
+                ) {
+                  onNewSubscribe();
                 }
                 // Add additional logic for "Renew" here if needed
               }}

@@ -40,13 +40,14 @@ export async function POST(req: NextRequest) {
       const txnId = data.transactionId;
       const subscriptionId = data.id;
       const formValues = data.customData.user;
+      const customerId = data.customerId;
 
       switch (eventData.eventType) {
         case EventName.SubscriptionCreated:
           // WHY? > When a customer starts a subscription
           // When ? > To create the user’s subscription record in your system (e.g., store plan, status, billing dates).
 
-          const user = await registeruser(formValues);
+          const user = await registeruser(formValues, customerId);
           const userId = user.data?.id;
 
           if (!userId) return;

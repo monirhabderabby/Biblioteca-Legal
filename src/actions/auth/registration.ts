@@ -4,7 +4,10 @@ import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/db";
 import { registrationSchema, RegistrationSchemaType } from "@/schemas/auth";
 
-export async function registeruser(data: RegistrationSchemaType) {
+export async function registeruser(
+  data: RegistrationSchemaType,
+  paddleCustomerId: string
+) {
   const {
     success,
     data: parsedData,
@@ -43,6 +46,7 @@ export async function registeruser(data: RegistrationSchemaType) {
         password: hashedPassword,
         first_name: parsedData.first_name, // Assuming name is part of registrationSchema
         last_name: parsedData.last_name,
+        paddleCustomerId,
       },
     });
 

@@ -4,11 +4,18 @@
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
 import { paddle } from "@/lib/paddle";
-import { CompanySubscription, UserSubscription } from "@prisma/client";
+
+interface Sub {
+  currentPeriodStart: Date;
+  currentPeriodEnd: Date;
+  sub_id?: string;
+  isActive: boolean;
+  userId: string;
+}
 
 export async function getCurrentUserSubscription(): Promise<{
   type: "user" | "company";
-  subscription: UserSubscription | CompanySubscription;
+  subscription: Sub;
 } | null> {
   const cu = await auth();
 
@@ -25,7 +32,16 @@ export async function getCurrentUserSubscription(): Promise<{
   });
 
   if (userSubscription) {
-    return { type: "user", subscription: userSubscription };
+    return {
+      type: "user",
+      subscription: {
+        currentPeriodStart: userSubscription.currentPeriodStart,
+        currentPeriodEnd: userSubscription.currentPeriodEnd,
+        sub_id: userSubscription.sub_id,
+        isActive: userSubscription.isActive,
+        userId: userSubscription.userId,
+      },
+    };
   }
 
   // 2. Check if the user belongs to a company
@@ -48,7 +64,16 @@ export async function getCurrentUserSubscription(): Promise<{
   });
 
   if (companySubscription) {
-    return { type: "company", subscription: companySubscription };
+    return {
+      type: "company",
+      subscription: {
+        currentPeriodStart: companySubscription.currentPeriodStart,
+        currentPeriodEnd: companySubscription.currentPeriodEnd,
+        isActive: companySubscription.isActive,
+        sub_id: undefined,
+        userId: cu.user.id,
+      },
+    };
   }
 
   return null; // No valid subscription found
@@ -69,4 +94,31 @@ export const paddleCustomerCreate = async ({
   });
 
   return customer.id;
+};
+
+export const getPaddleCustomerId = async (userId: string) => {
+  const user = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (!user) {
+    return null;
+  }
+
+  let paddleCustomerId;
+
+  if (!user.paddleCustomerId) {
+    paddleCustomerId = await paddleCustomerCreate({
+      email: user.email as string,
+      customerName: `${user.first_name} ${user.last_name}`,
+    });
+
+    return paddleCustomerId;
+  }
+
+  paddleCustomerId = user.paddleCustomerId;
+
+  return paddleCustomerId;
 };
