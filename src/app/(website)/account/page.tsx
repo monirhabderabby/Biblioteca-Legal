@@ -1,5 +1,11 @@
+import ProfileHeader from "./_components/header";
+
 const Page = () => {
-  return <div>Account Page</div>;
+  return (
+    <div>
+      <ProfileHeader />
+    </div>
+  );
 };
 
 export default Page;
