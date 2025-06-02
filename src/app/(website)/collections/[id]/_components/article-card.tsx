@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 import { Article, UserArticleMeta } from "@prisma/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
-import { Bookmark, MessageSquare } from "lucide-react";
+import { Bookmark, Lock, MessageSquare } from "lucide-react";
 import { useEffect, useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
 import ColorPicker from "./tool/color-picker";
@@ -174,7 +174,7 @@ const ArticleCard = ({ data, index, isLoggedin }: Props) => {
               onClick={() => setIsColorPickerOpen(true)}
               disabled={isLoading || pending || !isLoggedin}
             >
-              Article {index + 1}
+              Article {index + 1} {!isLoggedin && <Lock className="ml-1" />}
             </Button>
 
             {!isColorPickerOpen && !isCommentOpen && (

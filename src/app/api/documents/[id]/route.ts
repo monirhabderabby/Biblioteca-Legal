@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import { getCurrentUserSubscription } from "@/helper/subscription";
 import { prisma } from "@/lib/db";
 import { NextResponse } from "next/server";
 
@@ -12,42 +13,43 @@ export async function GET(
   const isLoggedin = !!cu;
   const searchQuery = searchParams.get("query")?.trim().toLowerCase();
 
+  let hasFullAccess = false;
+
+  // Check subscription status if user is logged in
+  if (isLoggedin) {
+    const currentSubscription = await getCurrentUserSubscription();
+    const isActive = currentSubscription?.subscription.isActive ?? false;
+    const currentPeriodEnd = currentSubscription?.subscription.currentPeriodEnd;
+
+    const now = new Date();
+    hasFullAccess = isActive && !!currentPeriodEnd && currentPeriodEnd > now;
+  }
+
   try {
     let sections;
 
-    if (searchQuery) {
-      // Fetch sections where section or chapters match
+    if (hasFullAccess) {
+      // ✅ Full access: fetch all data
       sections = await prisma.section.findMany({
         where: {
           documentId: id,
-          OR: [
-            {
-              title: {
-                contains: searchQuery,
-                mode: "insensitive",
-              },
-            },
-            {
-              chapters: {
-                some: {
-                  title: {
-                    contains: searchQuery,
-                    mode: "insensitive",
+          ...(searchQuery && {
+            OR: [
+              { title: { contains: searchQuery, mode: "insensitive" } },
+              {
+                chapters: {
+                  some: {
+                    title: { contains: searchQuery, mode: "insensitive" },
                   },
                 },
               },
-            },
-          ],
+            ],
+          }),
         },
         include: {
           chapters: {
             include: {
-              articles: {
-                take: isLoggedin ? undefined : 3,
-                orderBy: {
-                  createdAt: "asc",
-                },
-              },
+              articles: true,
             },
           },
         },
@@ -56,38 +58,68 @@ export async function GET(
         },
       });
 
-      // Filter chapters inside each section to only include matching chapters OR all chapters if section title matches
-      sections = sections.map((section) => {
-        // Check if section title matches search query
-        const sectionMatches = section.title
-          .toLowerCase()
-          .includes(searchQuery);
+      // Filter chapters inside each section based on search query
+      if (searchQuery) {
+        sections = sections.map((section) => {
+          const sectionMatches = section.title
+            .toLowerCase()
+            .includes(searchQuery);
 
-        return {
-          ...section,
-          chapters: section.chapters.filter((chapter) => {
-            // Include chapter if section matches OR chapter matches
-            return (
+          const filteredChapters = section.chapters.filter(
+            (chapter) =>
               sectionMatches ||
               chapter.title.toLowerCase().includes(searchQuery)
-            );
-          }),
-        };
-      });
+          );
 
-      // Optional: remove sections with no chapters after filtering (if needed)
-      sections = sections.filter((section) => section.chapters.length > 0);
+          return {
+            ...section,
+            chapters: filteredChapters,
+          };
+        });
+
+        sections = sections.filter((section) => section.chapters.length > 0);
+      }
     } else {
-      // No search query – return all
-      sections = await prisma.section.findMany({
+      // 🔒 Limited access: fetch only 1 section, 1 chapter, 3 articles
+      const [firstSection] = await prisma.section.findMany({
         where: {
           documentId: id,
+          ...(searchQuery && {
+            OR: [
+              { title: { contains: searchQuery, mode: "insensitive" } },
+              {
+                chapters: {
+                  some: {
+                    title: { contains: searchQuery, mode: "insensitive" },
+                  },
+                },
+              },
+            ],
+          }),
         },
         include: {
           chapters: {
+            where: searchQuery
+              ? {
+                  OR: [
+                    { title: { contains: searchQuery, mode: "insensitive" } },
+                    {
+                      articles: {
+                        some: {
+                          content: {
+                            contains: searchQuery,
+                            mode: "insensitive",
+                          },
+                        },
+                      },
+                    },
+                  ],
+                }
+              : undefined,
+            take: 1,
             include: {
               articles: {
-                take: isLoggedin ? undefined : 3,
+                take: 3,
                 orderBy: {
                   createdAt: "asc",
                 },
@@ -95,10 +127,13 @@ export async function GET(
             },
           },
         },
+        take: 1,
         orderBy: {
           createdAt: "asc",
         },
       });
+
+      sections = firstSection ? [firstSection] : [];
     }
 
     return NextResponse.json({
