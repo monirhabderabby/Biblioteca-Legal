@@ -56,7 +56,8 @@ const Navbar = ({ isLoggedin }: Props) => {
         scrolling && "bg-white",
         pathname === "/"
           ? "text-primary"
-          : pathname.startsWith("/collections/")
+          : pathname.startsWith("/collections/") ||
+              pathname.startsWith("/account")
             ? "text-black"
             : scrolling
               ? "text-primary"
