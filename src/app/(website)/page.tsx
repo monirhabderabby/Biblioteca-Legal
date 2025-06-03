@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import OurServices from "@/components/OurServices";
 import CTA from "@/components/shared/sections/cta";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -44,7 +45,7 @@ export default async function Home() {
           </div>
         </div>
       </div>
-
+      <OurServices />
       <CTA />
     </>
   );
