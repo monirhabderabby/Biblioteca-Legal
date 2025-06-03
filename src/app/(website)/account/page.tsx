@@ -2,6 +2,12 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
 import dynamic from "next/dynamic";
 import { redirect } from "next/navigation";
+const ChangePasswordForm = dynamic(
+  () => import("./_components/password-reset/password-reset-form"),
+  {
+    ssr: false,
+  }
+);
 const ProfileForm = dynamic(() => import("./_components/profile-form"), {
   ssr: false,
 });
@@ -18,10 +24,10 @@ const Page = async () => {
 
   if (!user) redirect("/login");
   return (
-    <div>
-      {/* <ProfileHeader /> */}
-
+    <div className="space-y-20">
       <ProfileForm user={user} />
+
+      <ChangePasswordForm />
     </div>
   );
 };

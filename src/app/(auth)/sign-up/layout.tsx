@@ -5,14 +5,17 @@ import { ReactNode } from "react";
 
 const RegistrationLayout = async ({ children }: { children: ReactNode }) => {
   const cu = await auth();
-  const user = await prisma.user.findUnique({
-    where: {
-      id: cu?.user.id,
-    },
-  });
+  let user;
+  if (cu?.user.id) {
+    user = await prisma.user.findUnique({
+      where: {
+        id: cu.user.id,
+      },
+    });
+  }
   return (
     <div>
-      <Navbar isLoggedin={!!cu} user={user} />
+      <Navbar isLoggedin={!!cu} user={user ?? null} />
       {children}
     </div>
   );
