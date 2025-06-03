@@ -1,11 +1,10 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { CalendarIcon, Loader2, Pencil, Save } from "lucide-react";
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useRef, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
@@ -36,7 +35,6 @@ import {
 } from "@/schemas/profile/profileSchema";
 import { User } from "@prisma/client";
 import { format } from "date-fns";
-import { toast } from "sonner";
 
 // Type Definitions
 type ProfileFormProps = {
@@ -47,28 +45,8 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
   const [editable, setEditable] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [imageLoader, setImageLoader] = useState(false);
+  const [pending, startTransition] = useTransition();
   // const { edgestore } = useEdgeStore();
-
-  const { mutate: updateMutation, isPending } = useMutation({
-    mutationKey: ["profile"],
-    mutationFn: async (data: ProfileSchemaType) => {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/users/update-profile`,
-        {
-          method: "PATCH",
-          headers: {
-            "content-type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
-      if (!res.ok) throw new Error("Failed to update profile");
-      return res.json();
-    },
-    onSuccess: () => toast.success("Profile updated successfully!"),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    onError: (error: any) => toast.error(error.message),
-  });
 
   const form = useForm<ProfileSchemaType>({
     resolver: zodResolver(profileSchema),
@@ -100,7 +78,14 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
   };
 
   const onSubmit = (data: ProfileSchemaType) => {
-    updateMutation(data);
+    startTransition(() => {
+      // Here you would typically send the data to your API or backend service
+      console.log("Form submitted with data:", data);
+      // For example:
+      // updateUserProfile(data).then(() => {
+      //   setEditable(false);
+      // });
+    });
   };
 
   return (
@@ -114,24 +99,26 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
             Manage your profile
           </p>
         </div>
-        <Button
-          className="text-sm  rounded-md px-3 py-2"
-          onClick={() => {
-            if (editable) {
-              form.handleSubmit(onSubmit)();
-            }
-            setEditable((prev) => !prev);
-          }}
-        >
-          {isPending ? (
-            <Loader2 className="w-4 h-4 animate-spin mr-2" />
-          ) : editable ? (
-            <Save className="mr-2 h-4 w-4" />
-          ) : (
-            <Pencil className="mr-2 h-4 w-4" />
-          )}
-          {isPending ? "Saving" : editable ? "Save" : "Edit"}
-        </Button>
+        {!editable && (
+          <Button
+            className="text-sm  rounded-md px-3 py-2"
+            onClick={() => {
+              if (editable) {
+                form.handleSubmit(onSubmit)();
+              }
+              setEditable((prev) => !prev);
+            }}
+          >
+            {pending ? (
+              <Loader2 className="w-4 h-4 animate-spin mr-2" />
+            ) : editable ? (
+              <Save className="mr-2 h-4 w-4" />
+            ) : (
+              <Pencil className="mr-2 h-4 w-4" />
+            )}
+            {pending ? "Saving" : editable ? "Save" : "Edit"}
+          </Button>
+        )}
       </div>
       {/* <Separator className="mb-4" /> */}
       <Form {...form}>
@@ -314,18 +301,14 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
                 {editable && <FormLabel>Gender</FormLabel>}
                 <FormControl>
                   <Select value={field.value} onValueChange={field.onChange}>
-                    <SelectTrigger className="w-full">
-                      <FormControl>
-                        <Button
-                          variant="outline"
-                          className={cn(
-                            "w-full pl-3 text-left flex justify-start font-normal text-primary hover:text-primary/80 border-0 outline-none"
-                          )}
-                          disabled={!editable}
-                        >
-                          {field.value || "Select Gender"}
-                        </Button>
-                      </FormControl>
+                    <SelectTrigger
+                      // className="w-full"
+                      className={cn(
+                        "w-full pl-3 text-left flex justify-between font-normal text-primary hover:text-primary/80 border-input border-[1px] outline-none"
+                      )}
+                      disabled={!editable}
+                    >
+                      {field.value || "Select Gender"}
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="Male">Male</SelectItem>
@@ -336,6 +319,19 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
               </FormItem>
             )}
           />
+
+          {editable && (
+            <div className="col-span-2 mt-4 flex justify-end">
+              <Button type="submit" disabled={!editable || pending}>
+                {pending ? (
+                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                ) : (
+                  <Save className="mr-2 h-4 w-4" />
+                )}
+                {pending ? "Saving" : "Save Changes"}
+              </Button>
+            </div>
+          )}
         </form>
       </Form>
     </div>
