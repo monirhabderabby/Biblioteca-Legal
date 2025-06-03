@@ -1,7 +1,9 @@
 import { auth } from "@/auth";
+import { getCurrentUserSubscription } from "@/helper/subscription";
 import { prisma } from "@/lib/db";
 import dynamic from "next/dynamic";
 import { redirect } from "next/navigation";
+import CancelSubscriptionContainer from "./_components/cancel-subscription/cancel-subscription-container";
 const ChangePasswordForm = dynamic(
   () => import("./_components/password-reset/password-reset-form"),
   {
@@ -23,11 +25,21 @@ const Page = async () => {
   });
 
   if (!user) redirect("/login");
+
+  const cs = await getCurrentUserSubscription();
+  const subType = cs?.type;
+  const now = new Date();
+  const isActive = cs?.subscription.isActive;
+  const currentPeriodEnd = cs?.subscription.currentPeriodEnd;
+  const hasFullAccess =
+    isActive && !!currentPeriodEnd && currentPeriodEnd > now;
   return (
-    <div className="space-y-20">
+    <div className="space-y-20 mb-20">
       <ProfileForm user={user} />
 
       <ChangePasswordForm />
+
+      {subType === "user" && hasFullAccess && <CancelSubscriptionContainer />}
     </div>
   );
 };
