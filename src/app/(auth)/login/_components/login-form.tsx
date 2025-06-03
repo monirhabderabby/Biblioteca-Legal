@@ -58,13 +58,13 @@ export default function LoginForm() {
         if (!res?.success) {
           toast.error(res?.message);
           return;
-        }
-        // handle success
-        setIsLoading(true);
-        if (res.role === "user") {
-          router.push("/");
-        } else if (res.role === "admin") {
-          router.push("/dashboard");
+        } else {
+          setIsLoading(true);
+          if (res.role === "user") {
+            router.push("/");
+          } else if (res.role === "admin") {
+            router.push("/dashboard");
+          }
         }
       });
     });

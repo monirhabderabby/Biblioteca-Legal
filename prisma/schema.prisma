@@ -18,11 +18,6 @@ enum Role {
   user
 }
 
-enum Gender {
-  male
-  female
-}
-
 model User {
   id               String    @id @default(auto()) @map("_id") @db.ObjectId
   first_name       String
@@ -32,7 +27,7 @@ model User {
   image            String?
   phone            String?
   dateOfBirth      DateTime?
-  gender           Gender?
+  gender           String?
   address          String?
   country          String?
   career           String?
@@ -53,8 +48,6 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
-
-
 
 model Account {
   id                String  @id @default(auto()) @map("_id") @db.ObjectId
@@ -203,12 +196,12 @@ model UserArticleMeta {
 }
 
 model Company {
-  id        String @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
-  location  String
-  contact_email String 
-  overview String 
-  employees User[]
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  location      String
+  contact_email String
+  overview      String
+  employees     User[]
 
   subscriptions CompanySubscription[]
 
@@ -230,7 +223,7 @@ model UserSubscription {
   id                 String   @id @default(auto()) @map("_id") @db.ObjectId
   userId             String   @unique @db.ObjectId
   txn_id             String   @unique
-  sub_id             String @unique
+  sub_id             String   @unique
   isActive           Boolean  @default(false)
   currentPeriodStart DateTime
   currentPeriodEnd   DateTime

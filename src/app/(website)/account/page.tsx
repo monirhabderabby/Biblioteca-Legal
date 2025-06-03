@@ -1,7 +1,18 @@
 import { auth } from "@/auth";
+import { getCurrentUserSubscription } from "@/helper/subscription";
 import { prisma } from "@/lib/db";
+import dynamic from "next/dynamic";
 import { redirect } from "next/navigation";
-import ProfileForm from "./_components/profile-form";
+import CancelSubscriptionContainer from "./_components/cancel-subscription/cancel-subscription-container";
+const ChangePasswordForm = dynamic(
+  () => import("./_components/password-reset/password-reset-form"),
+  {
+    ssr: false,
+  }
+);
+const ProfileForm = dynamic(() => import("./_components/profile-form"), {
+  ssr: false,
+});
 
 const Page = async () => {
   const cu = await auth();
@@ -14,11 +25,21 @@ const Page = async () => {
   });
 
   if (!user) redirect("/login");
-  return (
-    <div>
-      {/* <ProfileHeader /> */}
 
+  const cs = await getCurrentUserSubscription();
+  const subType = cs?.type;
+  const now = new Date();
+  const isActive = cs?.subscription.isActive;
+  const currentPeriodEnd = cs?.subscription.currentPeriodEnd;
+  const hasFullAccess =
+    isActive && !!currentPeriodEnd && currentPeriodEnd > now;
+  return (
+    <div className="space-y-20 mb-20">
       <ProfileForm user={user} />
+
+      <ChangePasswordForm />
+
+      {subType === "user" && hasFullAccess && <CancelSubscriptionContainer />}
     </div>
   );
 };
