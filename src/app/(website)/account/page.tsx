@@ -1,7 +1,10 @@
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
+import dynamic from "next/dynamic";
 import { redirect } from "next/navigation";
-import ProfileForm from "./_components/profile-form";
+const ProfileForm = dynamic(() => import("./_components/profile-form"), {
+  ssr: false,
+});
 
 const Page = async () => {
   const cu = await auth();

@@ -7,8 +7,8 @@ import Image from "next/image";
 import { useRef, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 
+import { updateProfile } from "@/actions/profile/update";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 import {
   Form,
   FormControl,
@@ -28,6 +28,7 @@ import {
   SelectItem,
   SelectTrigger,
 } from "@/components/ui/select";
+import { useEdgeStore } from "@/lib/edgestore";
 import { cn } from "@/lib/utils";
 import {
   profileSchema,
@@ -35,6 +36,7 @@ import {
 } from "@/schemas/profile/profileSchema";
 import { User } from "@prisma/client";
 import { format } from "date-fns";
+import { toast } from "sonner";
 
 // Type Definitions
 type ProfileFormProps = {
@@ -46,7 +48,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [imageLoader, setImageLoader] = useState(false);
   const [pending, startTransition] = useTransition();
-  // const { edgestore } = useEdgeStore();
+  const { edgestore } = useEdgeStore();
 
   const form = useForm<ProfileSchemaType>({
     resolver: zodResolver(profileSchema),
@@ -71,20 +73,24 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
     const file = event.target.files?.[0];
     if (file) {
       setImageLoader(true);
-      // const res = await edgestore.publicFiles.upload({ file });
-      // form.setValue("image", res?.url || "");
+      const res = await edgestore.publicFiles.upload({ file });
+      form.setValue("image", res?.url || "");
       setImageLoader(false);
     }
   };
 
   const onSubmit = (data: ProfileSchemaType) => {
     startTransition(() => {
-      // Here you would typically send the data to your API or backend service
-      console.log("Form submitted with data:", data);
-      // For example:
-      // updateUserProfile(data).then(() => {
-      //   setEditable(false);
-      // });
+      updateProfile(data).then((res) => {
+        if (!res.success) {
+          toast.error(res.message);
+          return;
+        }
+
+        // handle successful profile update
+        toast.success(res.message);
+        setEditable(false);
+      });
     });
   };
 
@@ -275,16 +281,18 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
                       </FormControl>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        disabled={(date) =>
-                          date > new Date() || date < new Date("1900-01-01")
+                      <Input
+                        type="date"
+                        value={
+                          field.value ? format(field.value, "yyyy-MM-dd") : ""
                         }
-                        initialFocus
-                        fromYear={1900}
-                        toYear={new Date().getFullYear()}
+                        onChange={(e) => {
+                          const dateValue = e.target.value
+                            ? new Date(e.target.value)
+                            : undefined;
+                          field.onChange(dateValue);
+                        }}
+                        disabled={!editable}
                       />
                     </PopoverContent>
                   </Popover>
