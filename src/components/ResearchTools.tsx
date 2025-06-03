@@ -5,10 +5,12 @@ import { useState } from "react";
 import { GiWhiteBook } from "react-icons/gi";
 import { VscLaw } from "react-icons/vsc";
 
-export default function ResearchTools() {
-  const [activeTab, setActiveTab] = useState("legislation");
+type TabKey = "legislation" | "jurisprudence" | "doctrine";
 
-  const tabContent = {
+export default function ResearchTools() {
+  const [activeTab, setActiveTab] = useState<TabKey>("legislation");
+
+  const tabContent: Record<TabKey, JSX.Element> = {
     legislation: (
       <div className="space-y-6">
         <div className="relative">
@@ -110,9 +112,7 @@ export default function ResearchTools() {
         </p>
 
         <div className="relative mx-auto max-w-3xl ">
-          {/* Card with shadow effect */}
           <div className="relative z-10 overflow-hidden rounded-xl bg-white p-6 shadow-xl">
-            {/* Tabs */}
             <div className="mb-6 flex justify-between border-b overflow-x-auto whitespace-nowrap">
               <button
                 onClick={() => setActiveTab("legislation")}
