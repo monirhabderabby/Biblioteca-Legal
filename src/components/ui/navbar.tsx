@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 // Components
 import { logoSrc } from "@/helper/assets";
 import { cn } from "@/lib/utils";
+import { User } from "@prisma/client";
 import Image from "next/image";
 import { Button } from "../ui/button";
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from "../ui/sheet";
@@ -18,9 +19,10 @@ import FramerDropdown from "./framer-dropdown";
 
 interface Props {
   isLoggedin: boolean;
+  user: User | null;
 }
 
-const Navbar = ({ isLoggedin }: Props) => {
+const Navbar = ({ isLoggedin, user }: Props) => {
   const [scrolling, setScrolling] = useState(false); // Track scrolling state for styling changes
 
   const pathname = usePathname(); // Get current route to highlight active menu
@@ -93,8 +95,8 @@ const Navbar = ({ isLoggedin }: Props) => {
                   trigger={
                     <Avatar>
                       <AvatarImage
-                        src="https://github.com/shadcn.png"
-                        alt="@shadcn"
+                        src={user?.image ?? "https://github.com/shadcn.png"}
+                        alt={user?.first_name + " " + user?.last_name}
                       />
                       <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
