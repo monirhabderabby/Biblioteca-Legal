@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import HomeContact from "@/components/HomeContact";
 import OurServices from "@/components/OurServices";
 import ResearchTools from "@/components/ResearchTools";
 import CTA from "@/components/shared/sections/cta";
@@ -49,6 +50,8 @@ export default async function Home() {
       <OurServices />
       <ResearchTools />
       <CTA />
+
+      <HomeContact />
     </>
   );
 }
