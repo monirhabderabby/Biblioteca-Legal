@@ -3,13 +3,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { Loader2, Pencil, Save } from "lucide-react";
+import { CalendarIcon, Loader2, Pencil, Save } from "lucide-react";
 import Image from "next/image";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Form,
   FormControl,
@@ -18,22 +18,30 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+} from "@/components/ui/select";
+import { cn } from "@/lib/utils";
+import {
+  profileSchema,
+  ProfileSchemaType,
+} from "@/schemas/profile/profileSchema";
 import { User } from "@prisma/client";
+import { format } from "date-fns";
 import { toast } from "sonner";
-
-export const UserSchema = z.object({
-  first_name: z.string().optional(),
-  last_name: z.string().optional(),
-  image: z.string().optional(),
-  email: z.string().optional(),
-});
 
 // Type Definitions
 type ProfileFormProps = {
   user: User;
 };
-
-type UserData = z.infer<typeof UserSchema>;
 
 const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
   const [editable, setEditable] = useState(false);
@@ -43,7 +51,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
 
   const { mutate: updateMutation, isPending } = useMutation({
     mutationKey: ["profile"],
-    mutationFn: async (data: UserData) => {
+    mutationFn: async (data: ProfileSchemaType) => {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/users/update-profile`,
         {
@@ -62,13 +70,16 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
     onError: (error: any) => toast.error(error.message),
   });
 
-  const form = useForm<UserData>({
-    resolver: zodResolver(UserSchema),
+  const form = useForm<ProfileSchemaType>({
+    resolver: zodResolver(profileSchema),
     defaultValues: {
       first_name: user?.first_name ?? "",
       last_name: user?.last_name ?? "",
       image: user?.image || "/default-profile.jpg", // Default profile image
       email: user?.email || "",
+      phone: user?.phone || "",
+      dateOfBirth: user?.dateOfBirth ? new Date(user.dateOfBirth) : undefined,
+      gender: user?.gender || "",
     },
   });
 
@@ -88,7 +99,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
     }
   };
 
-  const onSubmit = (data: UserData) => {
+  const onSubmit = (data: ProfileSchemaType) => {
     updateMutation(data);
   };
 
@@ -227,6 +238,100 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
                     disabled
                     className="disabled:opacity-70"
                   />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="phone"
+            render={({ field }) => (
+              <FormItem className="col-span-2 md:col-span-1">
+                {editable && <FormLabel>Phone</FormLabel>}
+                <FormControl>
+                  <Input
+                    type="text"
+                    placeholder="Your phone number"
+                    {...field}
+                    className="disabled:opacity-100"
+                    disabled={!editable}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="dateOfBirth"
+            render={({ field }) => (
+              <FormItem className="col-span-2 md:col-span-1">
+                {editable && <FormLabel>Date Of Birth</FormLabel>}
+                <FormControl>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant="outline"
+                          className={cn(
+                            "w-full pl-3 text-left font-normal text-primary hover:text-primary/80",
+                            !field.value && "text-muted-foreground"
+                          )}
+                          disabled={!editable}
+                        >
+                          {field.value ? (
+                            format(field.value, "PPP")
+                          ) : (
+                            <span>Pick your date of birth</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        disabled={(date) =>
+                          date > new Date() || date < new Date("1900-01-01")
+                        }
+                        initialFocus
+                        fromYear={1900}
+                        toYear={new Date().getFullYear()}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </FormControl>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="gender"
+            render={({ field }) => (
+              <FormItem className="col-span-2 md:col-span-1">
+                {editable && <FormLabel>Gender</FormLabel>}
+                <FormControl>
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger className="w-full">
+                      <FormControl>
+                        <Button
+                          variant="outline"
+                          className={cn(
+                            "w-full pl-3 text-left flex justify-start font-normal text-primary hover:text-primary/80 border-0 outline-none"
+                          )}
+                          disabled={!editable}
+                        >
+                          {field.value || "Select Gender"}
+                        </Button>
+                      </FormControl>
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Male">Male</SelectItem>
+                      <SelectItem value="Female">Female</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </FormControl>
               </FormItem>
             )}
