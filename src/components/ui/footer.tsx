@@ -17,7 +17,7 @@ export default function Footer() {
 
   const legalLinks = [
     { name: "Terms & Condition", href: "/terms-and-condition" },
-    { name: "Privacy Policy", href: "/privacy" },
+    { name: "Privacy Policy", href: "/privacy-policy" },
   ];
 
   const socialLinks = [

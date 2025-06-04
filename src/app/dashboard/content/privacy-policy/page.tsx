@@ -5,6 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { prisma } from "@/lib/db";
 import dynamic from "next/dynamic";
 const PrivacyPolicyContainer = dynamic(
   () => import("./_components/privacy-policy-container"),
@@ -13,7 +14,8 @@ const PrivacyPolicyContainer = dynamic(
   }
 );
 
-const Page = () => {
+const Page = async () => {
+  const data = await prisma.privacyPolicy.findFirst();
   return (
     <Card>
       <CardHeader>
@@ -21,7 +23,7 @@ const Page = () => {
         <CardDescription>Manage your privacy & policy content</CardDescription>
       </CardHeader>
       <CardContent>
-        <PrivacyPolicyContainer />
+        <PrivacyPolicyContainer initialContent={data?.content ?? ""} />
       </CardContent>
     </Card>
   );

@@ -13,7 +13,7 @@ interface Props {
 const ContentViewer = ({ content }: Props) => {
   return (
     <div
-      className="text-[14px] leading-[200%]"
+      className="text-[14px] leading-[230%] space-y-10"
       dangerouslySetInnerHTML={{
         __html: sanitize(content),
       }}
