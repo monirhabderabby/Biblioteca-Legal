@@ -1,6 +1,6 @@
 "use client";
 
-import { updatePrivacyPolicy } from "@/actions/content/update";
+import { updateRefundPolicy } from "@/actions/content/update";
 import RichTextEditor from "@/components/shared/sections/RichTextEditor";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,7 +19,7 @@ import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-const PrivacyPolicyContainer = () => {
+const RefundPolicyContainer = () => {
   const [pending, startTransition] = useTransition();
 
   const form = useForm<ContentSchemaType>({
@@ -28,7 +28,7 @@ const PrivacyPolicyContainer = () => {
 
   function onSubmit(values: ContentSchemaType) {
     startTransition(() => {
-      updatePrivacyPolicy(values).then((res) => {
+      updateRefundPolicy(values).then((res) => {
         if (!res.success) {
           toast.error(res.message);
           return;
@@ -58,7 +58,7 @@ const PrivacyPolicyContainer = () => {
                 />
               </FormControl>
               <FormDescription>
-                This is your privacy policy content.
+                This is your refund policy content.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -74,4 +74,4 @@ const PrivacyPolicyContainer = () => {
   );
 };
 
-export default PrivacyPolicyContainer;
+export default RefundPolicyContainer;

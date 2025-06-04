@@ -240,7 +240,7 @@ const ArticleCard = ({ data, index, isLoggedin }: Props) => {
         </CardHeader>
 
         <CardContent>
-          <ContentViewer article={data} />
+          <ContentViewer content={data.content} />
         </CardContent>
       </Card>
     </motion.div>

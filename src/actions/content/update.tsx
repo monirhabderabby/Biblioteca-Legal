@@ -94,3 +94,48 @@ export async function updatePrivacyPolicy(data: ContentSchemaType) {
     message: "Privacy policy created successfully.",
   };
 }
+export async function updateRefundPolicy(data: ContentSchemaType) {
+  const cu = await auth();
+
+  if (!cu || cu.user.role !== "admin") {
+    return {
+      success: false,
+      message: "You are not authorized to perform this action.",
+    };
+  }
+
+  const parsedData = contentSchema.safeParse(data);
+
+  if (!parsedData.success) {
+    return {
+      success: false,
+      message: parsedData.error.message,
+    };
+  }
+
+  const content = await prisma.refundPolicy.findFirst();
+
+  if (content) {
+    await prisma.refundPolicy.update({
+      where: { id: content.id },
+      data: {
+        content: parsedData.data.content,
+      },
+    });
+
+    return {
+      success: true,
+      message: "Privacy policy updated successfully.",
+    };
+  }
+
+  await prisma.refundPolicy.create({
+    data: {
+      content: parsedData.data.content,
+    },
+  });
+  return {
+    success: true,
+    message: "Privacy policy created successfully.",
+  };
+}

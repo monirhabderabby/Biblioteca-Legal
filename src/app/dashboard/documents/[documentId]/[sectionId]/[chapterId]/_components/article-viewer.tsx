@@ -78,7 +78,7 @@ const ArticleViewer = ({
         </CardHeader>
 
         <CardContent>
-          <ContentViewer article={data} />
+          <ContentViewer content={data.content} />
         </CardContent>
       </Card>
       <AlertModal
