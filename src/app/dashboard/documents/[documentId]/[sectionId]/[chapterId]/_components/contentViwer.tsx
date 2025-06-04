@@ -1,21 +1,23 @@
 "use client";
-import DOMPurify from "dompurify";
-const windowDOMPurify = DOMPurify as typeof DOMPurify & {
-  sanitize: (dirty: string) => string;
-};
+// import DOMPurify from "dompurify";
+import xss from "xss";
+// const windowDOMPurify = DOMPurify as typeof DOMPurify & {
+//   sanitize: (dirty: string) => string;
+// };
 
-const { sanitize } = windowDOMPurify;
+// const { sanitize } = windowDOMPurify;
 
 interface Props {
   content: string;
 }
 
 const ContentViewer = ({ content }: Props) => {
+  const cleanHTML = xss(content);
   return (
     <div
-      className="text-[14px] leading-[230%] space-y-10"
+      className="text-[14px] leading-[200%] space-y-5"
       dangerouslySetInnerHTML={{
-        __html: sanitize(content),
+        __html: cleanHTML,
       }}
     />
   );

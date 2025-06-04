@@ -19,11 +19,18 @@ import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-const RefundPolicyContainer = () => {
+interface Props {
+  initialContent: string;
+}
+
+const RefundPolicyContainer = ({ initialContent }: Props) => {
   const [pending, startTransition] = useTransition();
 
   const form = useForm<ContentSchemaType>({
     resolver: zodResolver(contentSchema),
+    defaultValues: {
+      content: initialContent,
+    },
   });
 
   function onSubmit(values: ContentSchemaType) {
