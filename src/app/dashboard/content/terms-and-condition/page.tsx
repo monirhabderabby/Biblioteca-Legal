@@ -5,6 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { prisma } from "@/lib/db";
 import dynamic from "next/dynamic";
 const TermsAndConditionContainer = dynamic(
   () => import("./_components/terms-condition-container"),
@@ -13,7 +14,9 @@ const TermsAndConditionContainer = dynamic(
   }
 );
 
-const Page = () => {
+const Page = async () => {
+  const data = await prisma.termsOfService.findFirst();
+
   return (
     <Card>
       <CardHeader>
@@ -23,7 +26,7 @@ const Page = () => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <TermsAndConditionContainer />
+        <TermsAndConditionContainer initialContent={data?.content ?? ""} />
       </CardContent>
     </Card>
   );

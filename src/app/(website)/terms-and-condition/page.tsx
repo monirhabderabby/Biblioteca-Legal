@@ -25,7 +25,9 @@ const Page = async () => {
         description=""
       />
 
-      <div className="container pt-10">{content}</div>
+      <div className="container mr-auto py-10 lg:py-20 max-w-[850px]">
+        {content}
+      </div>
     </div>
   );
 };
