@@ -1,5 +1,17 @@
+import dynamic from "next/dynamic";
+const PrivacyPolicyContainer = dynamic(
+  () => import("./_components/privacy-policy-container"),
+  {
+    ssr: false,
+  }
+);
+
 const Page = () => {
-  return <div>privacy-policy</div>;
+  return (
+    <div>
+      <PrivacyPolicyContainer />
+    </div>
+  );
 };
 
 export default Page;
