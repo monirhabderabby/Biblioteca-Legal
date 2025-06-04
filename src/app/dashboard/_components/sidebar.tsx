@@ -9,6 +9,7 @@ import {
   LayoutDashboard,
   LogOut,
   Settings,
+  TableOfContents,
   Users,
 } from "lucide-react";
 import { signOut } from "next-auth/react";
@@ -46,6 +47,12 @@ const routes = [
     label: "Category",
     icon: FileStack,
     href: "/dashboard/categories",
+  },
+  {
+    id: 6,
+    label: "Content",
+    icon: TableOfContents,
+    href: "/dashboard/content",
   },
   {
     id: 8,
