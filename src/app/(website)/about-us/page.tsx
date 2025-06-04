@@ -5,7 +5,7 @@ const page = () => {
   return (
     <div>
       <HeaderSection
-        imageUrl="https://files.edgestore.dev/ln9m9j3kr2yibrue/public/_public/30e3389036fce18f046221fe160bc5c37d0a167b.jpg"
+        imageUrl="https://files.edgestore.dev/ln9m9j3kr2yibrue/staticFiled/_public/about%20us.webp"
         title="About Us"
         description=""
       />

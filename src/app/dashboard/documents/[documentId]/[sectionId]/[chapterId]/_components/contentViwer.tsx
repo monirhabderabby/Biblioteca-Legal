@@ -1,17 +1,21 @@
 "use client";
-
-import { Article } from "@prisma/client";
 import DOMPurify from "dompurify";
+const windowDOMPurify = DOMPurify as typeof DOMPurify & {
+  sanitize: (dirty: string) => string;
+};
+
+const { sanitize } = windowDOMPurify;
 
 interface Props {
-  article: Article;
+  content: string;
 }
-const ContentViewer = ({ article }: Props) => {
+
+const ContentViewer = ({ content }: Props) => {
   return (
     <div
-      className="text-[14px] leading-[200%]"
+      className="text-[14px] leading-[230%] space-y-10"
       dangerouslySetInnerHTML={{
-        __html: DOMPurify.sanitize(article.content),
+        __html: sanitize(content),
       }}
     />
   );

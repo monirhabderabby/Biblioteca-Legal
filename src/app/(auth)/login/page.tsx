@@ -8,8 +8,8 @@ export default function LoginPage() {
       {/* Left side - Image */}
       <div className="hidden lg:w-3/5 md:w-1/2 bg-gray-900 lg:block relative">
         <Image
-          src="https://files.edgestore.dev/ln9m9j3kr2yibrue/public/_public/a92586cfd664d6c1cb2ae1be58175b3a05502154.jpg"
-          alt="Team meeting"
+          src="https://files.edgestore.dev/ln9m9j3kr2yibrue/staticFiled/_public/login%20page%20sidebar.webp"
+          alt="Login Page Background"
           fill
           className="object-cover"
         />

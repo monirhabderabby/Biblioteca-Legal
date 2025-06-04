@@ -16,8 +16,8 @@ export default function Footer() {
   ];
 
   const legalLinks = [
-    { name: "Terms & Condition", href: "/terms" },
-    { name: "Privacy Policy", href: "/privacy" },
+    { name: "Terms & Condition", href: "/terms-and-condition" },
+    { name: "Privacy Policy", href: "/privacy-policy" },
   ];
 
   const socialLinks = [
@@ -35,7 +35,7 @@ export default function Footer() {
           <div className="lg:col-span-1">
             <div className="flex items-center mb-4">
               <Image
-                src="https://files.edgestore.dev/ln9m9j3kr2yibrue/public/_public/0339e1e30a6961bded74b67305d5fccd817509e9.png"
+                src="https://files.edgestore.dev/ln9m9j3kr2yibrue/staticFiled/_public/white%20logo.webp"
                 height={100}
                 width={100}
                 alt="Logo"

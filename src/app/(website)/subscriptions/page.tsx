@@ -9,7 +9,7 @@ const Page = async () => {
   return (
     <div>
       <HeaderSection
-        imageUrl="https://files.edgestore.dev/ln9m9j3kr2yibrue/public/_public/56a74cc0-2cda-4bc2-8641-c3b9914a3bdf.jpg"
+        imageUrl="https://files.edgestore.dev/ln9m9j3kr2yibrue/staticFiled/_public/subscription%20page.webp"
         title="Our Subscriptions"
         description="Join our platform to access comprehensive legal resources"
       />

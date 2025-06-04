@@ -16,7 +16,7 @@ export default async function Home() {
         className="h-screen md:h-[60vh] lg:h-screen  w-full flex justify-start items-center bg-cover md:bg-right-top"
         style={{
           backgroundImage:
-            "url(https://files.edgestore.dev/ln9m9j3kr2yibrue/public/_public/735903d7-d939-410f-8055-df466977358c.jpg)",
+            "url(https://files.edgestore.dev/ln9m9j3kr2yibrue/staticFiled/_public/b878d4e8-03ef-4945-963b-b8f95ddbfb03.webp)",
         }}
       >
         <div className="container">
