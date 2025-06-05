@@ -46,6 +46,7 @@ export async function POST(req: NextRequest) {
         case EventName.SubscriptionCreated:
           // WHY? > When a customer starts a subscription
           // When ? > To create the user’s subscription record in your system (e.g., store plan, status, billing dates).
+          console.log("webhook called for subscription created");
 
           const user = await registeruser(formValues, customerId);
           const userId = user.data?.id;
@@ -76,9 +77,12 @@ export async function POST(req: NextRequest) {
           // Why? > When the subscription becomes active (e.g., after payment or pause).
           // When ? > To unlock access to paid features. Can also be used to confirm that the subscription is live.
 
+          console.log("webhook called for subscription activated");
+
           break;
 
         case EventName.SubscriptionCanceled:
+          console.log("webhook called for subscription canceled");
           const subscription = await prisma.userSubscription.findUnique({
             where: {
               sub_id: subscriptionId,
@@ -93,6 +97,7 @@ export async function POST(req: NextRequest) {
           break;
 
         case EventName.SubscriptionPaused:
+          console.log("webhook called for subscription paused");
           await prisma.userSubscription.update({
             where: {
               userId,
@@ -104,6 +109,7 @@ export async function POST(req: NextRequest) {
           break;
 
         case EventName.SubscriptionResumed:
+          console.log("webhook called for subscription resumed");
           await prisma.userSubscription.update({
             where: {
               userId,
@@ -114,6 +120,7 @@ export async function POST(req: NextRequest) {
           });
           break;
         case EventName.SubscriptionUpdated:
+          console.log("webhook called for subscription updated");
           console.log("subscription updated called");
           await prisma.userSubscription.update({
             where: {
