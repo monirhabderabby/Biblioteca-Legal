@@ -68,7 +68,7 @@ export default function RegistrationForm() {
             user: values,
           },
           settings: {
-            successUrl: `https://www.youtube.com/watch?v=WC-g0JtEIwM&list=PLHiZ4m8vCp9PHnOIT7gd30PCBoYCpGoQM`,
+            successUrl: `https://bibliotecalegalhn.com/login`,
           },
         });
       }
