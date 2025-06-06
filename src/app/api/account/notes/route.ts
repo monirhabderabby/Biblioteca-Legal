@@ -18,24 +18,27 @@ export async function GET(req: NextRequest) {
 
     const skip = (page - 1) * limit;
 
-    const [data, total] = await Promise.all([
-      prisma.userArticleMeta.findMany({
-        where: { userId: cu.user.id, comment: { not: null } },
-        skip,
-        take: limit,
-        distinct: ["documentId"],
-        include: {
-          article: true,
-          document: true,
-        },
-        orderBy: {
-          createdAt: "desc",
-        },
-      }),
-      prisma.userArticleMeta.count({
-        where: { userId: cu.user.id, comment: { not: null } },
-      }),
-    ]);
+    const data = await prisma.userArticleMeta.findMany({
+      where: { userId: cu.user.id, comment: { not: null } },
+      skip,
+      take: limit,
+      distinct: ["documentId"],
+      include: {
+        article: true,
+        document: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    const grouped = await prisma.userArticleMeta.groupBy({
+      by: ["documentId"],
+      where: { userId: cu.user.id, comment: { not: null } },
+      _count: true,
+    });
+
+    const total = grouped.length;
 
     return NextResponse.json({
       data,

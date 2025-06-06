@@ -2,9 +2,11 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { PaginationControls } from "@/components/ui/pagination-controls";
 import { Document, Prisma } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import { Bookmark, Loader2 } from "lucide-react";
@@ -99,6 +101,20 @@ const NotesCard = ({ document }: Props) => {
       </CardHeader>
 
       <CardContent>{content}</CardContent>
+
+      <CardFooter className="flex justify-end">
+        {data?.pagination &&
+          typeof data.pagination.total === "number" &&
+          data.pagination.total > 10 && (
+            <div>
+              <PaginationControls
+                currentPage={currentPage}
+                onPageChange={(page) => setCurrentPage(page)}
+                totalPages={data.pagination.totalPages}
+              />
+            </div>
+          )}
+      </CardFooter>
     </Card>
   );
 };
