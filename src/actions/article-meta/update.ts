@@ -97,3 +97,34 @@ export async function removeBookmark({ metaId }: RemoveBookmarkInput) {
     };
   }
 }
+
+export async function removeNotes({ metaId }: RemoveBookmarkInput) {
+  const session = await auth();
+
+  if (!session || !session.user || !session.user.id) {
+    throw new Error("Unauthorized");
+  }
+
+  try {
+    const updatedMeta = await prisma.userArticleMeta.update({
+      where: {
+        id: metaId,
+      },
+      data: {
+        comment: "",
+      },
+    });
+
+    return {
+      success: true,
+      message: "Notes removed successfully.",
+      data: updatedMeta,
+    };
+  } catch (error) {
+    console.error("Failed to remove notes:", error);
+    return {
+      success: false,
+      message: "Failed to remove notes.",
+    };
+  }
+}

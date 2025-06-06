@@ -28,7 +28,7 @@ const NotesContainer = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const { data, isLoading, isError, error } = useQuery<UserArticleMetaResponse>(
     {
-      queryKey: ["markers", currentPage],
+      queryKey: ["notesWithDoc", currentPage],
       queryFn: () =>
         fetch(`/api/account/notes?page=${currentPage}&limit=10`).then((res) =>
           res.json()
@@ -57,7 +57,7 @@ const NotesContainer = () => {
   } else if (data?.data?.length === 0) {
     content = (
       <div className="min-h-[300px] flex items-center justify-center text-gray-500 dark:text-gray-400">
-        No bookmarks found.
+        No notes found.
       </div>
     );
   } else if (data?.data && data.data.length > 0) {

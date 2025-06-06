@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
     const skip = (page - 1) * limit;
 
     const data = await prisma.userArticleMeta.findMany({
-      where: { userId: cu.user.id, comment: { not: null } },
+      where: { userId: cu.user.id, comment: { not: "" } },
       skip,
       take: limit,
       distinct: ["documentId"],
@@ -34,7 +34,7 @@ export async function GET(req: NextRequest) {
 
     const grouped = await prisma.userArticleMeta.groupBy({
       by: ["documentId"],
-      where: { userId: cu.user.id, comment: { not: null } },
+      where: { userId: cu.user.id, comment: { not: "" } },
       _count: true,
     });
 

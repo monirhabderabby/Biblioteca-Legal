@@ -9,8 +9,9 @@ import {
 import { PaginationControls } from "@/components/ui/pagination-controls";
 import { Document, Prisma } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
-import { Bookmark, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useState } from "react";
+import NoteCard from "./note-card";
 
 interface Props {
   document: Document;
@@ -36,7 +37,7 @@ const NotesCard = ({ document }: Props) => {
   const [currentPage, setCurrentPage] = useState(1);
   const { data, isLoading, isError, error } = useQuery<UserArticleMetaResponse>(
     {
-      queryKey: ["markers", currentPage, document.id],
+      queryKey: ["notes", currentPage, document.id],
       queryFn: () =>
         fetch(
           `/api/account/notes/${document.id}?page=${currentPage}&limit=10`
@@ -71,20 +72,7 @@ const NotesCard = ({ document }: Props) => {
     content = (
       <div className="space-y-4">
         {data?.data.map((meta, i) => (
-          <div key={meta.id}>
-            <p className="flex items-center gap-x-2 font-semibold">
-              {meta.isBookmarked ? (
-                <Bookmark className="h-5 w-5 fill-primary" />
-              ) : (
-                <Bookmark className="h-5 w-5" />
-              )}{" "}
-              Article {i + 1}
-            </p>
-
-            <p className="mt-2 border-input border-[1px] px-2 py-1 rounded-sm text-[15px]">
-              {meta.comment}
-            </p>
-          </div>
+          <NoteCard key={meta.id} index={i} meta={meta} />
         ))}
       </div>
     );
