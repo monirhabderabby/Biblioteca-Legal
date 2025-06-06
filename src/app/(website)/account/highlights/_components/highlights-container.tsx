@@ -5,7 +5,7 @@ import { UserArticleMeta } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import { AlertTriangle, Loader2 } from "lucide-react";
 import { useState } from "react";
-import BookmarkCard from "./bookmarkCard";
+import HighlightCard from "./highlight-card";
 
 export type UserArticleMetaResponse = {
   data: UserArticleMeta[];
@@ -17,13 +17,13 @@ export type UserArticleMetaResponse = {
   };
 };
 
-const BookmarkContainer = () => {
+const HighlightContainer = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const { data, isLoading, isError, error } = useQuery<UserArticleMetaResponse>(
     {
       queryKey: ["markers", currentPage],
       queryFn: () =>
-        fetch(`/api/account/bookmarked?page=${currentPage}&limit=10`).then(
+        fetch(`/api/account/highlights?page=${currentPage}&limit=10`).then(
           (res) => res.json()
         ),
     }
@@ -50,7 +50,7 @@ const BookmarkContainer = () => {
   } else if (data?.data?.length === 0) {
     content = (
       <div className="min-h-[300px] flex items-center justify-center text-gray-500 dark:text-gray-400">
-        No bookmarks found.
+        No highlights found.
       </div>
     );
   } else if (data?.data && data.data.length > 0) {
@@ -58,11 +58,13 @@ const BookmarkContainer = () => {
       <div className=" pb-20 space-y-10">
         <div className="grid grid-cols-1 space-y-10">
           {data.data.map((bookmark: UserArticleMeta, i: number) => (
-            <BookmarkCard
+            <HighlightCard
               key={bookmark.id}
               articleId={bookmark.articleId}
               index={i}
               metaId={bookmark.id}
+              isBookmarked={bookmark.isBookmarked}
+              selectedColor={bookmark.selectedColor ?? "#f0f0f0"}
             />
           ))}
         </div>
@@ -82,4 +84,4 @@ const BookmarkContainer = () => {
   return <div>{content}</div>;
 };
 
-export default BookmarkContainer;
+export default HighlightContainer;
