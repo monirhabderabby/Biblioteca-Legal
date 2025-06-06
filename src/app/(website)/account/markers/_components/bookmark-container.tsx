@@ -1,8 +1,10 @@
 "use client";
 
+import { PaginationControls } from "@/components/ui/pagination-controls";
 import { UserArticleMeta } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import { AlertTriangle, Loader2 } from "lucide-react";
+import { useState } from "react";
 import BookmarkCard from "./bookmarkCard";
 
 export type UserArticleMetaResponse = {
@@ -16,10 +18,18 @@ export type UserArticleMetaResponse = {
 };
 
 const BookmarkContainer = () => {
-  const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["markers"],
-    queryFn: () => fetch(`/api/account/bookmarked`).then((res) => res.json()),
-  });
+  const [currentPage, setCurrentPage] = useState(1);
+  const { data, isLoading, isError, error } = useQuery<UserArticleMetaResponse>(
+    {
+      queryKey: ["markers", currentPage],
+      queryFn: () =>
+        fetch(`/api/account/bookmarked?page=${currentPage}&limit=10`).then(
+          (res) => res.json()
+        ),
+    }
+  );
+
+  console.log(data?.pagination);
 
   let content;
 
@@ -45,16 +55,28 @@ const BookmarkContainer = () => {
         No bookmarks found.
       </div>
     );
-  } else if (data?.data?.length > 0) {
+  } else if (data?.data && data.data.length > 0) {
     content = (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {data.data.map((bookmark: UserArticleMeta, i: number) => (
-          <BookmarkCard
-            key={bookmark.id}
-            articleId={bookmark.articleId}
-            index={i}
-          />
-        ))}
+      <div className=" pb-20 space-y-10">
+        <div className="grid grid-cols-1 space-y-10">
+          {data.data.map((bookmark: UserArticleMeta, i: number) => (
+            <BookmarkCard
+              key={bookmark.id}
+              articleId={bookmark.articleId}
+              index={i}
+              metaId={bookmark.id}
+            />
+          ))}
+        </div>
+        {data.pagination.total > 10 && (
+          <div>
+            <PaginationControls
+              currentPage={currentPage}
+              onPageChange={(page) => setCurrentPage(page)}
+              totalPages={data.pagination.totalPages}
+            />
+          </div>
+        )}
       </div>
     );
   }

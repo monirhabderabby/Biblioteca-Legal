@@ -2,6 +2,9 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/db"; // adjust path to your prisma instance
 import { NextRequest, NextResponse } from "next/server";
 
+// Force dynamic rendering
+export const dynamic = "force-dynamic";
+
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
@@ -17,7 +20,7 @@ export async function GET(req: NextRequest) {
 
     const [data, total] = await Promise.all([
       prisma.userArticleMeta.findMany({
-        where: { userId: cu.user.id },
+        where: { userId: cu.user.id, isBookmarked: true },
         skip,
         take: limit,
         include: {
@@ -28,7 +31,7 @@ export async function GET(req: NextRequest) {
         },
       }),
       prisma.userArticleMeta.count({
-        where: { userId: cu.user.id },
+        where: { userId: cu.user.id, isBookmarked: true },
       }),
     ]);
 

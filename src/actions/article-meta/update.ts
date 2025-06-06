@@ -59,3 +59,38 @@ export async function updateArticleMeta({
     };
   }
 }
+
+interface RemoveBookmarkInput {
+  metaId: string;
+}
+
+export async function removeBookmark({ metaId }: RemoveBookmarkInput) {
+  const session = await auth();
+
+  if (!session || !session.user || !session.user.id) {
+    throw new Error("Unauthorized");
+  }
+
+  try {
+    const updatedMeta = await prisma.userArticleMeta.update({
+      where: {
+        id: metaId,
+      },
+      data: {
+        isBookmarked: false,
+      },
+    });
+
+    return {
+      success: true,
+      message: "Bookmark removed successfully.",
+      data: updatedMeta,
+    };
+  } catch (error) {
+    console.error("Failed to remove bookmark:", error);
+    return {
+      success: false,
+      message: "Failed to remove bookmark.",
+    };
+  }
+}
