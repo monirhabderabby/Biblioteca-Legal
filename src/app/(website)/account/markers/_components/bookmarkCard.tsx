@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Article } from "@prisma/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Loader2, Trash } from "lucide-react";
+import { Bookmark, Loader2, Trash } from "lucide-react";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 
@@ -80,7 +80,9 @@ const BookmarkCard = ({ articleId, index, metaId }: Props) => {
       <Card className="shadow-none w-full">
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle>Article {index + 1}</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              <Bookmark className="fill-primary" /> Article {index + 1}
+            </CardTitle>
             <Button
               variant="link"
               className="hover:text-red-500"
