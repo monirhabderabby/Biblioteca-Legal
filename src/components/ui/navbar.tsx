@@ -1,7 +1,6 @@
 "use client";
 
 // Packages
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Menu } from "lucide-react";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
@@ -69,7 +68,7 @@ const Navbar = ({ isLoggedin, user }: Props) => {
       <div className="container mx-auto">
         <div className="flex justify-between items-center">
           <div>
-            <Link href={"/"} className="bg-red-500">
+            <Link href={"/"} className="bg-red-500 ">
               <Image src={logoSrc} width={40} height={40} alt="Logo" />
             </Link>
           </div>
@@ -93,13 +92,13 @@ const Navbar = ({ isLoggedin, user }: Props) => {
               <>
                 <FramerDropdown
                   trigger={
-                    <Avatar>
-                      <AvatarImage
-                        src={user?.image ?? "https://github.com/shadcn.png"}
-                        alt={user?.first_name + " " + user?.last_name}
-                      />
-                      <AvatarFallback>CN</AvatarFallback>
-                    </Avatar>
+                    <Image
+                      src={user?.image ?? "https://github.com/shadcn.png"}
+                      alt={user?.first_name + " " + user?.last_name}
+                      height={30}
+                      width={30}
+                      className="rounded-full"
+                    />
                   }
                 >
                   {(close) => (
