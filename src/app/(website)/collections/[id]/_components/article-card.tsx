@@ -23,6 +23,7 @@ interface Props {
   data: Article;
   index: number;
   isLoggedin: boolean;
+  documentId: string;
 }
 
 interface ApiRes {
@@ -31,7 +32,7 @@ interface ApiRes {
   data: UserArticleMeta | null;
 }
 
-const ArticleCard = ({ data, index, isLoggedin }: Props) => {
+const ArticleCard = ({ data, index, isLoggedin, documentId }: Props) => {
   const [pending, startTransition] = useTransition();
   const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
   const [selectedColor, setSelectedColor] = useState<string>("");
@@ -68,6 +69,7 @@ const ArticleCard = ({ data, index, isLoggedin }: Props) => {
       updateArticleMeta({
         articleId: data.id,
         selectedColor: color,
+        documentId,
       }).then((res) => {
         if (!res.success) {
           toast.error(res.message);
@@ -87,6 +89,7 @@ const ArticleCard = ({ data, index, isLoggedin }: Props) => {
       updateArticleMeta({
         articleId: data.id,
         isBookmarked: !bookmarked,
+        documentId,
       }).then((res) => {
         if (!res.success) {
           toast.error(res.message);
@@ -106,6 +109,7 @@ const ArticleCard = ({ data, index, isLoggedin }: Props) => {
       updateArticleMeta({
         articleId: data.id,
         comment: comment,
+        documentId,
       }).then((res) => {
         if (!res.success) {
           toast.error(res.message);
@@ -126,6 +130,7 @@ const ArticleCard = ({ data, index, isLoggedin }: Props) => {
       updateArticleMeta({
         articleId: data.id,
         comment: "",
+        documentId,
       }).then((res) => {
         if (!res.success) {
           toast.error(res.message);

@@ -1,15 +1,16 @@
 "use client";
 
 import { PaginationControls } from "@/components/ui/pagination-controls";
-import { Prisma, UserArticleMeta } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import { AlertTriangle, Loader2 } from "lucide-react";
 import { useState } from "react";
-import BookmarkCard from "./bookmarkCard";
+import NotesCard from "./notes-card";
 
 export type UserArticleMetaWithArticle = Prisma.UserArticleMetaGetPayload<{
   include: {
     article: true;
+    document: true;
   };
 }>;
 
@@ -23,14 +24,14 @@ export type UserArticleMetaResponse = {
   };
 };
 
-const BookmarkContainer = () => {
+const NotesContainer = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const { data, isLoading, isError, error } = useQuery<UserArticleMetaResponse>(
     {
       queryKey: ["markers", currentPage],
       queryFn: () =>
-        fetch(`/api/account/bookmarked?page=${currentPage}&limit=10`).then(
-          (res) => res.json()
+        fetch(`/api/account/notes?page=${currentPage}&limit=10`).then((res) =>
+          res.json()
         ),
     }
   );
@@ -63,13 +64,8 @@ const BookmarkContainer = () => {
     content = (
       <div className=" pb-20 space-y-10">
         <div className="grid grid-cols-1 space-y-10">
-          {data.data.map((bookmark: UserArticleMeta, i: number) => (
-            <BookmarkCard
-              key={bookmark.id}
-              articleId={bookmark.articleId}
-              index={i}
-              metaId={bookmark.id}
-            />
+          {data.data.map((d: UserArticleMetaWithArticle) => (
+            <NotesCard key={d.id} document={d.document} />
           ))}
         </div>
         {data.pagination.total > 10 && (
@@ -88,4 +84,4 @@ const BookmarkContainer = () => {
   return <div>{content}</div>;
 };
 
-export default BookmarkContainer;
+export default NotesContainer;

@@ -7,9 +7,10 @@ const ArticleCard = dynamic(() => import("./article-card"), {
 interface Props {
   data: Article[];
   isLoggedin: boolean;
+  documentId: string;
 }
 
-const ArticleWrapper = ({ data, isLoggedin }: Props) => {
+const ArticleWrapper = ({ data, isLoggedin, documentId }: Props) => {
   return (
     <div className="space-y-5">
       {data?.map((item, i) => (
@@ -18,6 +19,7 @@ const ArticleWrapper = ({ data, isLoggedin }: Props) => {
           index={i}
           key={item.id}
           isLoggedin={isLoggedin}
+          documentId={documentId}
         />
       ))}
     </div>

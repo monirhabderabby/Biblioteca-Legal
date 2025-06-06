@@ -8,6 +8,7 @@ interface UpdateMetaInput {
   selectedColor?: string;
   isBookmarked?: boolean;
   comment?: string;
+  documentId: string; // Optional, if you want to associate with a document
 }
 
 export async function updateArticleMeta({
@@ -15,6 +16,7 @@ export async function updateArticleMeta({
   selectedColor,
   isBookmarked,
   comment,
+  documentId,
 }: UpdateMetaInput) {
   const session = await auth();
 
@@ -43,6 +45,7 @@ export async function updateArticleMeta({
         selectedColor: selectedColor ?? undefined,
         isBookmarked: isBookmarked ?? false,
         comment: comment ?? undefined,
+        documentId,
       },
     });
 

@@ -74,6 +74,7 @@ const ArticleContainer = ({ documentId, isLoggedin }: Props) => {
                 <ArticleWrapper
                   data={chapter.articles}
                   isLoggedin={isLoggedin}
+                  documentId={documentId}
                 />
               </div>
             ))}
