@@ -20,6 +20,8 @@ import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
+const priceId = process.env.NEXT_PUBLIC_PRICE_ID!;
+
 export default function RegistrationForm() {
   const [isRedirecting, setRedirecting] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -57,7 +59,7 @@ export default function RegistrationForm() {
         paddle.Checkout.open({
           items: [
             {
-              priceId: "pri_01jwbf7deypnwz4jya27m0nzjq",
+              priceId: priceId,
               quantity: 1,
             },
           ],
