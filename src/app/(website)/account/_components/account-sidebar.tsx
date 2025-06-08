@@ -1,11 +1,31 @@
 "use client";
+import AlertModal from "@/components/ui/alert-modal";
+import { Button } from "@/components/ui/button";
 import clsx from "clsx";
+import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { accountTablists } from "./data";
 
 const AccountSidebar = () => {
+  const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
   const pathname = usePathname();
+
+  const onLogout = () => {
+    setIsLoading(true);
+    signOut({
+      redirectTo: "/",
+    });
+  };
+
+  useEffect(() => {
+    return () => {
+      setIsLoading(false);
+    };
+  }, []);
   return (
     <div className=" h-full">
       <div className="flex h-full max-h-screen flex-col gap-2 ">
@@ -29,9 +49,28 @@ const AccountSidebar = () => {
                 {tab.linkText}
               </Link>
             ))}
+
+            <Button
+              variant="link"
+              className={clsx(
+                "flex items-start text-start mr-auto gap-2 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
+              )}
+              onClick={() => setOpen(true)}
+            >
+              Logout
+            </Button>
           </nav>
         </div>
       </div>
+
+      <AlertModal
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        onConfirm={onLogout}
+        loading={isLoading}
+        title="Are you sure want to logout"
+        message=""
+      />
     </div>
   );
 };
