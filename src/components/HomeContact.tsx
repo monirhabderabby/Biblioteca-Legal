@@ -7,7 +7,7 @@ const HomeContact = () => {
       {/* Left: Image */}
       <div className="flex-shrink-0">
         <Image
-          src="/contactimg.png"
+          src="https://files.edgestore.dev/ln9m9j3kr2yibrue/staticFiled/_public/contactimg.webp"
           height={300}
           width={300}
           alt="Contact"
