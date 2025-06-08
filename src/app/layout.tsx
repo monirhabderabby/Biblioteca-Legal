@@ -1,3 +1,4 @@
+import { prisma } from "@/lib/db";
 import { cn } from "@/lib/utils";
 import AppProvider from "@/provider/AppProvider";
 import type { Metadata } from "next";
@@ -18,11 +19,32 @@ const poppins = Poppins({
   variable: "--font-poppins",
 });
 
-export const metadata: Metadata = {
-  title: "Biblioteca Legal",
-  description:
-    "Biblioteca Legal offers reliable legal resources, case law, and expert insights to support legal professionals, students, and researchers.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const data = await prisma.setting.findFirst();
+
+  return {
+    title: data?.siteName ?? "Biblioteca Legal - Legal Document Services",
+    description:
+      data?.description ??
+      "Biblioteca Legal provides expert legal document services, including drafting, reviewing, and managing legal paperwork with accuracy and confidentiality.",
+    keywords: data?.keywords ?? [
+      "legal document services",
+      "legal drafting",
+      "contract creation",
+      "document review",
+      "legal paperwork",
+      "business legal documents",
+      "remote legal assistance",
+      "legal templates",
+      "freelance legal support",
+      "online legal document services",
+      "legal compliance documentation",
+      "legal writing services",
+      "privacy policy drafting",
+      "terms and conditions generator",
+    ],
+  };
+}
 
 export default function RootLayout({
   children,
