@@ -2,6 +2,7 @@
 
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
+import { revalidatePath } from "next/cache";
 
 export async function watchLater(documentId: string) {
   const cu = await auth();
@@ -34,6 +35,8 @@ export async function watchLater(documentId: string) {
         documentId,
       },
     });
+
+    revalidatePath("/account/documents");
 
     return {
       success: true,
@@ -80,6 +83,8 @@ export async function removeWatchLater(documentId: string) {
         id: existing.id,
       },
     });
+
+    revalidatePath("/account/documents");
 
     return {
       success: true,
