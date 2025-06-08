@@ -57,6 +57,7 @@ export default function LoginForm() {
       loginAction(data).then((res) => {
         if (!res?.success) {
           toast.error(res?.message);
+          setIsLoading(false);
           return;
         } else {
           setIsLoading(true);

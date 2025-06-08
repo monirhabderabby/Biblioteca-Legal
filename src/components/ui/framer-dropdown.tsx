@@ -27,11 +27,11 @@ export default function FramerDropdown({ trigger, children }: DropdownProps) {
     <div className="relative inline-block" ref={ref}>
       <button
         onClick={() => setIsOpen((prev) => !prev)}
-        className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gray-100 hover:bg-gray-200 transition"
+        className="flex items-center gap-2 px-2 py-1 rounded-xl bg-gray-100 hover:bg-gray-200 transition"
       >
         {trigger}
         <ChevronDown
-          className={`w-4 h-4 transition-transform ${isOpen ? "rotate-180" : ""}`}
+          className={`w-4 h-4 text-gray-500 transition-transform ${isOpen ? "rotate-180" : ""}`}
         />
       </button>
 
