@@ -18,15 +18,16 @@ const page = () => {
                 About Biblioteca legal
               </h2>
               <p className="text-[14px] md:text-[16px]  mb-6">
-                We are dedicated to providing comprehensive legal resources and
-                services to our clients. Our team of experienced professionals
-                is committed to excellence and integrity in all aspects of legal
-                practice.
+                Biblioteca Legal was born in response to the lack of digital
+                access to updated legal information in Honduras. It emerged from
+                the real need to provide an accessible, reliable, and
+                easy-to-use tool for those who study or practice law.
               </p>
               <p className="text-[14px] md:text-[16px]">
-                With years of experience in various fields of law, we strive to
-                deliver the highest quality legal assistance tailored to meet
-                the unique needs of each client.
+                The platform was created by a visionary law student who, based
+                on his own experience, identified the shortcomings of the sector
+                and decided to turn them into an opportunity to improve access
+                to legal knowledge
               </p>
             </div>
             <div className="w-full md:w-1/2 flex justify-center">
@@ -68,29 +69,66 @@ const page = () => {
             </div>
             <div className="w-full md:w-1/2 order-1 md:order-2">
               <div className="mb-12">
-                <h3 className="text-2xl md:text-[32px] font-bold text-[#1E2A38] mb-4">
+                <h3 className="text-2xl md:text-[25px] font-bold text-[#1E2A38] mb-4">
                   Vision Statement
                 </h3>
-                <p className="text-lg md:text-xl ">
-                  To be the leading legal resource center, recognized for our
-                  commitment to excellence, integrity, and innovation in
-                  providing accessible legal solutions to all segments of
-                  society.
+                <p className="text-[16px] ">
+                  We want thousands of people across Central America to be able
+                  to say, “I study and work better thanks to Biblioteca Legal.”
+                  Our goal is to reach every corner of the region, helping to
+                  shape better-prepared professionals who are connected to the
+                  legal knowledge they need to grow.
                 </p>
               </div>
               <div>
-                <h3 className="text-2xl md:text-[32px] font-bold text-[#1E2A38] mb-4">
+                <h3 className="text-2xl md:text-[25px] font-bold text-[#1E2A38] mb-4">
                   Mission Statement
                 </h3>
-                <p className="text-lg md:text-xl ">
-                  To empower individuals and organizations through comprehensive
-                  legal resources, education, and services that are accessible,
-                  affordable, and of the highest quality, while upholding the
-                  principles of justice and equity.
+                <p className="text-[16px] ">
+                  At Biblioteca Legal, we believe that everyone should have easy
+                  and affordable access to the laws and codes they need. That’s
+                  why we created a modern and accessible platform where
+                  students, professionals, and legal enthusiasts can find
+                  reliable and always up-to-date legal information, without
+                  complications.
                 </p>
+              </div>
+              <div className="mt-12">
+                <h3 className="text-2xl md:text-[25px] font-bold text-[#1E2A38] mb-4">
+                  💡 Our Values
+                </h3>
+                <ul>
+                  <li>
+                    <span className="font-semibold">Accessibility:</span> We
+                    bring the law closer to everyone.
+                  </li>
+                  <li>
+                    <span className="font-semibold">Empathy:</span> We
+                    understand your challenges and support you.
+                  </li>
+                  <li>
+                    <span className="font-semibold">Quality:</span> Reliable,
+                    up-to-date, and useful content.
+                  </li>
+                  <li>
+                    <span className="font-semibold">Trust:</span> You can always
+                    count on us.
+                  </li>
+                  <li>
+                    <span className="font-semibold">Professionalism:</span> We
+                    work with passion and responsibility.
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
+
+          <p className="mt-12 max-w-[900px]">
+            We believe in a flexible team that learns every day and collaborates
+            with enthusiasm. We support each other, share ideas, and grow
+            together—because legal knowledge can also be dynamic, approachable,
+            and transformative.
+          </p>
         </div>
       </section>
     </div>

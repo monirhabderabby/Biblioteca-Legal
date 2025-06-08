@@ -96,8 +96,11 @@ export default function PricingComparison({ subscription }: Props) {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6 ">
-            <Button className="w-full bg-white hover:bg-white/80 text-slate-900">
-              Contact us
+            <Button
+              asChild
+              className="w-full bg-white hover:bg-white/80 text-slate-900"
+            >
+              <a href="mailto:rrivera@bibliotecalegalhn.com">Contact us</a>
             </Button>
             <div className="space-y-3">
               {features.map((feature, index) => (
