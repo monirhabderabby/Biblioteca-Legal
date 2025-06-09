@@ -49,7 +49,7 @@ export default async function Home() {
       </div>
       <OurServices />
       <ResearchTools />
-      <CTA />
+      {!isLoggedin && <CTA />}
 
       <HomeContact />
     </>

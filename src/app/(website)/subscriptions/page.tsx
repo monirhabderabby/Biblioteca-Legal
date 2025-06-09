@@ -1,9 +1,12 @@
+import { auth } from "@/auth";
 import CTA from "@/components/shared/sections/cta";
 import HeaderSection from "@/components/shared/sections/header";
 import { getCurrentUserSubscription } from "@/helper/subscription";
 import PricingComparison from "./_components/pricing-plan";
 
 const Page = async () => {
+  const cu = await auth();
+  const isLoggedin = !!cu;
   const currentSubscription = await getCurrentUserSubscription();
 
   return (
@@ -19,7 +22,7 @@ const Page = async () => {
         sub_type={currentSubscription?.type as "user" | "company"}
       />
 
-      <CTA />
+      {!isLoggedin && <CTA />}
     </div>
   );
 };
