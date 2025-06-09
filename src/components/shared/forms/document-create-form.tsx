@@ -55,6 +55,7 @@ export function DocumentCreateForm() {
     resolver: zodResolver(documentFormSchema),
     defaultValues: {
       categoryIds: [],
+      short_description: "",
     },
   });
 
@@ -74,6 +75,8 @@ export function DocumentCreateForm() {
       });
     });
   }
+
+  const shortCharacter = form.watch("short_description").length;
 
   return (
     <Form {...form}>
@@ -167,8 +170,14 @@ export function DocumentCreateForm() {
                   {...field}
                 />
               </FormControl>
-              <FormDescription className="text-xs text-gray-500">
-                Provide a short summary of the document content
+              <FormDescription
+                className={cn(
+                  "text-xs text-gray-500",
+                  shortCharacter > 145 && "text-red-500"
+                )}
+              >
+                Provide a short summary of the document content (
+                {shortCharacter} / 145)
               </FormDescription>
               <FormMessage />
             </FormItem>
