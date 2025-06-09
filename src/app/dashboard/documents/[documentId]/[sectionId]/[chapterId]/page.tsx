@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/db";
 import moment from "moment";
 import { notFound } from "next/navigation";
+import BackNow from "../../../_components/back-now";
 import ArticleContainer from "./_components/article-container";
 
 const Page = async ({
@@ -41,7 +42,8 @@ const Page = async ({
   });
 
   return (
-    <div>
+    <div className="space-y-[30px]">
+      <BackNow />
       <section className="flex justify-between items-start">
         <div className="space-y-[15px]">
           <h1 className="font-bold text-[24px] leading-[120%]">
