@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight, BookOpen, FileSearch } from "lucide-react";
+import Link from "next/link";
 
 export default function OurServices() {
   return (
@@ -42,9 +43,12 @@ export default function OurServices() {
               <Button
                 variant="outline"
                 className="bg-white rounded-full text-slate-800 border-white hover:bg-slate-100 group-hover:bg-slate-800 group-hover:text-white group-hover:border-slate-800 transition-all duration-300"
+                asChild
               >
-                Browse Library
-                <ArrowRight className="ml-2 w-4 h-4" />
+                <Link href="/collections">
+                  Browse Library
+                  <ArrowRight className="ml-2 w-4 h-4" />
+                </Link>
               </Button>
             </CardContent>
           </Card>
@@ -97,9 +101,12 @@ export default function OurServices() {
               <Button
                 variant="outline"
                 className="bg-white rounded-full text-slate-800 border-white hover:bg-slate-100 group-hover:bg-slate-800 group-hover:text-white group-hover:border-slate-800 transition-all duration-300"
+                asChild
               >
-                Tray Serarch
-                <ArrowRight className="ml-2 w-4 h-4" />
+                <Link href="/collections">
+                  Browse Library
+                  <ArrowRight className="ml-2 w-4 h-4" />
+                </Link>
               </Button>
             </CardContent>
           </Card>
