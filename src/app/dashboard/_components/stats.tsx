@@ -1,4 +1,4 @@
-import { BarChart3, FileText, ShoppingBag } from "lucide-react";
+import { BarChart3, FileText } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { prisma } from "@/lib/db";
@@ -7,7 +7,7 @@ const Stats = async () => {
   const totalUsers = await prisma.user.count();
   const totalDocuments = await prisma.document.count();
   return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-6 md:grid-cols-2 ">
       <Card>
         <CardContent className="flex items-center justify-between p-6">
           <div>
@@ -23,7 +23,7 @@ const Stats = async () => {
           </div>
         </CardContent>
       </Card>
-      <Card>
+      {/* <Card>
         <CardContent className="flex items-center justify-between p-6">
           <div>
             <p className="text-sm font-medium text-muted-foreground">
@@ -35,7 +35,7 @@ const Stats = async () => {
             <ShoppingBag className="h-6 w-6 text-primary" />
           </div>
         </CardContent>
-      </Card>
+      </Card> */}
       <Card>
         <CardContent className="flex items-center justify-between p-6">
           <div>
