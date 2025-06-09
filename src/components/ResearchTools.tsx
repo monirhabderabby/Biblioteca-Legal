@@ -1,27 +1,38 @@
 "use client";
 
+import useCollectionSearchStore from "@/store/collections";
 import { Gavel, Search } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { GiWhiteBook } from "react-icons/gi";
 import { VscLaw } from "react-icons/vsc";
+import { Input } from "./ui/input";
 
 type TabKey = "legislation" | "jurisprudence" | "doctrine";
 
 export default function ResearchTools() {
   const [activeTab, setActiveTab] = useState<TabKey>("legislation");
+  const { query, setQuery } = useCollectionSearchStore();
+  const router = useRouter();
 
   const tabContent: Record<TabKey, JSX.Element> = {
     legislation: (
       <div className="space-y-6">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <input
-            type="text"
+          <Input
+            startIcon={Search}
             placeholder="Search Legislation"
-            className="w-full rounded-lg border border-gray-300 bg-white py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && query !== "") {
+                // router.push(`/collections?q=${encodeURIComponent(query)}`);
+                router.push("/collections");
+              }
+            }}
           />
         </div>
-        <div className="space-y-4">
+        {/* <div className="space-y-4">
           <p className="text-base text-start font-medium">Popular searches:</p>
           <div className="flex flex-wrap gap-2">
             <button className="rounded-full bg-gray-100 px-4 py-2 text-sm hover:bg-gray-200">
@@ -40,20 +51,26 @@ export default function ResearchTools() {
               Tax Regulations
             </button>
           </div>
-        </div>
+        </div> */}
       </div>
     ),
     jurisprudence: (
       <div className="space-y-6">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <input
-            type="text"
-            placeholder="Search Jurisprudence"
-            className="w-full rounded-lg border border-gray-300 bg-white py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+          <Input
+            startIcon={Search}
+            placeholder="Search Legislation"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && query !== "") {
+                // router.push(`/collections?q=${encodeURIComponent(query)}`);
+                router.push("/collections");
+              }
+            }}
           />
         </div>
-        <div className="space-y-4">
+        {/* <div className="space-y-4">
           <p className="text-base text-start font-medium">Popular searches:</p>
           <div className="flex flex-wrap gap-2">
             <button className="rounded-full bg-gray-100 px-4 py-2 text-sm hover:bg-gray-200">
@@ -66,20 +83,26 @@ export default function ResearchTools() {
               Landmark Decisions
             </button>
           </div>
-        </div>
+        </div> */}
       </div>
     ),
     doctrine: (
       <div className="space-y-6">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <input
-            type="text"
-            placeholder="Search Doctrine"
-            className="w-full rounded-lg border border-gray-300 bg-white py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+          <Input
+            startIcon={Search}
+            placeholder="Search Legislation"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && query !== "") {
+                // router.push(`/collections?q=${encodeURIComponent(query)}`);
+                router.push("/collections");
+              }
+            }}
           />
         </div>
-        <div className="space-y-4">
+        {/* <div className="space-y-4">
           <p className="text-base text-start font-medium">Popular searches:</p>
           <div className="flex flex-wrap gap-2">
             <button className="rounded-full bg-gray-100 px-4 py-2 text-sm hover:bg-gray-200">
@@ -92,7 +115,7 @@ export default function ResearchTools() {
               Legal Commentary
             </button>
           </div>
-        </div>
+        </div> */}
       </div>
     ),
   };

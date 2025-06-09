@@ -5,8 +5,10 @@ import { useArticleSearchStore } from "@/store/collections";
 import { Prisma } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
+import { useEffect } from "react";
 import ArticleHeader from "./article-header";
 import ArticleWrapper from "./article-wrapper";
+import SignInToContinue from "./sign-in-to-continue";
 
 interface Props {
   documentId: string;
@@ -44,6 +46,10 @@ const ArticleContainer = ({ documentId, isLoggedin }: Props) => {
       ),
   });
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
   let content;
 
   if (isLoading) {
@@ -62,7 +68,7 @@ const ArticleContainer = ({ documentId, isLoggedin }: Props) => {
     );
   } else {
     content = (
-      <div className=" space-y-[100px] mb-[200px]">
+      <div className=" space-y-[100px] mb-[100px]">
         {data.data.map((section) => (
           <div key={section.id} className="space-y-[80px]">
             {section.chapters.map((chapter) => (
@@ -80,6 +86,8 @@ const ArticleContainer = ({ documentId, isLoggedin }: Props) => {
             ))}
           </div>
         ))}
+
+        <SignInToContinue />
       </div>
     );
   }

@@ -27,7 +27,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
 
   return (
     <div className="">
-      <CollectionHeader document={document} />
+      <CollectionHeader document={document} hasFullAccess={hasFullAccess} />
 
       <ArticleContainer documentId={params.id} isLoggedin={!!hasFullAccess} />
     </div>

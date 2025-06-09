@@ -1,4 +1,5 @@
 "use client";
+import CompanyContactModal from "@/components/shared/modals/compnay-contact-modal";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Check, X } from "lucide-react";
@@ -96,12 +97,13 @@ export default function PricingComparison({ subscription }: Props) {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6 ">
-            <Button
-              asChild
-              className="w-full bg-white hover:bg-white/80 text-slate-900"
-            >
-              <a href="mailto:rrivera@bibliotecalegalhn.com">Contact us</a>
-            </Button>
+            <CompanyContactModal
+              trigger={
+                <Button className="w-full bg-white hover:bg-white/80 text-slate-900">
+                  Contact us
+                </Button>
+              }
+            />
             <div className="space-y-3">
               {features.map((feature, index) => (
                 <div key={index} className="flex items-center gap-3">
