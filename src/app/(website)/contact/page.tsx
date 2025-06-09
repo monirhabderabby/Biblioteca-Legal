@@ -1,8 +1,12 @@
+import { auth } from "@/auth";
 import CTA from "@/components/shared/sections/cta";
 import HeaderSection from "@/components/shared/sections/header";
 import ContactForm from "./_components/contact-form.";
 
-const Page = () => {
+const Page = async () => {
+  const cu = await auth();
+  const isLoggedin = !!cu;
+
   return (
     <div>
       <HeaderSection
@@ -20,7 +24,7 @@ const Page = () => {
         <ContactForm />
       </div>
 
-      <CTA />
+      {!isLoggedin && <CTA />}
     </div>
   );
 };

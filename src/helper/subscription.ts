@@ -122,3 +122,19 @@ export const getPaddleCustomerId = async (userId: string) => {
 
   return paddleCustomerId;
 };
+
+export const isSubscribed = async () => {
+  const cu = await auth();
+
+  const cs = await getCurrentUserSubscription();
+
+  const now = new Date();
+
+  const isActive = cs?.subscription.isActive ?? false;
+  const currentPeriodEnd = cs?.subscription.currentPeriodEnd;
+
+  const hasFullAccess =
+    isActive && !!currentPeriodEnd && currentPeriodEnd > now && !!cu;
+
+  return !!hasFullAccess;
+};

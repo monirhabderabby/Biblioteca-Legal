@@ -18,9 +18,10 @@ interface apiProps {
 
 interface Props {
   document: Document;
+  hasFullAccess: boolean;
 }
 
-const CollectionHeader = ({ document }: Props) => {
+const CollectionHeader = ({ document, hasFullAccess }: Props) => {
   const [pending, startTransition] = useTransition();
   const { query, setQuery } = useArticleSearchStore();
 
@@ -29,8 +30,6 @@ const CollectionHeader = ({ document }: Props) => {
     queryFn: () =>
       fetch(`/api/watch-later/${document.id}`).then((res) => res.json()),
   });
-
-  console.log(data);
 
   const isWatched = data?.success;
   const loading = pending || isLoading;
@@ -69,28 +68,32 @@ const CollectionHeader = ({ document }: Props) => {
         {document.name}
       </h1>
 
-      <Input
-        placeholder="Search by  section title or chapter title..."
-        className="max-w-[600px] mx-auto"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-      />
+      {hasFullAccess && (
+        <>
+          <Input
+            placeholder="Search by  section title or chapter title..."
+            className="max-w-[600px] mx-auto"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
 
-      <Button
-        variant="outline"
-        className="text-primary hover:text-primary/80"
-        disabled={loading}
-        onClick={watchListHandle}
-      >
-        {loading ? (
-          <Loader2 className="animate-spin" />
-        ) : isWatched ? (
-          <Check />
-        ) : (
-          <Clock />
-        )}{" "}
-        {isWatched ? "Remove watch list" : "Watch Later"}
-      </Button>
+          <Button
+            variant="outline"
+            className="text-primary hover:text-primary/80"
+            disabled={loading}
+            onClick={watchListHandle}
+          >
+            {loading ? (
+              <Loader2 className="animate-spin" />
+            ) : isWatched ? (
+              <Check />
+            ) : (
+              <Clock />
+            )}{" "}
+            {isWatched ? "Remove watch list" : "Watch Later"}
+          </Button>
+        </>
+      )}
     </div>
   );
 };
