@@ -19,7 +19,7 @@ import { Input } from "@/components/ui/input";
 import { loginFormSchema, LoginFormValues } from "@/schemas/auth";
 import Cookies from "js-cookie"; // Import js-cookie for cookie retrieval
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 
 // Retrieve cookies for email and "Remember Me"
@@ -32,6 +32,8 @@ export default function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [pending, startTransition] = useTransition();
   const [isMounted, setMounted] = useState(false);
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirectTo") ?? undefined;
 
   const router = useRouter();
 
@@ -62,9 +64,9 @@ export default function LoginForm() {
         } else {
           setIsLoading(true);
           if (res.role === "user") {
-            router.push("/");
+            router.push(redirectTo ?? "/");
           } else if (res.role === "admin") {
-            router.push("/dashboard");
+            router.push(redirectTo ?? "/dashboard");
           }
         }
       });

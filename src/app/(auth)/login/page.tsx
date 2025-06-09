@@ -1,8 +1,13 @@
+import { auth } from "@/auth";
 import { logoSrc } from "@/helper/assets";
 import Image from "next/image";
+import { redirect } from "next/navigation";
 import LoginForm from "./_components/login-form";
 
-export default function LoginPage() {
+export default async function LoginPage() {
+  const cu = await auth();
+
+  if (!!cu) redirect("/");
   return (
     <div className="flex min-h-screen">
       {/* Left side - Image */}
