@@ -28,3 +28,12 @@ export const companySubscriptionSchema = z.object({
 export type CompanySubscriptionSchemaType = z.infer<
   typeof companySubscriptionSchema
 >;
+
+export const companyContactSchema = z.object({
+  companyName: z.string().min(1, "Company name is required"),
+  numberOfEmployee: z.number().min(1, "Must have at least 1 employee"),
+  managerEmail: z.string().email("Invalid email address"),
+  about: z.string().min(10, "Please tell us more about your company"),
+});
+
+export type CompanyContactSchemaType = z.infer<typeof companyContactSchema>;
