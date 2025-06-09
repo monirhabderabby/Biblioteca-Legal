@@ -1,18 +1,30 @@
 "use server";
 
 import ContactFormSubmissionTemplate from "@/email-templates/contact-form-submission";
+import { prisma } from "@/lib/db";
 import { resend } from "@/lib/resend";
 import { contactFormSchema, ContactFormValues } from "@/schemas/contact";
 
-const adminEmail = process.env.ADMIN_EMAIL!;
-
 export async function createContact(data: ContactFormValues) {
+  // Fetch settings from the database
+  const settings = await prisma.setting.findFirst();
+
+  // Return early if settings or supportEmail are missing
+  if (!settings || !settings.supportEmail) {
+    return {
+      success: false,
+      message:
+        "Unable to process your request at the moment. Please try again later.",
+    };
+  }
+
+  // Validate the input data
   const parsedData = contactFormSchema.safeParse(data);
 
   if (!parsedData.success) {
     return {
       success: false,
-      message: parsedData.error.message,
+      message: "Invalid form data. " + parsedData.error.message,
     };
   }
 
@@ -20,28 +32,34 @@ export async function createContact(data: ContactFormValues) {
   const submittedAt = new Date();
 
   try {
+    // Send the email using Resend
     await resend.emails.send({
       from: `Contact Form <contact@bibliotecalegalhn.com>`,
-      to: [adminEmail],
-      subject: "Please verify your email address",
+      to: [settings.supportEmail],
+      subject: "New Contact Form Submission",
       react: ContactFormSubmissionTemplate({
         customerEmail: email,
         customerName: name,
         message,
-        submittedAt: submittedAt,
+        submittedAt,
       }),
     });
 
     return {
       success: true,
       message:
-        "Your message has been sent successfully. We will get back to you soon.",
+        "Thank you for contacting us, " +
+        name +
+        ". Your message has been successfully sent.",
     };
-  } catch {
+  } catch (error) {
+    console.error("Email sending error:", error);
+
     return {
       success: false,
       message:
-        "There was an error sending your message. Please try again later.",
+        "There was an error sending your message. Please try again later or contact us directly at " +
+        settings.supportEmail,
     };
   }
 }
