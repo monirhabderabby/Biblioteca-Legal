@@ -89,7 +89,6 @@ const ManageAdminPopover = () => {
         {data?.data?.users.map((user) => (
           <CommandItem
             key={user.id}
-            onSelect={() => handleMakeAdmin(user.id)}
             className="flex items-center justify-between"
             disabled={pending}
           >
@@ -121,6 +120,7 @@ const ManageAdminPopover = () => {
                 variant="outline"
                 className="ml-auto text-primary hover:text-primary/80"
                 disabled={pending}
+                onClick={() => handleMakeAdmin(user.id)}
               >
                 <Shield className="mr-1 h-3 w-3" />
                 Make Admin

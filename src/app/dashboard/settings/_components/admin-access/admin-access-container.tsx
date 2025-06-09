@@ -1,15 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+
 import {
   Table,
   TableBody,
@@ -19,7 +11,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { prisma } from "@/lib/db";
-import { MoreHorizontal } from "lucide-react";
+
+import AdminAccessTableAction from "./admin-access-table-action";
 import ManageAdminPopover from "./manage-admin-popover";
 
 const AdminAccessContainer = async () => {
@@ -77,23 +70,7 @@ const AdminAccessContainer = async () => {
                     )}
                   </TableCell>
                   <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                          <MoreHorizontal className="h-4 w-4" />
-                          <span className="sr-only">Open menu</span>
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        {user.role === "admin" ? (
-                          <DropdownMenuItem>Remove Admin</DropdownMenuItem>
-                        ) : (
-                          <DropdownMenuItem>Make Admin</DropdownMenuItem>
-                        )}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                    <AdminAccessTableAction user={user} />
                   </TableCell>
                 </TableRow>
               ))}
