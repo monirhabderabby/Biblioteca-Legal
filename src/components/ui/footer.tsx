@@ -1,10 +1,4 @@
-import {
-  Instagram,
-  Linkedin,
-  Mail,
-  MessageCircle,
-  Twitter,
-} from "lucide-react";
+import { Mail } from "lucide-react";
 import Image from "next/image";
 
 export default function Footer() {
@@ -22,12 +16,16 @@ export default function Footer() {
     { name: "Refund Policy", href: "/refund-policy" },
   ];
 
-  const socialLinks = [
+  {
+    /*
+    const socialLinks = [
     { name: "Instagram", icon: Instagram, href: "https://instagram.com" },
     { name: "LinkedIn", icon: Linkedin, href: "https://linkedin.com" },
     { name: "Twitter", icon: Twitter, href: "https://twitter.com" },
     { name: "WhatsApp", icon: MessageCircle, href: "https://whatsapp.com" },
   ];
+    */
+  }
 
   return (
     <footer className="bg-primary text-white">
