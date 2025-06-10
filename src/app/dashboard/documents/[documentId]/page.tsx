@@ -9,6 +9,7 @@ import { prisma } from "@/lib/db";
 import moment from "moment";
 import dynamic from "next/dynamic";
 import { notFound } from "next/navigation";
+import BackNow from "../_components/back-now";
 import DocumentHeaderAction from "./_components/document-header-action";
 import SectionSearch from "./_components/section-search";
 const SectionTitleContainer = dynamic(
@@ -38,6 +39,7 @@ const Page = async ({ params }: { params: { documentId: string } }) => {
 
   return (
     <div className="space-y-[30px]">
+      <BackNow />
       <section className="flex justify-between items-start">
         <div className="space-y-[15px]">
           <h1 className="font-bold text-[24px] leading-[120%]">
