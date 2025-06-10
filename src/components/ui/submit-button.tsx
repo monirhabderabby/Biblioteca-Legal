@@ -16,7 +16,7 @@ export const SubmitButton = ({
   return (
     <Button
       type="submit"
-      className={cn("w-full min-h-[40px]", className)}
+      className={cn("w-full ", className)}
       disabled={isLoading}
     >
       {children}
