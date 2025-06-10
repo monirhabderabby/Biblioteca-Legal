@@ -1,8 +1,21 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Document } from "@prisma/client";
-import { Calendar, FileText } from "lucide-react";
+import {
+  Calendar,
+  ExternalLink,
+  FileText,
+  Pencil,
+  Settings,
+} from "lucide-react";
 import moment from "moment";
 import Link from "next/link";
 
@@ -17,6 +30,37 @@ const ManageDocumentCard = ({ document }: Props) => {
         <h2 className="text-primary font-bold text-[24px] leading-[120%]">
           {document?.name}
         </h2>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild className="w-10">
+            <Button
+              size="icon"
+              variant="outline"
+              className="text-primary hover:text-primary/80"
+            >
+              <Settings />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start">
+            <DropdownMenuGroup>
+              <DropdownMenuItem asChild>
+                <Link
+                  href={`/dashboard/documents/edit/${document?.id}`}
+                  className="flex items-center cursor-pointer hover:bg-gray-100"
+                >
+                  <Pencil className="h-4 w-4" /> Edit
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link
+                  href={`/collections/${document?.id}`}
+                  className="flex items-center cursor-pointer hover:bg-gray-100"
+                >
+                  <ExternalLink className="h-4 w-4" /> View
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
       <p className="mt-[15px] text-primary font-semibold text-[14px] leading-[120%] tracking-[0%]">
         {document?.short_description}

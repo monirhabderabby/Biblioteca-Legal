@@ -5,7 +5,7 @@ import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 
-import { createDocument } from "@/actions/document/create";
+import { createDocument, editDocument } from "@/actions/document/create";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -35,13 +35,17 @@ import { SubmitButton } from "@/components/ui/submit-button";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { documentFormSchema, DocumentFormSchemaType } from "@/schemas/document";
-import { Category } from "@prisma/client";
+import { Category, Document } from "@prisma/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { toast } from "sonner";
 
-export function DocumentCreateForm() {
+interface Props {
+  initialData?: Document;
+}
+
+export function DocumentCreateForm({ initialData }: Props) {
   const [pending, startTransition] = useTransition();
   const router = useRouter();
 
@@ -54,25 +58,42 @@ export function DocumentCreateForm() {
   const form = useForm<DocumentFormSchemaType>({
     resolver: zodResolver(documentFormSchema),
     defaultValues: {
-      categoryIds: [],
-      short_description: "",
+      categoryIds: initialData?.categories.map((item) => item.id) ?? [],
+      short_description: initialData?.short_description ?? "",
+      name: initialData?.name ?? "",
+      law_number: initialData?.law_number ?? "",
+      publishedDate: initialData?.createdAt ?? undefined,
     },
   });
 
   // Handle form submission
   function handleSubmit(data: DocumentFormSchemaType) {
     startTransition(() => {
-      createDocument(data).then((res) => {
-        if (!res.success) {
-          toast.error(res.message);
-          return;
-        }
+      if (initialData) {
+        editDocument(initialData.id, data).then((res) => {
+          if (!res.success) {
+            toast.error(res.message);
+            return;
+          }
 
-        // handle succees
-        queryClient.invalidateQueries({ queryKey: ["documents"] });
-        toast.success(res.message);
-        router.back();
-      });
+          // handle succees
+          queryClient.invalidateQueries({ queryKey: ["documents"] });
+          toast.success(res.message);
+          router.back();
+        });
+      } else {
+        createDocument(data).then((res) => {
+          if (!res.success) {
+            toast.error(res.message);
+            return;
+          }
+
+          // handle succees
+          queryClient.invalidateQueries({ queryKey: ["documents"] });
+          toast.success(res.message);
+          router.back();
+        });
+      }
     });
   }
 
@@ -270,7 +291,7 @@ export function DocumentCreateForm() {
             Cancel
           </Button>
           <SubmitButton isLoading={pending} className="w-fit">
-            Create
+            {initialData ? "Save" : "Create"}
           </SubmitButton>
         </div>
       </form>
