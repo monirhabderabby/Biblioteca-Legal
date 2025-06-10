@@ -47,6 +47,7 @@ export default function Footer() {
               Your comprehensive virtual legal library with access to laws,
               decrees, and legal documents.
             </p>
+            {/*
             <div className="flex space-x-4">
               {socialLinks.map((social) => {
                 const IconComponent = social.icon;
@@ -62,6 +63,7 @@ export default function Footer() {
                 );
               })}
             </div>
+            */}
           </div>
 
           {/* Quick Links */}
