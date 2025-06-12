@@ -20,6 +20,11 @@ import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
+const priceId = process.env.NEXT_PUBLIC_PRICE_ID;
+if (!priceId) {
+  throw new Error("Price ID is not defined in environment variables.");
+}
+
 export default function RegistrationForm() {
   const [isRedirecting, setRedirecting] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -41,7 +46,7 @@ export default function RegistrationForm() {
         customerName: `${values.first_name} ${values.last_name}`,
       });
 
-      if (customerId) {
+      if (customerId && priceId) {
         paddle.Checkout.open({
           items: [
             {
@@ -72,7 +77,7 @@ export default function RegistrationForm() {
 
   useEffect(() => {
     initializePaddle({
-      environment: "sandbox",
+      environment: "production",
       token: process.env.NEXT_PUBLIC_PADDLE_TOKEN!,
     }).then((paddle) => setPaddle(paddle));
   }, []);
