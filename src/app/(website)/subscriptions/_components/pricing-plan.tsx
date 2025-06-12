@@ -16,9 +16,10 @@ interface Sub {
 interface Props {
   subscription?: Sub;
   sub_type: "user" | "company";
+  price: string;
 }
 
-export default function PricingComparison({ subscription }: Props) {
+export default function PricingComparison({ subscription, price }: Props) {
   const router = useRouter();
   const features = [
     { name: "Unlimited Access to Documents", starter: true, business: true },
@@ -50,7 +51,7 @@ export default function PricingComparison({ subscription }: Props) {
               User base
             </CardTitle>
             <div className="flex items-baseline justify-start">
-              <span className="text-4xl font-bold text-primary">$150</span>
+              <span className="text-4xl font-bold text-primary">{price}</span>
               <span className="text-gray-500 ml-1">/month</span>
             </div>
           </CardHeader>
