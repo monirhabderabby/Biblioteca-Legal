@@ -13,8 +13,8 @@ const Page = async () => {
     <div>
       <HeaderSection
         imageUrl="https://files.edgestore.dev/ln9m9j3kr2yibrue/staticFiled/_public/subscription%20page.webp"
-        title="Our Subscriptions"
-        description="Join our platform to access comprehensive legal resources"
+        title="Nuestras Suscripciones"
+        description="Únete a nuestra plataforma para acceder a recursos legales completos"
       />
 
       <PricingComparison

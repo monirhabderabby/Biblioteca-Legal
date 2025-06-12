@@ -7,17 +7,17 @@ import ResetRequestForm from "./_components/reset-request-form";
 export default function LoginPage() {
   return (
     <div className="flex min-h-screen">
-      {/* Left side - Image */}
+      {/* Lado izquierdo - Imagen */}
       <div className="hidden lg:w-3/5 md:w-1/2 bg-gray-900 lg:block relative">
         <Image
-          src="https://files.edgestore.dev/ln9m9j3kr2yibrue/public/_public/a92586cfd664d6c1cb2ae1be58175b3a05502154.jpg"
-          alt="Team meeting"
+          src="https://files.edgestore.dev/ln9m9j3kr2yibrue/staticFiled/_public/login%20page%20sidebar.webp"
+          alt="Reunión de equipo"
           fill
           className="object-cover"
         />
       </div>
 
-      {/* Right side - Login form */}
+      {/* Lado derecho - Formulario de restablecimiento */}
       <div className="flex w-full flex-col items-center justify-center px-4 py-12 lg:w-1/2 relative">
         <Image
           src={logoSrc}
@@ -27,24 +27,23 @@ export default function LoginPage() {
           className="mb-5"
         />
         <div className="mx-auto w-full max-w-md space-y-10">
-          {/* Logo */}
-
+          {/* Encabezado */}
           <div className="text-center">
-            <h1 className="text-[32px] leading-[120%]  font-semibold text-gray-900">
-              Reset <span className="text-pretty ">password</span>
+            <h1 className="text-[32px] leading-[120%] font-semibold text-gray-900">
+              Restablecer <span className="text-pretty">contraseña</span>
             </h1>
             <p className="mt-2 text-sm text-gray-600">
-              Enter your email to receive the OTP
+              Ingresa tu correo electrónico para recibir el código OTP
             </p>
           </div>
 
-          {/*  form component */}
+          {/* Componente del formulario */}
           <ResetRequestForm />
 
           <div className="w-full flex justify-center">
             <Link href="/" className="flex items-center gap-x-2 group">
               <MoveLeft />{" "}
-              <span className="group-hover:underline">Back to home</span>
+              <span className="group-hover:underline">Volver al inicio</span>
             </Link>
           </div>
         </div>

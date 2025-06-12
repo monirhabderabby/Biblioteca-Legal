@@ -17,38 +17,38 @@ export async function loginAction(data: LoginFormValues) {
     };
   }
 
-  // Check if the user exists
-  const user = await prisma.user.findFirst({
+  // Verificar si el usuario existe
+  const usuario = await prisma.user.findFirst({
     where: {
       email: parsedData.email as string,
     },
   });
 
-  if (!user) {
+  if (!usuario) {
     return {
       success: false,
-      message: "User Not Found!",
+      message: "¡Usuario no encontrado!",
     };
   }
 
-  if (!user.emailVerified) {
+  if (!usuario.emailVerified) {
     return {
       success: false,
       message:
-        "Your email is not verified. Please check your inbox and verify your email address before logging in.",
+        "Tu correo electrónico no está verificado. Por favor, revisa tu bandeja de entrada y verifica tu dirección antes de iniciar sesión.",
     };
   }
 
-  // Verify the password
-  const isPasswordValid = await bcrypt.compare(
+  // Verificar la contraseña
+  const contraseñaValida = await bcrypt.compare(
     parsedData.password as string,
-    user.password
+    usuario.password
   );
 
-  if (!isPasswordValid) {
+  if (!contraseñaValida) {
     return {
       success: false,
-      message: "Password mismatch!",
+      message: "¡La contraseña no coincide!",
     };
   }
 
@@ -59,8 +59,8 @@ export async function loginAction(data: LoginFormValues) {
       redirect: false,
     });
 
-    // Manage "Remember Me" cookies using the reusable function
-    await manageRememberMeCookies(
+    // Manejar cookies de "Recordarme"
+    await manejarCookiesRecordarme(
       !!data.rememberMe,
       data.rememberMe ? data.email : undefined,
       data.rememberMe ? data.password : undefined
@@ -68,51 +68,48 @@ export async function loginAction(data: LoginFormValues) {
 
     return {
       success: true,
-      message: "Login successful",
-      role: user.role as Role,
+      message: "Inicio de sesión exitoso",
+      role: usuario.role as Role,
     };
-
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.log(error);
     return {
       success: false,
-      message: error.message ?? "Something went wrong!",
+      message: error.message ?? "¡Algo salió mal!",
     };
   }
 }
 
 /**
- * A reusable server action to manage "Remember Me" cookies.
+ * Acción del servidor reutilizable para manejar las cookies de "Recordarme".
  *
- * @param {boolean} rememberMe - Whether the user wants to be remembered.
- * @param {string | undefined} email - The email to store in the cookie (optional if deleting).
- * @param {string | undefined} password - The password to store in the cookie (optional if deleting).
+ * @param {boolean} recordarme - Si el usuario desea ser recordado.
+ * @param {string | undefined} email - Correo a guardar en la cookie (opcional si se va a eliminar).
+ * @param {string | undefined} password - Contraseña a guardar en la cookie (opcional si se va a eliminar).
  */
-export async function manageRememberMeCookies(
-  rememberMe: boolean,
+export async function manejarCookiesRecordarme(
+  recordarme: boolean,
   email?: string,
   password?: string
 ) {
-  const cookieOptions = {
-    sameSite: "strict" as const, // Prevents the cookie from being sent with cross-site requests
-    maxAge: 2592000, // Expires after 30 days (in seconds)
+  const opcionesCookie = {
+    sameSite: "strict" as const,
+    maxAge: 2592000, // 30 días
   };
 
-  if (rememberMe && email && password) {
-    // Set the "rememberMeEmail" and "rememberMePassword" cookies
+  if (recordarme && email && password) {
     cookies().set({
       name: "rememberMeEmail",
       value: email,
-      ...cookieOptions,
+      ...opcionesCookie,
     });
     cookies().set({
       name: "rememberMePassword",
       value: password,
-      ...cookieOptions,
+      ...opcionesCookie,
     });
   } else {
-    // Delete the "rememberMeEmail" and "rememberMePassword" cookies
     cookies().delete("rememberMeEmail");
     cookies().delete("rememberMePassword");
   }

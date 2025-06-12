@@ -3,29 +3,18 @@ import Image from "next/image";
 
 export default function Footer() {
   const quickLinks = [
-    { name: "Home", href: "/" },
-    { name: "Collection", href: "/collections" },
-    { name: "Subscriptions", href: "/subscriptions" },
-    { name: "Contact", href: "/contact" },
+    { name: "Inicio", href: "/" },
+    { name: "Colección", href: "/collections" },
+    { name: "Suscripciones", href: "/subscriptions" },
+    { name: "Contacto", href: "/contact" },
   ];
 
   const legalLinks = [
-    { name: "About", href: "/about-us" },
-    { name: "Terms & Condition", href: "/terms-and-condition" },
-    { name: "Privacy Policy", href: "/privacy-policy" },
-    { name: "Refund Policy", href: "/refund-policy" },
+    { name: "Acerca de", href: "/about-us" },
+    { name: "Términos y Condiciones", href: "/terms-and-condition" },
+    { name: "Política de Privacidad", href: "/privacy-policy" },
+    { name: "Política de Reembolso", href: "/refund-policy" },
   ];
-
-  {
-    /*
-    const socialLinks = [
-    { name: "Instagram", icon: Instagram, href: "https://instagram.com" },
-    { name: "LinkedIn", icon: Linkedin, href: "https://linkedin.com" },
-    { name: "Twitter", icon: Twitter, href: "https://twitter.com" },
-    { name: "WhatsApp", icon: MessageCircle, href: "https://whatsapp.com" },
-  ];
-    */
-  }
 
   return (
     <footer className="bg-primary text-white">
@@ -42,31 +31,14 @@ export default function Footer() {
               />
             </div>
             <p className="text-slate-300 text-sm mb-6 leading-relaxed">
-              Your comprehensive virtual legal library with access to laws,
-              decrees, and legal documents.
+              Su biblioteca legal virtual integral con acceso a leyes, decretos
+              y documentos legales.
             </p>
-            {/*
-            <div className="flex space-x-4">
-              {socialLinks.map((social) => {
-                const IconComponent = social.icon;
-                return (
-                  <a
-                    key={social.name}
-                    href={social.href}
-                    className="text-slate-400 hover:text-white transition-colors duration-200"
-                    aria-label={social.name}
-                  >
-                    <IconComponent className="w-5 h-5" />
-                  </a>
-                );
-              })}
-            </div>
-            */}
           </div>
 
           {/* Quick Links */}
           <div className="lg:col-span-1">
-            <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
+            <h4 className="text-lg font-semibold mb-4">Enlaces Rápidos</h4>
             <ul className="space-y-3">
               {quickLinks.map((link) => (
                 <li key={link.name}>
@@ -100,7 +72,7 @@ export default function Footer() {
 
           {/* Contact Us */}
           <div className="lg:col-span-1">
-            <h4 className="text-lg font-semibold mb-4">Contact Us</h4>
+            <h4 className="text-lg font-semibold mb-4">Contáctenos</h4>
             <div className="flex items-center space-x-2">
               <Mail className="w-4 h-4 text-slate-400" />
               <a
@@ -116,7 +88,7 @@ export default function Footer() {
         {/* Copyright */}
         <div className="border-t border-slate-700 mt-8 pt-8">
           <p className="text-center text-slate-400 text-sm">
-            © 2025 BIBLIOTECA LEGAL All rights reserved.
+            © 2025 BIBLIOTECA LEGAL Todos los derechos reservados.
           </p>
         </div>
       </div>

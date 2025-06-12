@@ -15,9 +15,8 @@ const Page = async () => {
     <div>
       <HeaderSection
         imageUrl="https://files.edgestore.dev/ln9m9j3kr2yibrue/staticFiled/_public/86f8cacd-d2d6-42df-a1bd-569b2c5e047c.webp"
-        title="Legal Document Collection"
-        description="Browse our comprehensive collection of laws, decrees, and legal
-            documents"
+        title="Colección de Documentos Legales"
+        description="Explore nuestra completa colección de leyes, decretos y documentos legales"
       />
 
       <div>

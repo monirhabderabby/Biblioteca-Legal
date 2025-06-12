@@ -12,8 +12,8 @@ import { z } from "zod";
 const otpSchema = z.object({
   otp: z
     .string()
-    .length(6, "OTP must be 6 digits")
-    .regex(/^[0-9]+$/, "OTP must contain only numbers"),
+    .length(6, "El OTP debe tener 6 dígitos")
+    .regex(/^[0-9]+$/, "El OTP debe contener solo números"),
 });
 
 type OTPSchemaType = z.infer<typeof otpSchema>;
@@ -39,7 +39,7 @@ const OTPForm = ({ otpId }: Props) => {
           return;
         }
 
-        // handle success
+        // manejar éxito
         router.push(`/reset-request/otp/${otpId}/reset-now`);
       });
     });
@@ -72,7 +72,7 @@ const OTPForm = ({ otpId }: Props) => {
 
                 form.setValue("otp", updatedOtp);
 
-                // Move focus to the next input
+                // Mover el foco al siguiente input
                 if (value && i < 5) {
                   const nextInput = document.getElementById(
                     `otp-input-${i + 1}`
@@ -81,7 +81,7 @@ const OTPForm = ({ otpId }: Props) => {
                 }
               }}
               onKeyDown={(e) => {
-                // Handle Backspace key to focus on the previous input
+                // Manejar la tecla Backspace para enfocar el input anterior
                 if (e.key === "Backspace" && !form.watch("otp")[i] && i > 0) {
                   const prevInput = document.getElementById(
                     `otp-input-${i - 1}`
@@ -91,7 +91,7 @@ const OTPForm = ({ otpId }: Props) => {
                     const currentOtp = form.getValues("otp");
                     const updatedOtp =
                       currentOtp.substring(0, i - 1) +
-                      " " + // Clear the previous input value if needed
+                      " " + // Limpiar el valor del input anterior si es necesario
                       currentOtp.substring(i);
                     form.setValue("otp", updatedOtp.trim());
                   }
@@ -112,7 +112,7 @@ const OTPForm = ({ otpId }: Props) => {
         </div>
         {/* <div className="flex items-center justify-between mt-4">
           <span className="text-base text-[#444444] font-normal leading-[19.2px]">
-            Didn’t receive OTP?
+            ¿No recibiste el OTP?
           </span>
           <Button
             type="button"
@@ -122,7 +122,7 @@ const OTPForm = ({ otpId }: Props) => {
               //   resendOtp({ email: email });
             }}
           >
-            {true ? `Resend in ${15}s` : "Resend"}
+            {true ? `Reenviar en ${15}s` : "Reenviar"}
           </Button>
         </div> */}
         <Button
@@ -130,7 +130,7 @@ const OTPForm = ({ otpId }: Props) => {
           className="w-full min-h-[45px]"
           disabled={pending}
         >
-          {pending ? "Wait a second..." : "Verify"}
+          {pending ? "Espera un momento..." : "Verificar"}
         </Button>
       </form>
     </div>

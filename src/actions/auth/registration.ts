@@ -17,11 +17,11 @@ export async function registeruser(
   if (!success) {
     return {
       success: false,
-      message: error.message,
+      message: error.message, // Puedes traducir el mensaje del schema si lo necesitas
     };
   }
 
-  // Check if the user already exists
+  // Verificar si el usuario ya existe
   const exist = await prisma.user.findFirst({
     where: {
       email: parsedData.email,
@@ -31,26 +31,27 @@ export async function registeruser(
   if (exist) {
     return {
       success: false,
-      message: "User already exists.",
+      message: "Este usuario ya existe.",
     };
   }
 
-  // Hash the password before storing it
+  // Encriptar la contraseña antes de guardarla
   const hashedPassword = await bcrypt.hash(parsedData.password, 10);
 
   try {
-    // Create the user in the database
+    // Crear el usuario en la base de datos
     const newUser = await prisma.user.create({
       data: {
         email: parsedData.email,
         password: hashedPassword,
-        first_name: parsedData.first_name, // Assuming name is part of registrationSchema
+        first_name: parsedData.first_name,
         last_name: parsedData.last_name,
         paddleCustomerId,
-        emailVerified: new Date(),
+        emailVerified: new Date(), // Por ahora asumimos que el correo ya está verificado
       },
     });
 
+    // Suscribir al boletín si eligió recibir promociones
     if (parsedData.promotion) {
       await prisma.newsLetter.create({
         data: {
@@ -59,28 +60,16 @@ export async function registeruser(
       });
     }
 
-    // send email to the student
-    // await resend.emails.send({
-    //   from: "Biblioteca Legal <support@bibliotecalegalhn.com>",
-    //   to: [newUser.email as string],
-    //   subject: "Please verify your email address",
-    //   react: EmailVerification({
-    //     username: newUser?.first_name ?? "",
-    //     verificationUrl: `${process.env.AUTH_URL}/email-verification/${newUser.id}`,
-    //   }),
-    // });
-
     return {
       success: true,
-      message: "Registration successfully!",
+      message: "¡Registro exitoso!",
       data: newUser,
     };
-
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     return {
       success: false,
-      message: error.message,
+      message: error.message ?? "¡Ocurrió un error inesperado!",
     };
   }
 }

@@ -31,23 +31,11 @@ export default function RegistrationForm() {
 
   function onSubmit(values: RegistrationSchemaType) {
     if (!paddle) {
-      toast.warning("Paddle is not initialized");
+      toast.warning("Paddle no está inicializado");
       return;
     }
 
     startTransition(async () => {
-      // registeruser(values).then((res) => {
-      //   if (!res.success) {
-      //     toast.error(res.message);
-      //     return;
-      //   }
-
-      //   setRedirecting(true);
-
-      //   toast.success(res.message);
-      //   router.push("/sign-up/confirmation");
-      // });
-
       const customerId = await paddleCustomerCreate({
         email: values.email,
         customerName: `${values.first_name} ${values.last_name}`,
@@ -97,18 +85,17 @@ export default function RegistrationForm() {
         className="space-y-[20px] max-w-[730px] mx-auto py-10"
       >
         <h1 className="text-black font-semibold text-[20px] leading-[120%]">
-          Personal Information
+          Información personal
         </h1>
         <FormField
           control={form.control}
           name="first_name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>First Name</FormLabel>
+              <FormLabel>Nombre</FormLabel>
               <FormControl>
-                <Input placeholder="First Name" type="" {...field} />
+                <Input placeholder="Ingresa tu nombre" {...field} />
               </FormControl>
-
               <FormMessage />
             </FormItem>
           )}
@@ -119,11 +106,10 @@ export default function RegistrationForm() {
           name="last_name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Last Name</FormLabel>
+              <FormLabel>Apellido</FormLabel>
               <FormControl>
-                <Input placeholder="Last Name" type="" {...field} />
+                <Input placeholder="Ingresa tu apellido" {...field} />
               </FormControl>
-
               <FormMessage />
             </FormItem>
           )}
@@ -134,31 +120,34 @@ export default function RegistrationForm() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>Correo electrónico</FormLabel>
               <FormControl>
-                <Input placeholder="Email" type="email" {...field} />
+                <Input
+                  placeholder="Ingresa tu correo electrónico"
+                  type="email"
+                  {...field}
+                />
               </FormControl>
-
               <FormMessage />
             </FormItem>
           )}
         />
 
         <h1 className="text-black font-semibold text-[20px] leading-[120%] pt-[30px]">
-          Account Security
+          Seguridad de la cuenta
         </h1>
         <FormField
           control={form.control}
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>Contraseña</FormLabel>
               <FormControl>
-                <PasswordInput placeholder="Password" {...field} />
+                <PasswordInput placeholder="Ingresa tu contraseña" {...field} />
               </FormControl>
               <FormDescription>
-                Password must be at least 8 characters and include uppercase,
-                lowercase, and numbers
+                La contraseña debe tener al menos 8 caracteres e incluir
+                mayúsculas, minúsculas y números.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -170,11 +159,13 @@ export default function RegistrationForm() {
           name="confirmPassword"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Confirm Password</FormLabel>
+              <FormLabel>Confirmar contraseña</FormLabel>
               <FormControl>
-                <PasswordInput placeholder="Confirm Password" {...field} />
+                <PasswordInput
+                  placeholder="Confirma tu contraseña"
+                  {...field}
+                />
               </FormControl>
-
               <FormMessage />
             </FormItem>
           )}
@@ -182,24 +173,24 @@ export default function RegistrationForm() {
 
         <div className="space-y-3 pt-[20px]">
           <p className="text-black font-medium text-[12px] md:text-[14px] mb-[20px]">
-            By creating an account, you agree to our Terms of Service and
-            Privacy Policy. We will process your personal data in accordance
-            with our Privacy Policy.
+            Al crear una cuenta, aceptas nuestros Términos de servicio y
+            Política de privacidad. Procesaremos tus datos personales de acuerdo
+            con nuestra Política de privacidad.
           </p>
           <FormField
             control={form.control}
             name="terms"
             render={({ field }) => (
-              <FormItem className="flex  flex-row items-start space-x-3 space-y-0 rounded-md border-0 ">
+              <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border-0">
                 <FormControl>
                   <Checkbox
                     checked={!!field.value}
                     onCheckedChange={field.onChange}
                   />
                 </FormControl>
-                <div className="space-y-1 leading-none ">
+                <div className="space-y-1 leading-none">
                   <FormLabel>
-                    I accept the Terms of Service and Privacy Policy
+                    Acepto los Términos de servicio y la Política de privacidad
                   </FormLabel>
                 </div>
               </FormItem>
@@ -209,7 +200,7 @@ export default function RegistrationForm() {
             control={form.control}
             name="promotion"
             render={({ field }) => (
-              <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border-0 ">
+              <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border-0">
                 <FormControl>
                   <Checkbox
                     checked={field.value}
@@ -218,10 +209,9 @@ export default function RegistrationForm() {
                 </FormControl>
                 <div className="space-y-1 leading-none">
                   <FormLabel>
-                    I would like to receive updates about products, services,
-                    and promotions
+                    Me gustaría recibir actualizaciones sobre productos,
+                    servicios y promociones
                   </FormLabel>
-
                   <FormMessage />
                 </div>
               </FormItem>
@@ -229,7 +219,7 @@ export default function RegistrationForm() {
           />
         </div>
         <div className="pt-[30px]">
-          <SubmitButton isLoading={isLoading}>Sign up</SubmitButton>
+          <SubmitButton isLoading={isLoading}>Registrarse</SubmitButton>
         </div>
       </form>
     </Form>

@@ -11,14 +11,14 @@ const Page = async () => {
     <div>
       <HeaderSection
         imageUrl="https://files.edgestore.dev/ln9m9j3kr2yibrue/staticFiled/_public/6a97120d-8c08-4f98-97b9-a2d269864fc7.webp"
-        title="Get in Touch"
-        description="We're here to help with any questions about our legal resources"
+        title="Ponte en Contacto"
+        description="Estamos aquí para ayudarte con cualquier pregunta sobre nuestros recursos legales"
       />
 
       <div className="py-[100px]">
         <div className="text-center mb-8">
           <h2 className="text-[32px] font-semibold text-black mb-[30px]">
-            HAVE QUESTIONS? <br /> SEND US A MESSAGE
+            ¿TIENES PREGUNTAS? <br /> ENVÍANOS UN MENSAJE
           </h2>
         </div>
         <ContactForm />

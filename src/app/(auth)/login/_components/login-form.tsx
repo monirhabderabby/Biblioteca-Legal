@@ -81,7 +81,7 @@ export default function LoginForm() {
     <>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          {/* Email field */}
+          {/* Campo de correo electrónico */}
           <FormField
             control={form.control}
             name="email"
@@ -91,7 +91,7 @@ export default function LoginForm() {
                   <div className="relative">
                     <Input
                       {...field}
-                      placeholder="Enter your email"
+                      placeholder="Ingresa tu correo electrónico"
                       type="email"
                       className="border-primary border-[1px]  min-h-[45px] "
                       disabled={loading}
@@ -104,7 +104,7 @@ export default function LoginForm() {
             )}
           />
 
-          {/* Password field */}
+          {/* Campo de contraseña */}
           <FormField
             control={form.control}
             name="password"
@@ -114,7 +114,7 @@ export default function LoginForm() {
                   <div className="relative">
                     <Input
                       {...field}
-                      placeholder="Enter your Password"
+                      placeholder="Ingresa tu contraseña"
                       type={showPassword ? "text" : "password"}
                       autoComplete="current-password"
                       className=" pr-10 border-primary border-[1px]  min-h-[45px]"
@@ -140,7 +140,7 @@ export default function LoginForm() {
             )}
           />
 
-          {/* Remember me and Forgot password */}
+          {/* Recordarme y Olvidé mi contraseña */}
           <div className="flex items-center justify-between">
             <FormField
               control={form.control}
@@ -157,7 +157,7 @@ export default function LoginForm() {
                     htmlFor="rememberMe"
                     className="text-sm font-medium text-gray-700"
                   >
-                    Remember me
+                    Recuérdame
                   </label>
                 </div>
               )}
@@ -166,40 +166,40 @@ export default function LoginForm() {
               href="/reset-request"
               className="text-sm font-medium text-primary"
             >
-              Forgot password?
+              ¿Olvidaste tu contraseña?
             </Link>
           </div>
 
-          {/* Submit button */}
+          {/* Botón de enviar */}
           <Button
             type="submit"
             className="w-full  min-h-[45px]"
             disabled={loading}
           >
             {pending
-              ? "Signing In..."
+              ? "Iniciando sesión..."
               : isLoading
-                ? "Just a second..."
-                : "Sign In"}
+                ? "Un momento..."
+                : "Iniciar sesión"}
           </Button>
         </form>
       </Form>
 
-      {/* Sign up link */}
+      {/* Enlace para registrarse */}
       <div className="text-center text-sm">
-        <span className="text-gray-600">New to our platform?</span>{" "}
+        <span className="text-gray-600">¿Nuevo en nuestra plataforma?</span>{" "}
         <Link
           href="/sign-up"
-          className="font-medium  text-primary hover:underline "
+          className="font-medium text-primary hover:underline"
         >
-          Sign Up Here
+          Regístrate aquí
         </Link>
       </div>
 
       <div className="w-full flex justify-center">
         <Link href="/" className="flex items-center gap-x-2 group">
-          <MoveLeft />{" "}
-          <span className="group-hover:underline">Back to home</span>
+          <MoveLeft />
+          <span className="group-hover:underline">Volver al inicio</span>
         </Link>
       </div>
     </>
