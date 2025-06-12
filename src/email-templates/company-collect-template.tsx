@@ -25,43 +25,44 @@ export default function CompanyCollectTemplate({
   companyName = "Acme Inc.",
   employeeCount = "50-100",
   accountManagerEmail = "manager@acme.com",
-  companyDescription = "We are a mid-sized company specializing in logistics and supply chain optimization.",
+  companyDescription = "Somos una empresa mediana especializada en logística y optimización de la cadena de suministro.",
   collectedAt = new Date(),
 }: CompanyCollectTemplateProps) {
   return (
     <Html>
       <Head />
-      <Preview>New company details submitted: {companyName}</Preview>
+      <Preview>Nuevos detalles de la empresa enviados: {companyName}</Preview>
       <Tailwind>
         <Body className="bg-gray-50 font-sans">
           <Container className="mx-auto py-8 px-4 max-w-2xl">
             <Section className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-              {/* Header */}
+              {/* Encabezado */}
               <div className="bg-[#1E2A38] px-6 py-4">
                 <Text className="text-white text-xl font-bold m-0">
-                  🏢 Company Information Submission
+                  🏢 Envío de información de la empresa
                 </Text>
               </div>
 
-              {/* Content */}
+              {/* Contenido */}
               <div className="px-6 py-6">
                 <Text className="text-gray-600 text-sm m-0 mb-6">
-                  A new company has submitted their details through the form.
+                  Una nueva empresa ha enviado sus detalles a través del
+                  formulario.
                 </Text>
 
-                {/* Company Information */}
+                {/* Información de la empresa */}
                 <Section className="mb-6">
                   <Text className="text-[#1E2A38] text-lg font-semibold m-0 mb-4">
-                    Submitted Details
+                    Detalles enviados
                   </Text>
 
                   {[
-                    ["Company Name:", companyName],
-                    ["Employee Count:", employeeCount],
-                    ["Account Manager Email:", accountManagerEmail],
+                    ["Nombre de la empresa:", companyName],
+                    ["Número de empleados:", employeeCount],
+                    ["Correo del gestor de cuenta:", accountManagerEmail],
                     [
-                      "Collected At:",
-                      moment(collectedAt).format("D MMMM, YYYY h:mm A"),
+                      "Fecha de envío:",
+                      moment(collectedAt).format("D [de] MMMM, YYYY h:mm A"),
                     ],
                   ].map(([label, value], idx) => (
                     <Row className="mb-3" key={idx}>
@@ -81,10 +82,10 @@ export default function CompanyCollectTemplate({
 
                 <Hr className="border-gray-200 my-6" />
 
-                {/* Company Description */}
+                {/* Descripción de la empresa */}
                 <Section>
                   <Text className="text-[#1E2A38] text-lg font-semibold m-0 mb-4">
-                    About the Company
+                    Sobre la empresa
                   </Text>
                   <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mt-2">
                     <Text className="text-gray-900 text-sm m-0 leading-relaxed whitespace-pre-wrap">
@@ -96,11 +97,11 @@ export default function CompanyCollectTemplate({
                 <Hr className="border-gray-200 my-6" />
               </div>
 
-              {/* Footer */}
+              {/* Pie de página */}
               <div className="bg-gray-100 px-6 py-4 border-t border-gray-200">
                 <Text className="text-gray-500 text-xs m-0 text-center">
-                  This email was automatically generated from your website form
-                  submission.
+                  Este correo fue generado automáticamente desde el formulario
+                  de tu sitio web.
                 </Text>
               </div>
             </Section>

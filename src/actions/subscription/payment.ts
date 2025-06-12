@@ -10,7 +10,7 @@ export async function makeSubscribe() {
   if (!cu) {
     return {
       success: false,
-      message: "Not authenticated.",
+      message: "No estás autenticado.",
       redirectTo: "/",
     };
   }
@@ -24,13 +24,13 @@ export async function makeSubscribe() {
   if (!user) {
     return {
       success: false,
-      message: "User not found.",
+      message: "Usuario no encontrado.",
     };
   }
 
   let paddleCustomerId = user.paddleCustomerId;
 
-  // Create Paddle customer if one doesn't exist
+  // Crear cliente de Paddle si no existe
   if (!paddleCustomerId) {
     try {
       paddleCustomerId = await paddleCustomerCreate({
@@ -38,41 +38,23 @@ export async function makeSubscribe() {
         customerName: `${user.first_name} ${user.last_name}`,
       });
 
-      // Save paddleCustomerId to the database
+      // Guardar paddleCustomerId en la base de datos
       await prisma.user.update({
         where: { id: user.id },
         data: { paddleCustomerId },
       });
     } catch (error) {
-      console.error("Failed to create Paddle customer:", error);
+      console.error("Error al crear el cliente en Paddle:", error);
       return {
         success: false,
-        message: "Failed to create Paddle customer.",
+        message: "Error al crear el cliente en Paddle.",
       };
     }
   }
 
-  // const txn = await paddle.transactions.create({
-  //   items: [
-  //     {
-  //       quantity: 1,
-  //       price: {
-  //         name: "User base",
-  //         unitPrice: {
-  //           currencyCode: "USD",
-  //           amount: "3000",
-  //         },
-  //         description: "dynamically generated description",
-  //         productId: "pro_01jwbf686w3y85w5twkxkbv9a9",
-  //       },
-  //     },
-  //   ],
-  //   customerId: paddleCustomerId,
-  // });
-
   return {
     success: true,
-    message: "Paddle Trasaction is ready",
+    message: "La transacción de Paddle está lista.",
     customerId: paddleCustomerId,
     userId: user.id,
   };

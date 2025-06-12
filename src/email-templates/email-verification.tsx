@@ -18,7 +18,7 @@ interface EmailVerificationProps {
 const baseUrl = process.env.AUTH_URL ? `https://${process.env.AUTH_URL}` : "";
 
 export const EmailVerification = ({
-  username = "Simon",
+  username = "Simón",
   verificationUrl = `${baseUrl}/verify-email`,
 }: EmailVerificationProps) => (
   <Tailwind
@@ -36,23 +36,24 @@ export const EmailVerification = ({
       <Head />
       <Body style={main}>
         <Preview>
-          Verify your email address to complete your registration
+          Verifica tu correo electrónico para completar tu registro
         </Preview>
         <Container style={container}>
           <Text className="text-center text-[28px] font-semibold">
-            Verify your email address
+            Verifica tu correo electrónico
           </Text>
           <Text className="text-center text-[16px] font-semibold">
-            Welcome to Biblioteca Legal
+            Bienvenido a Biblioteca Legal
           </Text>
 
           <Section style={section}>
             <Text style={text}>
-              Hey <strong>{username}</strong>!
+              ¡Hola <strong>{username}</strong>!
             </Text>
             <Text style={text}>
-              Thank you for signing up! To complete your registration, please
-              verify your email address by clicking the button below.
+              Gracias por registrarte. Para completar tu registro, por favor
+              verifica tu dirección de correo electrónico haciendo clic en el
+              botón de abajo.
             </Text>
 
             <Button
@@ -60,13 +61,13 @@ export const EmailVerification = ({
               style={button}
               className="mt-5 bg-blue-500"
             >
-              Verify Email Address
+              Verificar correo electrónico
             </Button>
           </Section>
 
           <Text style={footer}>
-            If you did not sign up for this account, you can safely ignore this
-            email.
+            Si no solicitaste esta cuenta, puedes ignorar este correo con
+            seguridad.
           </Text>
         </Container>
       </Body>
@@ -75,7 +76,7 @@ export const EmailVerification = ({
 );
 
 EmailVerification.PreviewProps = {
-  username: "johndoe",
+  username: "juanperez",
   verificationUrl: "https://example.com/verify-email",
 } as EmailVerificationProps;
 
@@ -109,21 +110,11 @@ const text = {
 
 const button = {
   fontSize: "14px",
-  // backgroundColor: "#28a745",
   color: "#fff",
   lineHeight: 1.5,
   borderRadius: "0.5em",
   padding: "12px 24px",
 };
-
-// const links = {
-//   textAlign: "center" as const,
-// };
-
-// const link = {
-//   color: "#0366d6",
-//   fontSize: "12px",
-// };
 
 const footer = {
   color: "#6a737d",
