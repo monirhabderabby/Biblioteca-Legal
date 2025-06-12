@@ -11,15 +11,15 @@ import { revalidatePath } from "next/cache";
 export async function subscribeCompany(data: CompanySubscriptionSchemaType) {
   const cu = await auth();
 
-  // Ensure user is admin
+  // Asegurar que el usuario sea administrador
   if (!cu || cu.user.role !== "admin") {
     return {
       success: false,
-      message: "Unauthorized access.",
+      message: "Acceso no autorizado.",
     };
   }
 
-  // Validate input
+  // Validar entrada
   const parsedData = companySubscriptionSchema.safeParse(data);
 
   if (!parsedData.success) {
@@ -33,7 +33,7 @@ export async function subscribeCompany(data: CompanySubscriptionSchemaType) {
     parsedData.data;
 
   try {
-    // Optional: check if company exists
+    // Opcional: verificar si la empresa existe
     const company = await prisma.company.findUnique({
       where: { id: companyId },
     });
@@ -41,11 +41,11 @@ export async function subscribeCompany(data: CompanySubscriptionSchemaType) {
     if (!company) {
       return {
         success: false,
-        message: "Company not found.",
+        message: "Empresa no encontrada.",
       };
     }
 
-    // Create subscription (you can also use upsert if updates are allowed)
+    // Crear suscripción (también puedes usar upsert si se permiten actualizaciones)
     const subscription = await prisma.companySubscription.create({
       data: {
         txn_id,
@@ -59,14 +59,14 @@ export async function subscribeCompany(data: CompanySubscriptionSchemaType) {
 
     return {
       success: true,
-      message: `Company subscribed successfully.`,
+      message: `Empresa suscrita exitosamente.`,
       subscription,
     };
   } catch (error) {
-    console.error("Error subscribing company:", error);
+    console.error("Error al suscribir empresa:", error);
     return {
       success: false,
-      message: "An error occurred while subscribing the company.",
+      message: "Ocurrió un error al suscribir la empresa.",
     };
   }
 }
@@ -77,15 +77,15 @@ export async function renewsubscribeCompany(
 ) {
   const cu = await auth();
 
-  // Ensure user is admin
+  // Asegurar que el usuario sea administrador
   if (!cu || cu.user.role !== "admin") {
     return {
       success: false,
-      message: "Unauthorized access.",
+      message: "Acceso no autorizado.",
     };
   }
 
-  // Validate input
+  // Validar entrada
   const parsedData = companySubscriptionSchema.safeParse(data);
 
   if (!parsedData.success) {
@@ -99,7 +99,7 @@ export async function renewsubscribeCompany(
     parsedData.data;
 
   try {
-    // Optional: check if company exists
+    // Opcional: verificar si la empresa existe
     const company = await prisma.company.findUnique({
       where: { id: companyId },
     });
@@ -107,11 +107,11 @@ export async function renewsubscribeCompany(
     if (!company) {
       return {
         success: false,
-        message: "Company not found.",
+        message: "Empresa no encontrada.",
       };
     }
 
-    // Create subscription (you can also use upsert if updates are allowed)
+    // Actualizar suscripción existente
     const subscription = await prisma.companySubscription.update({
       where: {
         id: subId,
@@ -127,14 +127,14 @@ export async function renewsubscribeCompany(
 
     return {
       success: true,
-      message: `${company.name} renewd successfully.`,
+      message: `${company.name} renovada exitosamente.`,
       subscription,
     };
   } catch (error) {
-    console.error("Error subscribing company:", error);
+    console.error("Error al renovar suscripción:", error);
     return {
       success: false,
-      message: "An error occurred while subscribing the company.",
+      message: "Ocurrió un error al renovar la suscripción.",
     };
   }
 }
@@ -145,12 +145,12 @@ export async function pauseCompanySubscription(companyId: string) {
   if (!cu || cu.user.role !== "admin") {
     return {
       success: false,
-      message: "Unauthorized access.",
+      message: "Acceso no autorizado.",
     };
   }
 
   try {
-    // Find the latest active subscription
+    // Buscar la última suscripción activa
     const subscription = await prisma.companySubscription.findFirst({
       where: {
         companyId,
@@ -164,11 +164,11 @@ export async function pauseCompanySubscription(companyId: string) {
     if (!subscription) {
       return {
         success: false,
-        message: "No active subscription found for this company.",
+        message: "No se encontró una suscripción activa para esta empresa.",
       };
     }
 
-    // Set isActive to false (pause)
+    // Marcar la suscripción como inactiva (pausar)
     await prisma.companySubscription.update({
       where: { id: subscription.id },
       data: { isActive: false },
@@ -178,28 +178,29 @@ export async function pauseCompanySubscription(companyId: string) {
 
     return {
       success: true,
-      message: "Subscription paused successfully.",
+      message: "Suscripción pausada exitosamente.",
     };
   } catch (error) {
-    console.error("Error pausing subscription:", error);
+    console.error("Error al pausar suscripción:", error);
     return {
       success: false,
-      message: "An error occurred while pausing the subscription.",
+      message: "Ocurrió un error al pausar la suscripción.",
     };
   }
 }
+
 export async function resumeCompanySubscription(companyId: string) {
   const cu = await auth();
 
   if (!cu || cu.user.role !== "admin") {
     return {
       success: false,
-      message: "Unauthorized access.",
+      message: "Acceso no autorizado.",
     };
   }
 
   try {
-    // Find the latest active subscription
+    // Buscar la última suscripción inactiva
     const subscription = await prisma.companySubscription.findFirst({
       where: {
         companyId,
@@ -213,11 +214,11 @@ export async function resumeCompanySubscription(companyId: string) {
     if (!subscription) {
       return {
         success: false,
-        message: "No active subscription found for this company.",
+        message: "No se encontró una suscripción inactiva para esta empresa.",
       };
     }
 
-    // Set isActive to false (pause)
+    // Reactivar la suscripción
     await prisma.companySubscription.update({
       where: { id: subscription.id },
       data: { isActive: true },
@@ -227,13 +228,13 @@ export async function resumeCompanySubscription(companyId: string) {
 
     return {
       success: true,
-      message: "Subscription resumed successfully.",
+      message: "Suscripción reanudada exitosamente.",
     };
   } catch (error) {
-    console.error("Error pausing subscription:", error);
+    console.error("Error al reanudar suscripción:", error);
     return {
       success: false,
-      message: "An error occurred while pausing the subscription.",
+      message: "Ocurrió un error al reanudar la suscripción.",
     };
   }
 }

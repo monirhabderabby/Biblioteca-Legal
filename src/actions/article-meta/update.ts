@@ -51,14 +51,14 @@ export async function updateArticleMeta({
 
     return {
       success: true,
-      message: "Article meta updated successfully.",
+      message: "Los metadatos del artículo se actualizaron correctamente.",
       data: updatedMeta,
     };
   } catch (error) {
     console.error("Failed to update article meta:", error);
     return {
       success: false,
-      message: "Failed to update article meta.",
+      message: "No se pudieron actualizar los metadatos del artículo.",
     };
   }
 }

@@ -11,7 +11,7 @@ export async function cancelSubscriptionAction() {
   if (!cu?.user.id) {
     return {
       success: false,
-      message: "You must be logged in to cancel your subscription.",
+      message: "Debes iniciar sesión para cancelar tu suscripción.",
     };
   }
 
@@ -24,7 +24,7 @@ export async function cancelSubscriptionAction() {
   if (!sub) {
     return {
       success: false,
-      message: "No subscription found.",
+      message: "No se encontró ninguna suscripción.",
     };
   }
 
@@ -33,7 +33,7 @@ export async function cancelSubscriptionAction() {
   const paddleRes = await paddle.subscriptions.cancel(subId);
 
   if (paddleRes) {
-    // remove subscription for database
+    // eliminar suscripción de la base de datos
     await prisma.userSubscription.update({
       where: {
         id: sub.id,
@@ -49,12 +49,13 @@ export async function cancelSubscriptionAction() {
     return {
       success: true,
       message:
-        "Your subscription has been successfully cancelled. You will no longer be charged.",
+        "Tu suscripción ha sido cancelada exitosamente. Ya no se te cobrará.",
     };
   }
 
   return {
     success: false,
-    message: "Failed to cancel subscription. Please try again later.",
+    message:
+      "No se pudo cancelar la suscripción. Por favor, intenta más tarde.",
   };
 }

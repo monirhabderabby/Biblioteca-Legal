@@ -16,7 +16,7 @@ export async function sendSubscriptionReqCompany(
   if (!settings?.supportEmail) {
     return {
       success: false,
-      message: "Support email is not configured.",
+      message: "El correo de soporte no está configurado.",
     };
   }
 
@@ -35,9 +35,9 @@ export async function sendSubscriptionReqCompany(
 
   try {
     await resend.emails.send({
-      from: `Contact Form <contact@bibliotecalegalhn.com>`,
+      from: `Formulario de Contacto <contacto@bibliotecalegalhn.com>`,
       to: [settings.supportEmail],
-      subject: "📥 New Company Interest Submission",
+      subject: "📥 Nueva Solicitud de Interés de Empresa",
       react: CompanyCollectTemplate({
         companyName,
         employeeCount: numberOfEmployee.toString(),
@@ -50,14 +50,14 @@ export async function sendSubscriptionReqCompany(
     return {
       success: true,
       message:
-        "Your message has been sent successfully. We will get back to you soon.",
+        "Tu mensaje ha sido enviado exitosamente. Nos pondremos en contacto contigo pronto.",
     };
   } catch (error) {
-    console.error("Email sending failed:", error);
+    console.error("Error al enviar el correo:", error);
     return {
       success: false,
       message:
-        "There was an error sending your message. Please try again later.",
+        "Hubo un error al enviar tu mensaje. Por favor, intenta nuevamente más tarde.",
     };
   }
 }
