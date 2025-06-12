@@ -10,14 +10,14 @@ export default function OurServices() {
         {/* Header */}
         <div className="text-center mb-16">
           <h2 className="text-blue-400 text-lg font-medium mb-4">
-            Our Services
+            Nuestros Servicios
           </h2>
           <h3 className="text-white text-3xl sm:text-4xl lg:text-5xl font-bold mb-6">
-            Comprehensive Legal Resources
+            Recursos Legales Integrales
           </h3>
           <p className="text-gray-300 text-lg max-w-4xl mx-auto">
-            Discover the tools and resources designed to enhance your legal
-            practice and provide you with the most up-to-date information.
+            Descubre las herramientas y recursos diseñados para mejorar tu
+            práctica legal y proporcionarte la información más actualizada.
           </p>
         </div>
 
@@ -28,17 +28,17 @@ export default function OurServices() {
             <CardContent className="p-8">
               <div className="mb-6 flex justify-between">
                 <h4 className="text-white group-hover:text-slate-800 text-2xl font-bold mb-4 transition-colors duration-300">
-                  Legal Library
+                  Biblioteca Jurídica
                 </h4>
                 <BookOpen className="w-12 h-12 text-white group-hover:text-slate-800 transition-colors duration-300" />
               </div>
 
               <p className="text-gray-300 group-hover:text-gray-600 text-lg font-medium mb-6 transition-colors duration-300">
-                Access thousands of legal documents, laws, and decrees
+                Accede a miles de documentos legales, leyes y decretos
               </p>
               <p className="text-gray-300 group-hover:text-gray-600 text-lg font-medium mb-6 transition-colors duration-300">
-                Our comprehensive collection includes the latest legal
-                documents, organized and easily accessible.
+                Nuestra colección integral incluye los documentos legales más
+                recientes, organizados y de fácil acceso.
               </p>
               <Button
                 variant="outline"
@@ -46,7 +46,7 @@ export default function OurServices() {
                 asChild
               >
                 <Link href="/collections">
-                  Browse Library
+                  Explorar Biblioteca
                   <ArrowRight className="ml-2 w-4 h-4" />
                 </Link>
               </Button>
@@ -58,23 +58,23 @@ export default function OurServices() {
             <CardContent className="p-8">
               <div className="mb-6 flex justify-between">
                 <h4 className="text-white group-hover:text-slate-800 text-2xl font-bold mb-4 transition-colors duration-300">
-                  Legal Updates
+                  Actualizaciones Legales
                 </h4>
                 {/* <FileText className="w-12 h-12 text-white group-hover:text-slate-800 transition-colors duration-300" /> */}
               </div>
 
               <p className="text-gray-300 group-hover:text-gray-600 text-lg font-medium mb-6 transition-colors duration-300">
-                Stay informed with the latest legal developments
+                Mantente informado con los últimos desarrollos legales
               </p>
               <p className="text-gray-300 group-hover:text-gray-600 text-lg font-medium mb-6 transition-colors duration-300">
-                Get timely updates on new laws, amendments, and important legal
-                changes affecting your practice.
+                Recibe actualizaciones oportunas sobre nuevas leyes, enmiendas y
+                cambios legales importantes que afectan tu práctica.
               </p>
               <Button
                 variant="outline"
                 className="bg-white rounded-full text-slate-800 border-white hover:bg-slate-100 group-hover:bg-slate-800 group-hover:text-white group-hover:border-slate-800 transition-all duration-300"
               >
-                View Updates
+                Ver Actualizaciones
                 <ArrowRight className="ml-2 w-4 h-4" />
               </Button>
             </CardContent>
@@ -85,18 +85,19 @@ export default function OurServices() {
             <CardContent className="p-8">
               <div className="mb-6 flex justify-between">
                 <h4 className="text-white group-hover:text-slate-800 text-2xl font-bold mb-4 transition-colors duration-300">
-                  Document Search
+                  Búsqueda de Documentos
                 </h4>
 
                 <FileSearch className="w-12 h-12 text-white group-hover:text-slate-800 transition-colors duration-300" />
               </div>
 
               <p className="text-gray-300 group-hover:text-gray-600 text-lg font-medium mb-6 transition-colors duration-300">
-                Find specific legal documents quickly and efficiently
+                Encuentra documentos legales específicos de forma rápida y
+                eficiente
               </p>
               <p className="text-gray-300 group-hover:text-gray-600 text-lg font-medium mb-6 transition-colors duration-300">
-                Our powerful search tools help you locate exactly what you need
-                within our extensive collection.
+                Nuestras potentes herramientas de búsqueda te ayudan a localizar
+                exactamente lo que necesitas dentro de nuestra amplia colección.
               </p>
               <Button
                 variant="outline"
@@ -104,7 +105,7 @@ export default function OurServices() {
                 asChild
               >
                 <Link href="/collections">
-                  Browse Library
+                  Explorar Biblioteca
                   <ArrowRight className="ml-2 w-4 h-4" />
                 </Link>
               </Button>

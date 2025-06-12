@@ -56,7 +56,7 @@ export default function ContactForm() {
             <FormItem>
               <FormControl>
                 <Input
-                  placeholder="Enter your name"
+                  placeholder="Ingrese su nombre"
                   className="border-gray-300 focus:border-gray-500 focus:ring-gray-500"
                   {...field}
                 />
@@ -74,7 +74,7 @@ export default function ContactForm() {
               <FormControl>
                 <Input
                   type="email"
-                  placeholder="Enter your email"
+                  placeholder="Ingrese su correo electrónico"
                   className="border-gray-300 focus:border-gray-500 focus:ring-gray-500"
                   {...field}
                 />
@@ -91,7 +91,7 @@ export default function ContactForm() {
             <FormItem>
               <FormControl>
                 <Textarea
-                  placeholder="Your Text..."
+                  placeholder="Su mensaje..."
                   className="min-h-[120px] border-gray-300 focus:border-gray-500 focus:ring-gray-500 resize-none"
                   {...field}
                 />
@@ -106,7 +106,7 @@ export default function ContactForm() {
           className="w-full bg-slate-800 hover:bg-slate-700 text-white py-3 text-base font-medium"
           disabled={pending}
         >
-          {pending ? "Sending..." : "Send Message"}
+          {pending ? "Enviando..." : "Enviar mensaje"}
         </Button>
       </form>
     </Form>

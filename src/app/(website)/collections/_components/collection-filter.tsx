@@ -16,7 +16,7 @@ const CollectionFilter = ({ categories }: Props) => {
     <div className="py-[50px] container">
       <div className="relative">
         <Input
-          placeholder="Search by title, description, or law number"
+          placeholder="Buscar por título, descripción o número de ley"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
@@ -33,7 +33,7 @@ const CollectionFilter = ({ categories }: Props) => {
           )}
           onClick={() => setCategory("all")}
         >
-          All
+          Todos
         </Button>
         {categories.map((item) => (
           <Button

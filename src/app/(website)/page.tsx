@@ -21,26 +21,26 @@ export default async function Home() {
       >
         <div className="container">
           <h1 className="text-primary font-bold text-[35px] md:text-[40px] lg:text-[60px] leading-[120%]">
-            Your Virtual Legal Library
+            Tu Biblioteca Jurídica Virtual
           </h1>
 
           <p className="text-white font-normal text-[14px] md:text-[18px] leading-[120%] mt-[25px] max-w-[600px]">
-            Access comprehensive legal documents, laws, and decrees in one
-            centralized platform.
+            Accede a documentos legales, leyes y decretos actualizados en una
+            sola plataforma centralizada.
           </p>
 
           <div className="space-x-[40px] mt-[40px] md:mt-[60px]">
             {isLoggedin ? (
               <Button size="lg" asChild>
-                <Link href="/collections">View Collection</Link>
+                <Link href="/collections">Ver Colección</Link>
               </Button>
             ) : (
               <>
                 <Button size="lg" asChild>
-                  <Link href="/sign-up">Register</Link>
+                  <Link href="/sign-up">Registrarse</Link>
                 </Button>
                 <Button variant="outline" size="lg" asChild>
-                  <Link href="/login">Login</Link>
+                  <Link href="/login">Iniciar sesión</Link>
                 </Button>
               </>
             )}

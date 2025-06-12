@@ -21,37 +21,16 @@ export default function ResearchTools() {
         <div className="relative">
           <Input
             startIcon={Search}
-            placeholder="Search Legislation"
+            placeholder="Buscar legislación"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter" && query !== "") {
-                // router.push(`/collections?q=${encodeURIComponent(query)}`);
                 router.push("/collections");
               }
             }}
           />
         </div>
-        {/* <div className="space-y-4">
-          <p className="text-base text-start font-medium">Popular searches:</p>
-          <div className="flex flex-wrap gap-2">
-            <button className="rounded-full bg-gray-100 px-4 py-2 text-sm hover:bg-gray-200">
-              Administrative Law
-            </button>
-            <button className="rounded-full bg-gray-100 px-4 py-2 text-sm hover:bg-gray-200">
-              Criminal Code
-            </button>
-            <button className="rounded-full bg-gray-100 px-4 py-2 text-sm hover:bg-gray-200">
-              Civil Code
-            </button>
-            <button className="rounded-full bg-gray-100 px-4 py-2 text-sm hover:bg-gray-200">
-              Commercial Law
-            </button>
-            <button className="rounded-full bg-gray-100 px-4 py-2 text-sm hover:bg-gray-200">
-              Tax Regulations
-            </button>
-          </div>
-        </div> */}
       </div>
     ),
     jurisprudence: (
@@ -59,31 +38,16 @@ export default function ResearchTools() {
         <div className="relative">
           <Input
             startIcon={Search}
-            placeholder="Search Legislation"
+            placeholder="Buscar jurisprudencia"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter" && query !== "") {
-                // router.push(`/collections?q=${encodeURIComponent(query)}`);
                 router.push("/collections");
               }
             }}
           />
         </div>
-        {/* <div className="space-y-4">
-          <p className="text-base text-start font-medium">Popular searches:</p>
-          <div className="flex flex-wrap gap-2">
-            <button className="rounded-full bg-gray-100 px-4 py-2 text-sm hover:bg-gray-200">
-              Supreme Court
-            </button>
-            <button className="rounded-full bg-gray-100 px-4 py-2 text-sm hover:bg-gray-200">
-              Constitutional Cases
-            </button>
-            <button className="rounded-full bg-gray-100 px-4 py-2 text-sm hover:bg-gray-200">
-              Landmark Decisions
-            </button>
-          </div>
-        </div> */}
       </div>
     ),
     doctrine: (
@@ -91,47 +55,32 @@ export default function ResearchTools() {
         <div className="relative">
           <Input
             startIcon={Search}
-            placeholder="Search Legislation"
+            placeholder="Buscar doctrina"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter" && query !== "") {
-                // router.push(`/collections?q=${encodeURIComponent(query)}`);
                 router.push("/collections");
               }
             }}
           />
         </div>
-        {/* <div className="space-y-4">
-          <p className="text-base text-start font-medium">Popular searches:</p>
-          <div className="flex flex-wrap gap-2">
-            <button className="rounded-full bg-gray-100 px-4 py-2 text-sm hover:bg-gray-200">
-              Legal Theory
-            </button>
-            <button className="rounded-full bg-gray-100 px-4 py-2 text-sm hover:bg-gray-200">
-              Academic Papers
-            </button>
-            <button className="rounded-full bg-gray-100 px-4 py-2 text-sm hover:bg-gray-200">
-              Legal Commentary
-            </button>
-          </div>
-        </div> */}
       </div>
     ),
   };
 
   return (
-    <section className=" py-16 px-4 md:py-24">
+    <section className="py-16 px-4 md:py-24">
       <div className="mx-auto max-w-4xl text-center">
         <h2 className="my-8 text-2xl font-bold text-[#D4AF37] ">
-          Research Tools
+          Herramientas de Investigación
         </h2>
         <h3 className="my-4 text-2xl font-bold text-[#1E2A38] md:text-[40px]">
-          Find Legal Information
+          Encuentra Información Legal
         </h3>
         <p className="mb-10 font-medium text-[#1E2A38] md:text-lg">
-          Search through our extensive database of legal resources to find the
-          information you need.
+          Busca en nuestra extensa base de datos de recursos legales para
+          encontrar la información que necesitas.
         </p>
 
         <div className="relative mx-auto max-w-3xl ">
@@ -146,7 +95,7 @@ export default function ResearchTools() {
                 }`}
               >
                 <Gavel className="h-8 w-8" />
-                Legislation
+                Legislación
               </button>
               <button
                 onClick={() => setActiveTab("jurisprudence")}
@@ -157,7 +106,7 @@ export default function ResearchTools() {
                 }`}
               >
                 <VscLaw className="h-8 w-8" />
-                Jurisprudence
+                Jurisprudencia
               </button>
               <button
                 onClick={() => setActiveTab("doctrine")}
@@ -168,7 +117,7 @@ export default function ResearchTools() {
                 }`}
               >
                 <GiWhiteBook className="h-8 w-8" />
-                Doctrine
+                Doctrina
               </button>
             </div>
 

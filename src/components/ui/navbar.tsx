@@ -27,10 +27,10 @@ const Navbar = ({ isLoggedin, user }: Props) => {
   const pathname = usePathname(); // Get current route to highlight active menu
 
   const menus = [
-    { id: 1, href: "/", linkText: "Home" },
-    { id: 2, href: "/collections", linkText: "Collections" },
-    { id: 3, href: "/subscriptions", linkText: "Subscriptions" },
-    { id: 4, href: "/contact", linkText: "Contact" },
+    { id: 1, href: "/", linkText: "Inicio" },
+    { id: 2, href: "/collections", linkText: "Colección" },
+    { id: 3, href: "/subscriptions", linkText: "Subscripciones" },
+    { id: 4, href: "/contact", linkText: "Contacto" },
   ];
 
   // Track window scroll to update navbar style
@@ -110,7 +110,7 @@ const Navbar = ({ isLoggedin, user }: Props) => {
                         onClick={close}
                       >
                         <Link href="/account" className="w-full">
-                          Account
+                          Cuenta
                         </Link>
                       </Button>
                       <Button
@@ -121,7 +121,7 @@ const Navbar = ({ isLoggedin, user }: Props) => {
                         className="cursor-pointer w-full text-primary hover:text-primary/90 border-none"
                         variant="outline"
                       >
-                        Logout
+                        Cerrar sesión
                       </Button>
                     </div>
                   )}
@@ -130,7 +130,7 @@ const Navbar = ({ isLoggedin, user }: Props) => {
             ) : (
               <Button asChild>
                 <Link href="/login" className="w-full h-full">
-                  Login
+                  Iniciar sesión
                 </Link>
               </Button>
             )}
@@ -139,8 +139,8 @@ const Navbar = ({ isLoggedin, user }: Props) => {
           {/* Mobile Responsive */}
           <div className="md:hidden flex items-center gap-x-4">
             <div>
-              {!isLoggedin && <Button size="sm">Login</Button>}
-              {isLoggedin && <p>Profile Image</p>}
+              {!isLoggedin && <Button size="sm">Iniciar sesión</Button>}
+              {isLoggedin && <p>Perfil</p>}
             </div>
             <Sheet>
               <SheetTrigger asChild>

@@ -7,100 +7,103 @@ import { resend } from "@/lib/resend";
 import bcrypt from "bcryptjs";
 import { redirect } from "next/navigation";
 
-// Helper to generate a 6-digit OTP
-function generateOtp(): string {
+// Función auxiliar para generar un OTP de 6 dígitos
+function generarOtp(): string {
   return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
+// Enviar código OTP al correo
 export async function sendOtp(email: string) {
-  const existUser = await prisma.user.findUnique({
+  const usuarioExistente = await prisma.user.findUnique({
     where: { email },
   });
 
-  if (!existUser) {
+  if (!usuarioExistente) {
     return {
       success: false,
-      message: "No account found with this email address.",
+      message: "No se encontró una cuenta con este correo electrónico.",
     };
   }
+
   try {
-    // Check if there is an existing reset request
-    const exist = await prisma.resetReq.findFirst({
+    // Verificar si ya existe una solicitud de restablecimiento
+    const existente = await prisma.resetReq.findFirst({
       where: {
         email,
       },
     });
 
-    if (exist) {
-      // Delete old request to avoid duplicates
+    if (existente) {
+      // Eliminar solicitud anterior para evitar duplicados
       await prisma.resetReq.delete({
         where: {
-          id: exist.id,
+          id: existente.id,
         },
       });
     }
 
-    // Generate OTP
-    const otp = generateOtp();
+    // Generar OTP
+    const otp = generarOtp();
 
-    // Create new reset request
-    const newReq = await prisma.resetReq.create({
+    // Crear nueva solicitud de restablecimiento
+    const nuevaSolicitud = await prisma.resetReq.create({
       data: {
         email,
         otp: Number(otp),
-        expiresAt: new Date(Date.now() + 10 * 60 * 1000), // OTP valid for 10 minutes
+        expiresAt: new Date(Date.now() + 10 * 60 * 1000), // OTP válido por 10 minutos
       },
     });
 
-    // Send OTP via email
+    // Enviar OTP por correo electrónico
     await resend.emails.send({
       from: "Biblioteca Legal <support@bibliotecalegalhn.com>",
-      to: [newReq.email as string],
-      subject: `Your Password Reset OTP: [${newReq.otp}]`,
+      to: [nuevaSolicitud.email as string],
+      subject: `Tu código OTP para restablecer la contraseña: [${nuevaSolicitud.otp}]`,
       react: OtpEmail({
-        otpCode: newReq.otp.toString(),
+        otpCode: nuevaSolicitud.otp.toString(),
       }),
     });
 
     return {
       success: true,
-      message: "OTP sent successfully.",
-      otpId: newReq.id,
+      message: "Código OTP enviado exitosamente.",
+      otpId: nuevaSolicitud.id,
     };
   } catch (error) {
-    console.error("Error sending OTP:", error);
+    console.error("Error al enviar el OTP:", error);
     return {
       success: false,
-      message: "Something went wrong. Please try again later.",
+      message: "Ocurrió un error. Por favor, intenta de nuevo más tarde.",
     };
   }
 }
 
+// Verificar el código OTP ingresado por el usuario
 export async function verifyOTP(id: string, otp: number) {
-  const exist = await prisma.resetReq.findFirst({
+  const solicitud = await prisma.resetReq.findFirst({
     where: {
       id,
       otp,
     },
   });
 
-  if (!exist) {
+  if (!solicitud) {
     return {
       success: false,
-      message: "Invalid OTP or ID",
+      message: "OTP o ID inválido.",
     };
   }
 
-  // Check if the OTP has expired
-  if (exist.expiresAt && new Date() > exist.expiresAt) {
-    // Optional: Delete the expired OTP
+  // Verificar si el OTP ha expirado
+  if (solicitud.expiresAt && new Date() > solicitud.expiresAt) {
+    // Opcional: eliminar OTP expirado
     await prisma.resetReq.delete({
-      where: { id: exist.id },
+      where: { id: solicitud.id },
     });
 
     return {
       success: false,
-      message: "OTP has expired",
+      message: "El código OTP ha expirado.",
     };
   }
 
@@ -115,88 +118,88 @@ export async function verifyOTP(id: string, otp: number) {
 
   return {
     success: true,
-    message: "OTP verified successfully",
-    data: exist,
+    message: "Código OTP verificado correctamente.",
+    data: solicitud,
   };
 }
 
+// Restablecer la contraseña luego de verificación del OTP
 export async function resetNow(id: string, password: string) {
-  const req = await prisma.resetReq.findFirst({
+  const solicitud = await prisma.resetReq.findFirst({
     where: {
       id,
     },
   });
 
-  if (!req) {
+  if (!solicitud) {
     return {
       success: false,
-      message: "Invalid request or ID not found",
+      message: "Solicitud inválida o ID no encontrado.",
     };
   }
 
-  if (!req.isOtpVerified) {
+  if (!solicitud.isOtpVerified) {
     return {
       success: false,
-      message: "OTP has not been verified yet",
+      message: "El código OTP aún no ha sido verificado.",
     };
   }
 
-  // Hash the new password
+  // Hashear la nueva contraseña
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  // Update user's password using the email stored in the reset request
+  // Actualizar contraseña del usuario
   await prisma.user.update({
     where: {
-      email: req.email,
+      email: solicitud.email,
     },
     data: {
       password: hashedPassword,
     },
   });
 
-  // Optionally delete the reset request after successful password reset
+  // Eliminar la solicitud de restablecimiento tras éxito
   await prisma.resetReq.delete({
     where: {
-      id: req.id,
+      id: solicitud.id,
     },
   });
 
   return {
     success: true,
-    message: "Password reset successfully",
+    message: "Contraseña restablecida correctamente.",
   };
 }
 
+// Cambio de contraseña por parte del administrador autenticado
 export async function adminPasswordChangeAction(password: string) {
-  const cu = await auth();
+  const usuarioActual = await auth();
 
-  if (!cu || !cu.user.id) {
+  if (!usuarioActual || !usuarioActual.user.id) {
     redirect("/login");
   }
 
-  if (cu.user.role !== "admin") {
+  if (usuarioActual.user.role !== "admin") {
     return {
       success: false,
-      message: "Unauthorized access.",
+      message: "Acceso no autorizado.",
     };
   }
 
-  // Validate password strength (basic example)
+  // Validar longitud mínima
   if (password.length < 6) {
     return {
       success: false,
-      message: "Password must be at least 6 characters long.",
+      message: "La contraseña debe tener al menos 6 caracteres.",
     };
   }
 
   try {
-    // Hash the new password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Update user password in database
     await prisma.user.update({
       where: {
-        id: cu.user.id,
+        id: usuarioActual.user.id,
       },
       data: {
         password: hashedPassword,
@@ -205,15 +208,14 @@ export async function adminPasswordChangeAction(password: string) {
 
     return {
       success: true,
-      message: "Password changed successfully.",
+      message: "Contraseña actualizada correctamente.",
     };
 
-    // Optional: redirect after success
-    // redirect("/admin/settings");
+    // redirect("/admin/settings"); // Opcional
   } catch {
     return {
       success: false,
-      message: "Something went wrong. Please try again.",
+      message: "Ocurrió un error. Por favor intenta nuevamente.",
     };
   }
 }

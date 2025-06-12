@@ -23,7 +23,7 @@ export default function ResetRequestForm() {
   const [pending, startTransition] = useTransition();
   const router = useRouter();
 
-  // Initialize the form
+  // Inicializar el formulario
   const form = useForm<ResetRequestFormValues>({
     resolver: zodResolver(resetReqestForm),
     defaultValues: {
@@ -31,7 +31,7 @@ export default function ResetRequestForm() {
     },
   });
 
-  // Handle form submission
+  // Manejar el envío del formulario
   async function onSubmit(data: ResetRequestFormValues) {
     startTransition(() => {
       sendOtp(data.email).then((res) => {
@@ -40,7 +40,7 @@ export default function ResetRequestForm() {
           return;
         }
 
-        // handle success
+        // Envío exitoso
         toast.success(res.message);
         form.reset();
         router.push(`/reset-request/otp/${res.otpId}`);
@@ -51,7 +51,7 @@ export default function ResetRequestForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        {/* Email field */}
+        {/* Campo de correo electrónico */}
         <FormField
           control={form.control}
           name="email"
@@ -61,7 +61,7 @@ export default function ResetRequestForm() {
                 <div className="relative">
                   <Input
                     {...field}
-                    placeholder="Enter your email"
+                    placeholder="Ingresa tu correo electrónico"
                     type="email"
                     className="border-primary border-[1px]  min-h-[45px] "
                     disabled={pending}
@@ -74,13 +74,13 @@ export default function ResetRequestForm() {
           )}
         />
 
-        {/* Submit button */}
+        {/* Botón de envío */}
         <Button
           type="submit"
           className="w-full  min-h-[45px]"
           disabled={pending}
         >
-          {pending ? "Please wait..." : "Send OTP"}
+          {pending ? "Por favor espera..." : "Enviar código OTP"}
         </Button>
       </form>
     </Form>

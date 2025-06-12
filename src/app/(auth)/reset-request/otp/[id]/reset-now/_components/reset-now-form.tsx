@@ -19,16 +19,18 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-// Validation schema with zod
+// Esquema de validación con zod
 const resetPasswordSchema = z
   .object({
-    password: z.string().min(8, "Password must be at least 8 characters long"),
+    password: z
+      .string()
+      .min(8, "La contraseña debe tener al menos 8 caracteres"),
     confirmPassword: z
       .string()
-      .min(8, "Password must be at least 8 characters long"),
+      .min(8, "La contraseña debe tener al menos 8 caracteres"),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords must match",
+    message: "Las contraseñas deben coincidir",
     path: ["confirmPassword"],
   });
 
@@ -37,9 +39,8 @@ interface Props {
 }
 const ResetNowForm = ({ otpId }: Props) => {
   const [pending, startTransition] = useTransition();
-  const [showPassword, setShowPassword] = useState(false); // Show/hide password state
+  const [showPassword, setShowPassword] = useState(false); // Estado para mostrar/ocultar contraseña
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  // Form configuration
 
   const router = useRouter();
   const form = useForm({
@@ -58,7 +59,7 @@ const ResetNowForm = ({ otpId }: Props) => {
           return;
         }
 
-        // handle success
+        // manejar éxito
         toast.success(res.message);
         router.push("/login");
       });
@@ -67,22 +68,21 @@ const ResetNowForm = ({ otpId }: Props) => {
 
   return (
     <div>
-      {" "}
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="space-y-[24px]">
-            {/* New Password field */}
+            {/* Campo Nueva Contraseña */}
             <FormField
               name="password"
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>New Password</FormLabel>
+                  <FormLabel>Nueva contraseña</FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input
                         type={showPassword ? "text" : "password"}
-                        placeholder="Enter your new password"
+                        placeholder="Ingresa tu nueva contraseña"
                         className=" h-[50px] w-full"
                         {...field}
                       />
@@ -91,7 +91,9 @@ const ResetNowForm = ({ otpId }: Props) => {
                         className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
                         onClick={() => setShowPassword(!showPassword)}
                         aria-label={
-                          showPassword ? "Hide password" : "Show password"
+                          showPassword
+                            ? "Ocultar contraseña"
+                            : "Mostrar contraseña"
                         }
                       >
                         {showPassword ? (
@@ -107,18 +109,18 @@ const ResetNowForm = ({ otpId }: Props) => {
               )}
             />
 
-            {/* Confirm New Password field */}
+            {/* Campo Confirmar Nueva Contraseña */}
             <FormField
               name="confirmPassword"
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Confirm New Password</FormLabel>
+                  <FormLabel>Confirmar nueva contraseña</FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input
                         type={showConfirmPassword ? "text" : "password"}
-                        placeholder="Confirm your new password"
+                        placeholder="Confirma tu nueva contraseña"
                         className=" h-[50px]"
                         {...field}
                       />
@@ -130,8 +132,8 @@ const ResetNowForm = ({ otpId }: Props) => {
                         }
                         aria-label={
                           showConfirmPassword
-                            ? "Hide confirm password"
-                            : "Show confirm password"
+                            ? "Ocultar confirmación de contraseña"
+                            : "Mostrar confirmación de contraseña"
                         }
                       >
                         {showConfirmPassword ? (
@@ -148,13 +150,13 @@ const ResetNowForm = ({ otpId }: Props) => {
             />
           </div>
 
-          {/* Submit button */}
+          {/* Botón de enviar */}
           <Button
             type="submit"
             className="w-full mt-[24px] min-h-[45px]"
             disabled={pending}
           >
-            {pending ? "Please wait..." : "Update Password"}
+            {pending ? "Por favor espera..." : "Actualizar contraseña"}
           </Button>
         </form>
       </Form>
