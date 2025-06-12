@@ -55,6 +55,7 @@ export default function RegistrationForm() {
           customData: {
             user: values,
           },
+
           settings: {
             successUrl: `https://bibliotecalegalhn.com/login`,
           },
@@ -71,7 +72,7 @@ export default function RegistrationForm() {
 
   useEffect(() => {
     initializePaddle({
-      environment: "production",
+      environment: "sandbox",
       token: process.env.NEXT_PUBLIC_PADDLE_TOKEN!,
     }).then((paddle) => setPaddle(paddle));
   }, []);
