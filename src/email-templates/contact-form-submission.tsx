@@ -21,43 +21,43 @@ interface ContactFormEmailProps {
 }
 
 export default function ContactFormSubmissionTemplate({
-  customerName = "John Doe",
-  customerEmail = "john.doe@example.com",
-  message = "Hello, I'm interested in your services and would like to know more about your offerings. Please contact me at your earliest convenience.",
+  customerName = "Juan Pérez",
+  customerEmail = "juan.perez@ejemplo.com",
+  message = "Hola, estoy interesado en sus servicios y me gustaría saber más sobre sus ofertas. Por favor contácteme a la brevedad.",
   submittedAt = new Date(),
 }: ContactFormEmailProps) {
   return (
     <Html>
       <Head />
-      <Preview>New contact form submission from {customerName}</Preview>
+      <Preview>Nuevo mensaje de contacto de {customerName}</Preview>
       <Tailwind>
         <Body className="bg-gray-50 font-sans">
           <Container className="mx-auto py-8 px-4 max-w-2xl">
-            {/* Header */}
+            {/* Encabezado */}
             <Section className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
               <div className="bg-[#1E2A38] px-6 py-4">
                 <Text className="text-white text-xl font-bold m-0">
-                  📧 New Contact Form Submission
+                  📧 Nuevo mensaje de formulario de contacto
                 </Text>
               </div>
 
-              {/* Content */}
+              {/* Contenido */}
               <div className="px-6 py-6">
                 <Text className="text-gray-600 text-sm m-0 mb-6">
-                  You have received a new message through your website contact
-                  form.
+                  Has recibido un nuevo mensaje a través del formulario de
+                  contacto de tu sitio web.
                 </Text>
 
-                {/* Customer Information */}
+                {/* Información del cliente */}
                 <Section className="mb-6">
                   <Text className="text-[#1E2A38] text-lg font-semibold m-0 mb-4">
-                    Customer Information
+                    Información del cliente
                   </Text>
 
                   <Row className="mb-3">
                     <Column className="w-24">
                       <Text className="text-gray-600 font-medium text-sm m-0">
-                        Name:
+                        Nombre:
                       </Text>
                     </Column>
                     <Column>
@@ -70,7 +70,7 @@ export default function ContactFormSubmissionTemplate({
                   <Row className="mb-3">
                     <Column className="w-24">
                       <Text className="text-gray-600 font-medium text-sm m-0">
-                        Email:
+                        Correo:
                       </Text>
                     </Column>
                     <Column>
@@ -83,7 +83,7 @@ export default function ContactFormSubmissionTemplate({
                   <Row>
                     <Column className="w-24">
                       <Text className="text-gray-600 font-medium text-sm m-0">
-                        Submitted:
+                        Fecha:
                       </Text>
                     </Column>
                     <Column>
@@ -96,10 +96,10 @@ export default function ContactFormSubmissionTemplate({
 
                 <Hr className="border-gray-200 my-6" />
 
-                {/* Message */}
+                {/* Mensaje */}
                 <Section>
                   <Text className="text-[#1E2A38] text-lg font-semibold m-0 mb-4">
-                    Message
+                    Mensaje
                   </Text>
                   <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mt-2">
                     <Text className="text-gray-900 text-sm m-0 leading-relaxed whitespace-pre-wrap">
@@ -111,11 +111,11 @@ export default function ContactFormSubmissionTemplate({
                 <Hr className="border-gray-200 my-6" />
               </div>
 
-              {/* Footer */}
+              {/* Pie de página */}
               <div className="bg-gray-100 px-6 py-4 border-t border-gray-200">
                 <Text className="text-gray-500 text-xs m-0 text-center font-poppins">
-                  This email was automatically generated from your website
-                  contact form.
+                  Este correo fue generado automáticamente desde el formulario
+                  de contacto de tu sitio web.
                 </Text>
               </div>
             </Section>
