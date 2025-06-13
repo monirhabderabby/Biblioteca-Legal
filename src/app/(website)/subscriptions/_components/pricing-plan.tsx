@@ -56,7 +56,7 @@ export default function PricingComparison({ subscription, price }: Props) {
         <Card className="relative bg-white border-2 border-gray-200 w-full md:max-w-[334px] shadow-[0px_4px_12px_0px_#0000001A] ">
           <CardHeader className="text-start pb-8">
             <CardTitle className="text-xl font-semibold text-primary mb-2">
-              Base de usuario
+              Plan Personal
             </CardTitle>
             <div className="flex items-baseline justify-start">
               <span className="text-4xl font-bold text-primary">{price}</span>
@@ -101,7 +101,7 @@ export default function PricingComparison({ subscription, price }: Props) {
         <Card className="relative bg-primary border-2 w-full border-black/20 md:max-w-[334px] shadow-[0px_4px_12px_0px_#0000001A]">
           <CardHeader className="text-start pb-8">
             <CardTitle className="text-xl font-semibold text-white mb-2">
-              Base de empresa
+              Plan Empresarial
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6 ">

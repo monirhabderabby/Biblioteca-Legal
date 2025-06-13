@@ -34,7 +34,7 @@ export default function OurServices() {
               </div>
 
               <p className="text-gray-300 group-hover:text-gray-600 text-lg font-medium mb-6 transition-colors duration-300">
-                Accede a miles de documentos legales, leyes y decretos
+                Accede a todos los documentos legales, leyes y decretos
               </p>
               <p className="text-gray-300 group-hover:text-gray-600 text-lg font-medium mb-6 transition-colors duration-300">
                 Nuestra colección integral incluye los documentos legales más
