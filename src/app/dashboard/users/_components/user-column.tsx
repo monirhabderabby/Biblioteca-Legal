@@ -1,10 +1,9 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { User } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
-import { Trash } from "lucide-react";
 import moment from "moment";
+import UserAction from "./user-action";
 
 export const manageUsersColumn: ColumnDef<User>[] = [
   {
@@ -29,14 +28,6 @@ export const manageUsersColumn: ColumnDef<User>[] = [
   },
   {
     header: "Action",
-    cell: () => (
-      <Button
-        size="icon"
-        variant="outline"
-        className="text-primary hover:text-primary/80"
-      >
-        <Trash />
-      </Button>
-    ),
+    cell: () => <UserAction />,
   },
 ];
