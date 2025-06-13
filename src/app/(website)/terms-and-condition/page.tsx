@@ -10,7 +10,7 @@ const Page = async () => {
   if (!data) {
     content = (
       <div className="h-[600px] flex justify-center items-center">
-        Content not published
+        Contenido no publicado
       </div>
     );
   } else {
@@ -21,7 +21,7 @@ const Page = async () => {
     <div>
       <HeaderSection
         imageUrl="https://files.edgestore.dev/ln9m9j3kr2yibrue/staticFiled/_public/terms%20and%20condition.webp"
-        title="Terms of Service"
+        title="Términos y Condiciones"
         description=""
       />
 

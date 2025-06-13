@@ -6,35 +6,36 @@ const page = () => {
     <div>
       <HeaderSection
         imageUrl="https://files.edgestore.dev/ln9m9j3kr2yibrue/staticFiled/_public/about%20us.webp"
-        title="About Us"
+        title="Sobre Nosotros"
         description=""
       />
       <section className="w-full py-16 px-4 md:px-8 lg:px-16 ">
-        {/* About Section */}
+        {/* Sección Acerca de */}
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12 lg:gap-16">
             <div className="w-full md:w-1/2">
               <h2 className="text-4xl md:text-[40px] font-bold text-[#1E2A38] mb-6">
-                About Biblioteca legal
+                Acerca de Biblioteca Legal
               </h2>
               <p className="text-[14px] md:text-[16px]  mb-6">
-                Biblioteca Legal was born in response to the lack of digital
-                access to updated legal information in Honduras. It emerged from
-                the real need to provide an accessible, reliable, and
-                easy-to-use tool for those who study or practice law.
+                Biblioteca Legal nació como respuesta a la falta de acceso
+                digital a información legal actualizada en Honduras. Surgió de
+                la necesidad real de brindar una herramienta accesible,
+                confiable y fácil de usar para quienes estudian o ejercen el
+                Derecho.
               </p>
               <p className="text-[14px] md:text-[16px]">
-                The platform was created by a visionary law student who, based
-                on his own experience, identified the shortcomings of the sector
-                and decided to turn them into an opportunity to improve access
-                to legal knowledge
+                La plataforma fue creada por un estudiante de Derecho visionario
+                que, basado en su propia experiencia, identificó las
+                deficiencias del sector y decidió convertirlas en una
+                oportunidad para mejorar el acceso al conocimiento legal.
               </p>
             </div>
             <div className="w-full md:w-1/2 flex justify-center">
               <div className="relative w-full max-w-[684px] h-[542px]">
                 <Image
                   src="/about1.png"
-                  alt="Lady Justice statue"
+                  alt="Estatua de la Dama de la Justicia"
                   fill
                   className="object-cover rounded-[16px]"
                   sizes="(max-width: 768px) 100vw, 684px"
@@ -45,13 +46,13 @@ const page = () => {
           </div>
         </div>
 
-        {/* Vision and Mission Section */}
+        {/* Sección Visión y Misión */}
         <div className="max-w-7xl mx-auto mt-24">
           <h3 className="text-lg md:text-[20px] font-semibold text-[#D4AF37] text-center mb-6">
-            Our Vision and Mission
+            Nuestra Visión y Misión
           </h3>
           <h2 className="text-2xl md:text-[32px]  font-semibold text-[#1E2A38] text-center mb-16">
-            What makes us who we are
+            Lo que nos define
           </h2>
 
           <div className="flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12 lg:gap-16">
@@ -59,7 +60,7 @@ const page = () => {
               <div className="relative w-full max-w-[684px] h-[542px]">
                 <Image
                   src="/about2.png"
-                  alt="Legal scales and gavel"
+                  alt="Balanza de la justicia y mazo"
                   fill
                   className="object-cover rounded-[16px]"
                   sizes="(max-width: 768px) 100vw, 684px"
@@ -70,53 +71,53 @@ const page = () => {
             <div className="w-full md:w-1/2 order-1 md:order-2">
               <div className="mb-12">
                 <h3 className="text-2xl md:text-[25px] font-bold text-[#1E2A38] mb-4">
-                  Vision Statement
+                  Declaración de Visión
                 </h3>
                 <p className="text-[16px] ">
-                  We want thousands of people across Central America to be able
-                  to say, “I study and work better thanks to Biblioteca Legal.”
-                  Our goal is to reach every corner of the region, helping to
-                  shape better-prepared professionals who are connected to the
-                  legal knowledge they need to grow.
+                  Queremos que miles de personas en toda Centroamérica puedan
+                  decir: “Estudio y trabajo mejor gracias a Biblioteca Legal.”
+                  Nuestra meta es llegar a cada rincón de la región, ayudando a
+                  formar profesionales mejor preparados y conectados con el
+                  conocimiento legal que necesitan para crecer.
                 </p>
               </div>
               <div>
                 <h3 className="text-2xl md:text-[25px] font-bold text-[#1E2A38] mb-4">
-                  Mission Statement
+                  Declaración de Misión
                 </h3>
                 <p className="text-[16px] ">
-                  At Biblioteca Legal, we believe that everyone should have easy
-                  and affordable access to the laws and codes they need. That’s
-                  why we created a modern and accessible platform where
-                  students, professionals, and legal enthusiasts can find
-                  reliable and always up-to-date legal information, without
-                  complications.
+                  En Biblioteca Legal creemos que todas las personas deberían
+                  tener acceso fácil y asequible a las leyes y códigos que
+                  necesitan. Por eso creamos una plataforma moderna y accesible
+                  donde estudiantes, profesionales y entusiastas del Derecho
+                  pueden encontrar información legal confiable y siempre
+                  actualizada, sin complicaciones.
                 </p>
               </div>
               <div className="mt-12">
                 <h3 className="text-2xl md:text-[25px] font-bold text-[#1E2A38] mb-4">
-                  💡 Our Values
+                  💡 Nuestros Valores
                 </h3>
                 <ul>
                   <li>
-                    <span className="font-semibold">Accessibility:</span> We
-                    bring the law closer to everyone.
+                    <span className="font-semibold">Accesibilidad:</span>{" "}
+                    Acercamos el Derecho a todos.
                   </li>
                   <li>
-                    <span className="font-semibold">Empathy:</span> We
-                    understand your challenges and support you.
+                    <span className="font-semibold">Empatía:</span> Entendemos
+                    tus desafíos y te apoyamos.
                   </li>
                   <li>
-                    <span className="font-semibold">Quality:</span> Reliable,
-                    up-to-date, and useful content.
+                    <span className="font-semibold">Calidad:</span> Contenido
+                    confiable, actualizado y útil.
                   </li>
                   <li>
-                    <span className="font-semibold">Trust:</span> You can always
-                    count on us.
+                    <span className="font-semibold">Confianza:</span> Siempre
+                    puedes contar con nosotros.
                   </li>
                   <li>
-                    <span className="font-semibold">Professionalism:</span> We
-                    work with passion and responsibility.
+                    <span className="font-semibold">Profesionalismo:</span>
+                    Trabajamos con pasión y responsabilidad.
                   </li>
                 </ul>
               </div>
@@ -124,10 +125,10 @@ const page = () => {
           </div>
 
           <p className="mt-12 max-w-[900px]">
-            We believe in a flexible team that learns every day and collaborates
-            with enthusiasm. We support each other, share ideas, and grow
-            together—because legal knowledge can also be dynamic, approachable,
-            and transformative.
+            Creemos en un equipo flexible que aprende todos los días y colabora
+            con entusiasmo. Nos apoyamos, compartimos ideas y crecemos juntos,
+            porque el conocimiento legal también puede ser dinámico, accesible y
+            transformador.
           </p>
         </div>
       </section>

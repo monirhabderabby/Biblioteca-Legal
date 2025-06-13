@@ -27,8 +27,6 @@ import { ReactNode, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-// Schema for form validation
-
 interface Props {
   trigger: ReactNode;
 }
@@ -55,7 +53,6 @@ export default function CompanyContactModal({ trigger }: Props) {
           return;
         }
 
-        // handle success
         toast.success(res.message);
         form.reset();
         setOpen(false);
@@ -74,9 +71,9 @@ export default function CompanyContactModal({ trigger }: Props) {
               name="companyName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Company Name</FormLabel>
+                  <FormLabel>Nombre de la empresa</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g. OpenAI" {...field} />
+                    <Input placeholder="ej. OpenAI" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -88,11 +85,11 @@ export default function CompanyContactModal({ trigger }: Props) {
               name="numberOfEmployee"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Number of Employees</FormLabel>
+                  <FormLabel>Número de usuarios</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
-                      placeholder="e.g. 1"
+                      placeholder="ej. 1"
                       {...field}
                       onChange={(e) =>
                         field.onChange(parseInt(e.target.value || "0"))
@@ -109,11 +106,11 @@ export default function CompanyContactModal({ trigger }: Props) {
               name="managerEmail"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Account Manager Email</FormLabel>
+                  <FormLabel>Correo del encargado de cuenta</FormLabel>
                   <FormControl>
                     <Input
                       type="email"
-                      placeholder="manager@example.com"
+                      placeholder="gerente@ejemplo.com"
                       {...field}
                     />
                   </FormControl>
@@ -127,10 +124,10 @@ export default function CompanyContactModal({ trigger }: Props) {
               name="about"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Say About Your Company</FormLabel>
+                  <FormLabel>Cuéntanos sobre tu empresa</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Tell us about your company..."
+                      placeholder="Háblanos sobre tu empresa..."
                       className="min-h-[120px]"
                       {...field}
                     />
@@ -151,10 +148,10 @@ export default function CompanyContactModal({ trigger }: Props) {
                   setOpen(false);
                 }}
               >
-                Cancel
+                Cancelar
               </Button>
               <Button type="submit" disabled={pending}>
-                Submit{" "}
+                Enviar{" "}
                 {pending && <Loader2 className="ml-2 animate-spin w-4 h-4" />}
               </Button>
             </div>
