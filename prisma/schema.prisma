@@ -41,6 +41,7 @@ model User {
   isActive    Boolean           @default(false)
 
   watchLists WatchLists[]
+  devices    Device[]
 
   userSubscription UserSubscription?
 
@@ -49,6 +50,19 @@ model User {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Device {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deviceId  String
+  userAgent String?
+  ipAddress String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, deviceId])
 }
 
 model Account {
