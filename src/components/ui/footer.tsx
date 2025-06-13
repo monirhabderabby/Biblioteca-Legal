@@ -79,7 +79,7 @@ export default function Footer() {
                 href="mailto:rrivera@bibliotecalegalthn.com"
                 className="text-slate-300 hover:text-white transition-colors duration-200 text-sm"
               >
-                soporte@bibliotecalegalthn.com
+                soporte@bibliotecalegalhn.com
               </a>
             </div>
           </div>
