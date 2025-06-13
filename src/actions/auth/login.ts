@@ -3,11 +3,22 @@
 import { signIn } from "@/auth";
 import { prisma } from "@/lib/db";
 import { loginFormSchema, LoginFormValues } from "@/schemas/auth";
-import { Role } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { cookies } from "next/headers";
 
-export async function loginAction(data: LoginFormValues) {
+interface Props {
+  data: LoginFormValues;
+  deviceId: string;
+  userAgent: string;
+  ipAddress: string;
+}
+
+export async function loginAction({
+  data,
+  deviceId,
+  userAgent,
+  ipAddress,
+}: Props) {
   const { success, data: parsedData, error } = loginFormSchema.safeParse(data);
 
   if (!success) {
@@ -17,41 +28,81 @@ export async function loginAction(data: LoginFormValues) {
     };
   }
 
-  // Verificar si el usuario existe
-  const usuario = await prisma.user.findFirst({
+  // 1. Check if the user exists
+  const user = await prisma.user.findFirst({
     where: {
-      email: parsedData.email as string,
+      email: parsedData.email,
     },
   });
 
-  if (!usuario) {
+  if (!user) {
     return {
       success: false,
-      message: "¡Usuario no encontrado!",
+      message: "User not found.",
     };
   }
 
-  if (!usuario.emailVerified) {
+  // 2. Check if email is verified
+  if (!user.emailVerified) {
     return {
       success: false,
       message:
-        "Tu correo electrónico no está verificado. Por favor, revisa tu bandeja de entrada y verifica tu dirección antes de iniciar sesión.",
+        "Your email is not verified. Please check your inbox to verify your email before logging in.",
     };
   }
 
-  // Verificar la contraseña
-  const contraseñaValida = await bcrypt.compare(
-    parsedData.password as string,
-    usuario.password
+  // 3. Validate password
+  const isPasswordValid = await bcrypt.compare(
+    parsedData.password,
+    user.password
   );
 
-  if (!contraseñaValida) {
+  if (!isPasswordValid) {
     return {
       success: false,
-      message: "¡La contraseña no coincide!",
+      message: "Incorrect password.",
     };
   }
 
+  const userDevices = await prisma.device.findMany({
+    where: { userId: user.id },
+  });
+
+  const isKnownDevice = userDevices.some((d) => d.deviceId === deviceId);
+
+  // Enforce maximum of 2 devices
+  if (!isKnownDevice && userDevices.length >= 2) {
+    return {
+      success: false,
+      message: "You can only log in from up to 2 devices.",
+    };
+  }
+
+  // Register new device if unknown
+  if (!isKnownDevice) {
+    try {
+      await prisma.device.create({
+        data: {
+          userId: user.id,
+          deviceId,
+          userAgent: userAgent ?? "unknown",
+          ipAddress: ipAddress ?? "unknown",
+        },
+      });
+
+      // Set persistent device_id cookie
+      cookies().set("device_id", deviceId, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        maxAge: 60 * 60 * 24 * 365, // 1 year
+        path: "/",
+      });
+    } catch (err) {
+      console.error("Failed to save device info:", err);
+    }
+  }
+
+  // 5. Sign in with next-auth
   try {
     await signIn("credentials", {
       email: parsedData.email,
@@ -59,7 +110,7 @@ export async function loginAction(data: LoginFormValues) {
       redirect: false,
     });
 
-    // Manejar cookies de "Recordarme"
+    // 6. Handle "Remember me" cookies
     await manejarCookiesRecordarme(
       !!data.rememberMe,
       data.rememberMe ? data.email : undefined,
@@ -68,15 +119,15 @@ export async function loginAction(data: LoginFormValues) {
 
     return {
       success: true,
-      message: "Inicio de sesión exitoso",
-      role: usuario.role as Role,
+      message: "Login successful.",
+      role: user.role,
     };
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    console.log(error);
+    console.error("Sign-in error:", error);
     return {
       success: false,
-      message: error.message ?? "¡Algo salió mal!",
+      message: error.message ?? "Something went wrong.",
     };
   }
 }

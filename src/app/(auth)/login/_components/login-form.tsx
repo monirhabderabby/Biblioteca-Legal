@@ -53,10 +53,20 @@ export default function LoginForm() {
 
   // Handle form submission
   async function onSubmit(data: LoginFormValues) {
-    console.log(data);
     setIsLoading(true);
+
+    const deviceId = Cookies.get("device_id") || crypto.randomUUID(); // Store if new
+
+    Cookies.set("device_id", deviceId, { expires: 365 }); // Store for future logins
+    const userAgent = navigator.userAgent;
+
+    const ip = await fetch("https://api.ipify.org?format=json")
+      .then((res) => res.json())
+      .then((data) => data.ip)
+      .catch(() => "unknown");
+
     startTransition(() => {
-      loginAction(data).then((res) => {
+      loginAction({ data, deviceId, userAgent, ipAddress: ip }).then((res) => {
         if (!res?.success) {
           toast.error(res?.message);
           setIsLoading(false);
