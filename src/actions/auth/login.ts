@@ -8,18 +8,14 @@ import { cookies } from "next/headers";
 
 interface Props {
   data: LoginFormValues;
-  deviceId: string;
   userAgent: string;
   ipAddress: string;
 }
 
-export async function loginAction({
-  data,
-  deviceId,
-  userAgent,
-  ipAddress,
-}: Props) {
+export async function loginAction({ data, userAgent, ipAddress }: Props) {
   const { success, data: parsedData, error } = loginFormSchema.safeParse(data);
+
+  const deviceId = cookies().get("device_id")?.value || crypto.randomUUID();
 
   if (!success) {
     return {
