@@ -55,7 +55,6 @@ export function DocumentCreateForm({ initialData }: Props) {
     queryFn: () => fetch("/api/categories").then((res) => res.json()),
   });
 
-  console.log("categories", categories);
   // Initialize the form with react-hook-form and Zod resolver
   const form = useForm<DocumentFormSchemaType>({
     resolver: zodResolver(documentFormSchema),

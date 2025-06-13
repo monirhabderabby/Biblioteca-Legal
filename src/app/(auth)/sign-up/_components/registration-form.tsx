@@ -77,7 +77,7 @@ export default function RegistrationForm() {
 
   useEffect(() => {
     initializePaddle({
-      environment: "sandbox",
+      environment: "production",
       token: process.env.NEXT_PUBLIC_PADDLE_TOKEN!,
       debug: true,
     }).then((paddle) => setPaddle(paddle));
