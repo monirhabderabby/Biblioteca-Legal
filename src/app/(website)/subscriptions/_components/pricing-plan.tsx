@@ -22,12 +22,20 @@ interface Props {
 export default function PricingComparison({ subscription, price }: Props) {
   const router = useRouter();
   const features = [
-    { name: "Unlimited Access to Documents", starter: true, business: true },
-    { name: "Update and News", starter: true, business: true },
-    { name: "Multi Device Access", starter: true, business: false },
-    { name: "Smart Reading Tools", starter: true, business: true },
-    { name: "Multi User Access", starter: false, business: true },
-    { name: "Tiered Pricing Packages", starter: false, business: true },
+    { name: "Acceso ilimitado a documentos", starter: true, business: true },
+    { name: "Actualizaciones y noticias", starter: true, business: true },
+    {
+      name: "Acceso en múltiples dispositivos",
+      starter: true,
+      business: false,
+    },
+    {
+      name: "Herramientas de lectura inteligente",
+      starter: true,
+      business: true,
+    },
+    { name: "Acceso multiusuario", starter: false, business: true },
+    { name: "Paquetes de precios escalonados", starter: false, business: true },
   ];
 
   const now = new Date();
@@ -36,33 +44,32 @@ export default function PricingComparison({ subscription, price }: Props) {
     subscription?.isActive && new Date(subscription.currentPeriodEnd) > now;
 
   const userButtonLabel = !subscription
-    ? "Get Started"
+    ? "Comenzar"
     : isSubscribed
-      ? "Subscribed"
-      : "Renew";
+      ? "Suscrito"
+      : "Renovar";
 
   return (
     <div className="container mx-auto py-[100px]">
       <div className="flex flex-col md:flex-row justify-center gap-10">
-        {/* Starter Plan */}
+        {/* Plan Inicial */}
         <Card className="relative bg-white border-2 border-gray-200 w-full md:max-w-[334px] shadow-[0px_4px_12px_0px_#0000001A] ">
           <CardHeader className="text-start pb-8">
             <CardTitle className="text-xl font-semibold text-primary mb-2">
-              User base
+              Base de usuario
             </CardTitle>
             <div className="flex items-baseline justify-start">
               <span className="text-4xl font-bold text-primary">{price}</span>
-              <span className="text-gray-500 ml-1">/month</span>
+              <span className="text-gray-500 ml-1">/mes</span>
             </div>
           </CardHeader>
           <CardContent className="space-y-6">
             <Button
               className="w-full bg-gray-900 hover:bg-gray-800 text-white relative"
-              disabled={isSubscribed || userButtonLabel === "Renew"}
+              disabled={isSubscribed || userButtonLabel === "Renovar"}
               onClick={() => router.push("/sign-up")}
             >
               {userButtonLabel}
-              {/* {pending && <Loader2 className="animate-spin absolute right-3" />} */}
             </Button>
 
             <div className="space-y-3">
@@ -90,18 +97,18 @@ export default function PricingComparison({ subscription, price }: Props) {
           </CardContent>
         </Card>
 
-        {/* Business Plan */}
+        {/* Plan Empresarial */}
         <Card className="relative bg-primary border-2 w-full border-black/20 md:max-w-[334px] shadow-[0px_4px_12px_0px_#0000001A]">
           <CardHeader className="text-start pb-8">
             <CardTitle className="text-xl font-semibold text-white mb-2">
-              Company base
+              Base de empresa
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6 ">
             <CompanyContactModal
               trigger={
                 <Button className="w-full bg-white hover:bg-white/80 text-slate-900">
-                  Contact us
+                  Contáctanos
                 </Button>
               }
             />

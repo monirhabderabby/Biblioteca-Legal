@@ -6,6 +6,8 @@ export async function GET() {
   try {
     const categories = await prisma.category.findMany();
 
+    console.log("server categories", categories);
+
     return NextResponse.json(categories ?? []);
   } catch (error) {
     console.error("Error fetching categories:", error);
