@@ -16,8 +16,7 @@ const Page = () => {
             Crea una cuenta
           </h1>
           <p className="text-black font-medium text-[14px] leading-[120%] md:text-[18px]">
-            Completa el siguiente formulario para crear tu cuenta y obtén 15
-            días de acceso gratuito
+            Completa el siguiente formulario para crear tu cuenta
           </p>
         </div>
         <RegistrationForm />
