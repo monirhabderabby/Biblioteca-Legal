@@ -56,7 +56,7 @@ export default function ChangePasswordForm() {
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle className="text-xl font-semibold">
-              Change Password
+              Cambiar Contraseña
             </CardTitle>
             {editable ? (
               <Button
@@ -64,11 +64,11 @@ export default function ChangePasswordForm() {
                 className="text-primary hover:text-primary/80"
                 onClick={() => {
                   setEditable(!editable);
-                  form.reset(); // Reset the form when canceling
+                  form.reset(); // Restablece el formulario al cancelar
                 }}
                 disabled={!editable}
               >
-                Cancel
+                Cancelar
               </Button>
             ) : (
               <Button
@@ -77,7 +77,7 @@ export default function ChangePasswordForm() {
                 onClick={() => setEditable(!editable)}
                 disabled={editable}
               >
-                Edit
+                Editar
               </Button>
             )}
           </div>
@@ -92,11 +92,11 @@ export default function ChangePasswordForm() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-sm text-muted-foreground">
-                        Enter your current password
+                        Ingresa tu contraseña actual
                       </FormLabel>
                       <FormControl>
                         <PasswordInput
-                          placeholder="Current Password"
+                          placeholder="Contraseña actual"
                           {...field}
                           disabled={!editable}
                         />
@@ -112,11 +112,11 @@ export default function ChangePasswordForm() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-sm text-muted-foreground">
-                        Enter your new password
+                        Ingresa tu nueva contraseña
                       </FormLabel>
                       <FormControl>
                         <PasswordInput
-                          placeholder="Password"
+                          placeholder="Nueva contraseña"
                           {...field}
                           disabled={!editable}
                         />
@@ -132,11 +132,11 @@ export default function ChangePasswordForm() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-sm text-muted-foreground">
-                        Confirm your new password
+                        Confirma tu nueva contraseña
                       </FormLabel>
                       <FormControl>
                         <PasswordInput
-                          placeholder="Confirm Password"
+                          placeholder="Confirmar contraseña"
                           disabled={!editable}
                           {...field}
                         />
@@ -153,8 +153,8 @@ export default function ChangePasswordForm() {
                     type="submit"
                     className="bg-slate-800 hover:bg-slate-700"
                   >
-                    {pending && <Loader2 className="animate-spin" />} Save
-                    Change
+                    {pending && <Loader2 className="animate-spin" />} Guardar
+                    cambios
                   </Button>
                 </div>
               )}

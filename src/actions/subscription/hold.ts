@@ -2,7 +2,6 @@
 
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
-import { paddle } from "@/lib/paddle";
 
 export async function holdSubscription() {
   const cu = await auth();
@@ -28,9 +27,9 @@ export async function holdSubscription() {
       };
     }
 
-    await paddle.subscriptions.pause(existingSubscription.sub_id, {
-      effectiveFrom: "immediately",
-    });
+    // const res = await paddle.subscriptions.pause(existingSubscription.sub_id, {
+    //   effectiveFrom: "immediately",
+    // });
 
     // "Hold" the subscription - e.g., set isActive to false
     await prisma.userSubscription.update({

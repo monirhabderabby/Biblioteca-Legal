@@ -143,7 +143,7 @@ const Sidebar = () => {
         onClose={() => setOpen(false)}
         onConfirm={onLogout}
         loading={isLoading}
-        title="Are you sure want to logout"
+        title="¿Estás seguro que quieres cerrar sesión?"
         message=""
       />
     </>

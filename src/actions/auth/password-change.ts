@@ -14,7 +14,7 @@ export async function changePasswordAction(data: passwordChangeSchemaType) {
   if (!cu?.user.id) {
     return {
       success: false,
-      message: "You must be logged in to change your password.",
+      message: "Debes iniciar sesión para cambiar tu contraseña.",
     };
   }
 
@@ -36,11 +36,11 @@ export async function changePasswordAction(data: passwordChangeSchemaType) {
   if (!user) {
     return {
       success: false,
-      message: "User not found.",
+      message: "Usuario no encontrado.",
     };
   }
 
-  const isPasswordValid = bcrypt.compare(
+  const isPasswordValid = await bcrypt.compare(
     parsedData.data.currentPassword,
     user.password
   );
@@ -48,7 +48,7 @@ export async function changePasswordAction(data: passwordChangeSchemaType) {
   if (!isPasswordValid) {
     return {
       success: false,
-      message: "Current password is incorrect.",
+      message: "La contraseña actual es incorrecta.",
     };
   }
 
@@ -61,8 +61,9 @@ export async function changePasswordAction(data: passwordChangeSchemaType) {
       password: hashedNewPassword,
     },
   });
+
   return {
     success: true,
-    message: "Password changed successfully.",
+    message: "Contraseña cambiada exitosamente.",
   };
 }

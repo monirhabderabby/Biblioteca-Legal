@@ -72,6 +72,7 @@ export async function POST(req: NextRequest) {
               isActive: true,
             },
           });
+
           break;
         case EventName.SubscriptionActivated:
           // Why? > When the subscription becomes active (e.g., after payment or pause).

@@ -99,15 +99,24 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-tourHub-title2 text-[30px] font-bold font-inter">
-            Profile
+            Perfil
           </h2>
           <p className="text-tourHub-green-dark text-base mb-1">
-            Manage your profile
+            Administra tu perfil
           </p>
         </div>
+        {editable && (
+          <Button
+            onClick={() => setEditable((prev) => !prev)}
+            variant="outline"
+            className="text-primary hover:text-primary/80"
+          >
+            Cancelar
+          </Button>
+        )}
         {!editable && (
           <Button
-            className="text-sm  rounded-md px-3 py-2"
+            className="text-sm rounded-md px-3 py-2"
             onClick={() => {
               if (editable) {
                 form.handleSubmit(onSubmit)();
@@ -122,11 +131,11 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
             ) : (
               <Pencil className="mr-2 h-4 w-4" />
             )}
-            {pending ? "Saving" : editable ? "Save" : "Edit"}
+            {pending ? "Guardando" : editable ? "Guardar" : "Editar"}
           </Button>
         )}
       </div>
-      {/* <Separator className="mb-4" /> */}
+
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -142,15 +151,13 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
                     initial={{ filter: "blur(0px)" }}
                     animate={{
                       filter: imageLoader ? "blur(1px)" : "blur(0px)",
-                      transition: {
-                        duration: 0.5,
-                      },
+                      transition: { duration: 0.5 },
                     }}
                     className="h-full w-full rounded-full relative flex justify-center items-center"
                   >
                     <Image
                       src={field.value || "/default-profile.jpg"}
-                      alt="profile"
+                      alt="perfil"
                       fill
                       className="rounded-full object-cover text-tourHub-green-dark bg-gray-100"
                     />
@@ -174,23 +181,24 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
                       onClick={handleUploadClick}
                       disabled={imageLoader}
                     >
-                      Upload
+                      Subir
                     </Button>
                   </>
                 )}
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name="first_name"
             render={({ field }) => (
               <FormItem className="col-span-2 md:col-span-1">
-                {editable && <FormLabel>First Name</FormLabel>}
+                {editable && <FormLabel>Nombre</FormLabel>}
                 <FormControl>
                   <Input
                     type="text"
-                    placeholder="Your First Name"
+                    placeholder="Tu nombre"
                     {...field}
                     className="disabled:opacity-100"
                     disabled={!editable}
@@ -199,16 +207,17 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name="last_name"
             render={({ field }) => (
               <FormItem className="col-span-2 md:col-span-1">
-                {editable && <FormLabel>Last Name</FormLabel>}
+                {editable && <FormLabel>Apellido</FormLabel>}
                 <FormControl>
                   <Input
                     type="text"
-                    placeholder="Your last Name"
+                    placeholder="Tu apellido"
                     {...field}
                     className="disabled:opacity-100"
                     disabled={!editable}
@@ -217,16 +226,17 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name="email"
             render={({ field }) => (
               <FormItem className="col-span-2 md:col-span-1">
-                {editable && <FormLabel>Email</FormLabel>}
+                {editable && <FormLabel>Correo electrónico</FormLabel>}
                 <FormControl>
                   <Input
                     type="text"
-                    placeholder="Primary Email"
+                    placeholder="Correo electrónico principal"
                     {...field}
                     disabled
                     className="disabled:opacity-70"
@@ -235,16 +245,17 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name="phone"
             render={({ field }) => (
               <FormItem className="col-span-2 md:col-span-1">
-                {editable && <FormLabel>Phone</FormLabel>}
+                {editable && <FormLabel>Teléfono</FormLabel>}
                 <FormControl>
                   <Input
                     type="text"
-                    placeholder="Your phone number"
+                    placeholder="Tu número de teléfono"
                     {...field}
                     className="disabled:opacity-100"
                     disabled={!editable}
@@ -253,12 +264,13 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name="dateOfBirth"
             render={({ field }) => (
               <FormItem className="col-span-2 md:col-span-1">
-                {editable && <FormLabel>Date Of Birth</FormLabel>}
+                {editable && <FormLabel>Fecha de nacimiento</FormLabel>}
                 <FormControl>
                   <Popover>
                     <PopoverTrigger asChild>
@@ -274,7 +286,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
                           {field.value ? (
                             format(field.value, "PPP")
                           ) : (
-                            <span>Pick your date of birth</span>
+                            <span>Selecciona tu fecha de nacimiento</span>
                           )}
                           <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                         </Button>
@@ -306,21 +318,20 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
             name="gender"
             render={({ field }) => (
               <FormItem className="col-span-2 md:col-span-1">
-                {editable && <FormLabel>Gender</FormLabel>}
+                {editable && <FormLabel>Género</FormLabel>}
                 <FormControl>
                   <Select value={field.value} onValueChange={field.onChange}>
                     <SelectTrigger
-                      // className="w-full"
                       className={cn(
                         "w-full pl-3 text-left flex justify-between font-normal text-primary hover:text-primary/80 border-input border-[1px] outline-none"
                       )}
                       disabled={!editable}
                     >
-                      {field.value || "Select Gender"}
+                      {field.value || "Selecciona el género"}
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="Male">Male</SelectItem>
-                      <SelectItem value="Female">Female</SelectItem>
+                      <SelectItem value="Male">Masculino</SelectItem>
+                      <SelectItem value="Female">Femenino</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormControl>
@@ -336,7 +347,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
                 ) : (
                   <Save className="mr-2 h-4 w-4" />
                 )}
-                {pending ? "Saving" : "Save Changes"}
+                {pending ? "Guardando" : "Guardar cambios"}
               </Button>
             </div>
           )}

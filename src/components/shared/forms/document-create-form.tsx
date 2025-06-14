@@ -264,11 +264,11 @@ export function DocumentCreateForm({ initialData }: Props) {
                       mode="single"
                       selected={field.value}
                       onSelect={field.onChange}
-                      disabled={(date) => {
-                        const today = new Date();
-                        today.setHours(0, 0, 0, 0); // Strip time to compare only date part
-                        return date < today;
-                      }}
+                      // disabled={(date) => {
+                      //   const today = new Date();
+                      //   today.setHours(0, 0, 0, 0); // Strip time to compare only date part
+                      //   return date < today;
+                      // }}
                       initialFocus
                     />
                   </PopoverContent>
