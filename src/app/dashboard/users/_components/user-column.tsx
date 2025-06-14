@@ -1,9 +1,10 @@
 "use client";
 
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 import { User } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import moment from "moment";
-import UserAction from "./user-action";
 
 export const manageUsersColumn: ColumnDef<User>[] = [
   {
@@ -27,7 +28,15 @@ export const manageUsersColumn: ColumnDef<User>[] = [
     ),
   },
   {
-    header: "Action",
-    cell: () => <UserAction />,
+    header: "Sub_Type",
+    cell: ({ row }) => (
+      <Badge
+        className={cn(
+          row.original.companyId ? "bg-green-500" : "bg-orange-500"
+        )}
+      >
+        {row.original.companyId ? "Company" : "Individual"}
+      </Badge>
+    ),
   },
 ];

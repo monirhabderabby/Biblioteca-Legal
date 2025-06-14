@@ -1,7 +1,7 @@
 import ManageUserContainer from "./_components/manage-user-container";
 import ManageUserHeader from "./_components/manage-user-header";
 
-const Page = () => {
+const Page = async () => {
   return (
     <div>
       <div className="w-full flex justify-between mb-5">
