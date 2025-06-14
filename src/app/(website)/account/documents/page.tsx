@@ -39,11 +39,11 @@ const Page = async () => {
           />
         </svg>
         <p className="text-lg font-medium">
-          No documents found in your watch list
+          No se encontraron documentos en tu lista de seguimiento
         </p>
-        <p className="text-sm">Try visting the collections page</p>
+        <p className="text-sm">Intenta visitar la página de colecciones</p>
         <Button>
-          <Link href="/collections">View Collections</Link>
+          <Link href="/collections">Ver colecciones</Link>
         </Button>
       </div>
     );
@@ -56,14 +56,15 @@ const Page = async () => {
       </div>
     );
   }
+
   return (
     <div>
       <div>
         <h2 className="text-tourHub-title2 text-[30px] font-bold font-inter">
-          Watch Lists
+          Lista de Seguimiento
         </h2>
         <p className="text-tourHub-green-dark text-base mb-1">
-          view your saved document
+          visualiza tus documentos guardados
         </p>
       </div>
 

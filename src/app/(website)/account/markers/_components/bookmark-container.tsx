@@ -47,21 +47,22 @@ const BookmarkContainer = () => {
     content = (
       <div className="min-h-[300px] flex flex-col items-center justify-center text-red-600 dark:text-red-400 text-center space-y-2">
         <AlertTriangle size={32} />
-        <p className="text-lg font-medium">Failed to load markers</p>
+        <p className="text-lg font-medium">Error al cargar los marcadores</p>
         <p className="text-sm text-gray-500 dark:text-gray-400">
-          {error?.message || "Something went wrong. Please try again later."}
+          {error?.message ||
+            "Algo salió mal. Por favor, inténtalo de nuevo más tarde."}
         </p>
       </div>
     );
   } else if (data?.data?.length === 0) {
     content = (
       <div className="min-h-[300px] flex items-center justify-center text-gray-500 dark:text-gray-400">
-        No bookmarks found.
+        No se encontraron marcadores.
       </div>
     );
   } else if (data?.data && data.data.length > 0) {
     content = (
-      <div className=" pb-20 space-y-10">
+      <div className="pb-20 space-y-10">
         <div className="grid grid-cols-1 space-y-10">
           {data.data.map((bookmark: UserArticleMeta, i: number) => (
             <BookmarkCard

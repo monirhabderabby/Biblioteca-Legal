@@ -1,35 +1,35 @@
-// Function to generate a random ID
+// Función para generar un ID aleatorio
 const generateRandomId = () => Math.floor(Math.random() * 100000);
 
 export const accountTablists = [
   {
     id: generateRandomId(),
     path: "/account",
-    linkText: "My Profile",
+    linkText: "Mi Perfil",
     roles: ["user"],
   },
   {
     id: generateRandomId(),
     path: "/account/documents",
-    linkText: "My Documents",
+    linkText: "Mis Documentos",
     roles: ["user"],
   },
   {
     id: generateRandomId(),
     path: "/account/markers",
-    linkText: "Markers",
+    linkText: "Marcadores",
     roles: ["user"],
   },
   {
     id: generateRandomId(),
     path: "/account/highlights",
-    linkText: "Highlights",
+    linkText: "Destacados",
     roles: ["user"],
   },
   {
     id: generateRandomId(),
     path: "/account/notes",
-    linkText: "Notes",
+    linkText: "Notas",
     roles: ["user"],
   },
 ];

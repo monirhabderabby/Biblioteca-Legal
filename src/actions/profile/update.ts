@@ -14,7 +14,7 @@ export async function updateProfile(data: ProfileSchemaType) {
   if (!cu?.user.id) {
     return {
       success: false,
-      message: "User not authenticated",
+      message: "Usuario no autenticado",
     };
   }
 
@@ -39,14 +39,14 @@ export async function updateProfile(data: ProfileSchemaType) {
 
     return {
       success: true,
-      message: "Profile updated successfully",
+      message: "Perfil actualizado con éxito",
       user: updatedUser,
     };
   } catch (error) {
-    console.error("Error updating profile:", error);
+    console.error("Error al actualizar el perfil:", error);
     return {
       success: false,
-      message: "Failed to update profile",
+      message: "Error al actualizar el perfil",
     };
   }
 }
