@@ -23,12 +23,12 @@ const DocumentCard = ({ document }: Props) => {
 
       <div className="mt-[20px] flex items-center gap-x-[13px] text-[#0D99FF]">
         <FileText className="h-5 w-5" />
-        <span className="font-poppins">Law No. {document?.law_number}</span>
+        <span className="font-poppins">{document?.law_number}</span>
       </div>
       <div className="mt-[20px] flex items-center gap-x-[13px] text-black">
         <Calendar className="h-5 w-5" />
         <span className="font-poppins text-[12px]">
-          Published: {moment(document?.createdAt).format("MMMM D, YYYY")}
+          Actualizado: {moment(document?.createdAt).format("MMMM D, YYYY")}
         </span>
       </div>
 
@@ -43,7 +43,7 @@ const DocumentCard = ({ document }: Props) => {
       {document && (
         <Button className="w-full mt-[30px] " asChild>
           <Link className="w-full" href={`/collections/${document.id}`}>
-            View Document
+            Ver documento
           </Link>
         </Button>
       )}

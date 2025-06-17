@@ -168,7 +168,7 @@ const ArticleCard = ({ data, index, isLoggedin, documentId }: Props) => {
               onClick={() => setIsColorPickerOpen(true)}
               disabled={isLoading || pending || !isLoggedin}
             >
-              Article {index + 1} {!isLoggedin && <Lock className="ml-1" />}
+              Artículo {index + 1} {!isLoggedin && <Lock className="ml-1" />}
             </Button>
 
             {!isColorPickerOpen && !isCommentOpen && (

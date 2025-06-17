@@ -15,6 +15,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { articleSchema, articleSchemaType } from "@/schemas/document";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Article } from "@prisma/client";
@@ -96,45 +97,50 @@ export default function AddArticleModal({
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>
-      <AlertDialogContent className="min-w-[800px]">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 ">
-            <FormField
-              control={form.control}
-              name="content"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Content</FormLabel>
-                  <FormControl>
-                    <RichTextEditor
-                      content={field.value}
-                      onChange={(content) => field.onChange(content)}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <div className="flex justify-end gap-x-4">
-              <Button
-                variant="outline"
-                className="text-primary hover:text-primary/80"
-                onClick={() => {
-                  form.reset();
-                  setOpen(false);
-                }}
-                type="button"
-                disabled={pending}
-              >
-                Cancel
-              </Button>
-              <Button type="submit" disabled={pending}>
-                {initialData ? "Save Now" : "Submit"}{" "}
-                {pending && <Loader2 className="animate-spin" />}
-              </Button>
-            </div>
-          </form>
-        </Form>
+      <AlertDialogContent className="min-w-[800px] overflow-y-auto p-0">
+        <ScrollArea className="max-h-[80vh] p-8 ">
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-8 mb-2 "
+            >
+              <FormField
+                control={form.control}
+                name="content"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Content</FormLabel>
+                    <FormControl>
+                      <RichTextEditor
+                        content={field.value}
+                        onChange={(content) => field.onChange(content)}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="flex justify-end gap-x-4">
+                <Button
+                  variant="outline"
+                  className="text-primary hover:text-primary/80"
+                  onClick={() => {
+                    form.reset();
+                    setOpen(false);
+                  }}
+                  type="button"
+                  disabled={pending}
+                >
+                  Cancel
+                </Button>
+                <Button type="submit" disabled={pending}>
+                  {initialData ? "Save Now" : "Submit"}{" "}
+                  {pending && <Loader2 className="animate-spin" />}
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </ScrollArea>
       </AlertDialogContent>
     </AlertDialog>
   );
