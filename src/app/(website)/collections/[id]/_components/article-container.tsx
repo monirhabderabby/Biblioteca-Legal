@@ -86,13 +86,17 @@ const ArticleContainer = ({ documentId, isLoggedin }: Props) => {
             ))}
           </div>
         ))}
-
-        {!isLoggedin && <SignInToContinue />}
       </div>
     );
   }
 
-  return <div className="container ">{content}</div>;
+  return (
+    <div className="container min-h-[calc(100vh-600px)]">
+      {content}
+
+      {!isLoggedin && <SignInToContinue />}
+    </div>
+  );
 };
 
 export default ArticleContainer;
