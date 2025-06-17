@@ -25,7 +25,7 @@ const CancelSubscriptionContainer = () => {
           return;
         }
 
-        // handle success
+        // manejar éxito
         toast.success(res.message);
         setOpen(false);
       });
@@ -37,17 +37,17 @@ const CancelSubscriptionContainer = () => {
         <CardHeader>
           <div className="flex flex-col items-start justify-between">
             <CardTitle className="text-xl font-semibold">
-              Unsubscribe your Subscription
+              Cancelar suscripción
             </CardTitle>
             <CardDescription>
-              Unsubscribing will end your access to premium features. You can
-              re-subscribe anytime.
+              Al cancelar la suscripción perderás acceso a las funciones
+              premium. Puedes volver a suscribirte en cualquier momento.
             </CardDescription>
           </div>
         </CardHeader>
         <CardContent>
           <Button variant="destructive" onClick={() => setOpen((p) => !p)}>
-            Cancel Subscription
+            Cancelar suscripción
           </Button>
         </CardContent>
       </Card>

@@ -57,7 +57,7 @@ const AccountSidebar = () => {
               )}
               onClick={() => setOpen(true)}
             >
-              Logout
+              Cerrar sesión
             </Button>
           </nav>
         </div>
