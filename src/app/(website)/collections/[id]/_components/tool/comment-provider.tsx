@@ -35,7 +35,7 @@ const CommentPopover = ({
         ref={inputRef}
         className="w-full p-2 border rounded-md text-sm resize-none"
         rows={3}
-        placeholder="Add your comment..."
+        placeholder="Agrega tu comentario..."
         value={comment}
         disabled={loading}
         onChange={(e) => setComment(e.target.value)}
@@ -54,7 +54,7 @@ const CommentPopover = ({
           onClick={onSubmit}
           disabled={loading}
         >
-          Save
+          Guardar
         </button>
       </div>
     </div>
