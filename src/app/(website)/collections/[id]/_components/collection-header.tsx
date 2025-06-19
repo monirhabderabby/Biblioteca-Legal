@@ -90,7 +90,7 @@ const CollectionHeader = ({ document, hasFullAccess }: Props) => {
             ) : (
               <Clock />
             )}{" "}
-            {isWatched ? "Remove watch list" : "Watch Later"}
+            {isWatched ? "Eliminar la lista de seguimiento" : "Guardar"}
           </Button>
         </>
       )}
