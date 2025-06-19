@@ -77,7 +77,15 @@ const ColorPicker = ({
           color.bgClass,
           color.hoverClass
         )}
-        onClick={() => onColorSelect(color.name)}
+        onClick={() => {
+          const currentColor = color.name;
+
+          if (currentColor === selectedColor) {
+            onColorSelect("bg-white");
+          } else {
+            onColorSelect(color.name);
+          }
+        }}
       >
         {selectedColor === color.name && <Check size={14} />}
       </motion.button>
