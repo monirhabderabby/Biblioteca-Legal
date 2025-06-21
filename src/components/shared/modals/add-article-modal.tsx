@@ -15,6 +15,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { articleSchema, articleSchemaType } from "@/schemas/document";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -114,6 +115,24 @@ export default function AddArticleModal({
                       <RichTextEditor
                         content={field.value}
                         onChange={(content) => field.onChange(content)}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="articleNumber"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Article Number</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="number"
+                        placeholder="Write Article number"
+                        onChange={(e) => field.onChange(Number(e.target.value))}
                       />
                     </FormControl>
                     <FormMessage />

@@ -40,6 +40,7 @@ export async function editArticle({
       data: {
         content: parsedData.data.content,
         chapterId: parsedData.data.chapterId,
+        articleNumber: parsedData.data.articleNumber,
       },
     });
 

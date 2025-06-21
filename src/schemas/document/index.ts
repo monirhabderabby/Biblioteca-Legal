@@ -61,6 +61,9 @@ export const articleSchema = z.object({
   content: z.string().min(1, {
     message: "Content is required.",
   }),
+  articleNumber: z.number({
+    message: "Article number is required",
+  }),
   chapterId: z.string().min(1, {
     message: "Document ID is required.",
   }),

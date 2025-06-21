@@ -31,6 +31,7 @@ export async function createArticle(
       data: {
         content: parsedData.data.content,
         chapterId: parsedData.data.chapterId,
+        articleNumber: parsedData.data.articleNumber,
       },
     });
 

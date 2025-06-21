@@ -75,12 +75,9 @@ export async function removeBookmark({ metaId }: RemoveBookmarkInput) {
   }
 
   try {
-    const updatedMeta = await prisma.userArticleMeta.update({
+    const updatedMeta = await prisma.userArticleMeta.delete({
       where: {
         id: metaId,
-      },
-      data: {
-        isBookmarked: false,
       },
     });
 

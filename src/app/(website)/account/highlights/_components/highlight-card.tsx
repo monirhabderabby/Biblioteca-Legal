@@ -36,10 +36,8 @@ const HighlightCard = ({
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
 
-  console.log(selectedColor, "selectedColor");
-
   const { data, isLoading } = useQuery<ApiProps>({
-    queryKey: [`article`, articleId],
+    queryKey: [`meta`, articleId],
     queryFn: () => fetch(`/api/article/${articleId}`).then((res) => res.json()),
   });
 
@@ -55,7 +53,7 @@ const HighlightCard = ({
         toast.success("Bookmark removed successfully");
         setOpen(false);
         queryClient.invalidateQueries({ queryKey: [`markers`] });
-        queryClient.invalidateQueries({ queryKey: [`article`, articleId] });
+        queryClient.invalidateQueries({ queryKey: [`meta`, articleId] });
       });
     });
   };
