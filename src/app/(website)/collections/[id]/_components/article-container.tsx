@@ -71,19 +71,23 @@ const ArticleContainer = ({ documentId, isLoggedin }: Props) => {
       <div className=" space-y-[100px] mb-[100px]">
         {data.data.map((section) => (
           <div key={section.id} className="space-y-[80px]">
-            {section.chapters.map((chapter) => (
-              <div key={chapter.id}>
-                <ArticleHeader
-                  sectionTitle={section.title}
-                  chapterTitle={chapter.title}
-                />
-                <ArticleWrapper
-                  data={chapter.articles}
-                  isLoggedin={isLoggedin}
-                  documentId={documentId}
-                />
-              </div>
-            ))}
+            {section.chapters.map((chapter, cId) => {
+              const isFirstChapter = cId === 0;
+
+              return (
+                <div key={chapter.id}>
+                  <ArticleHeader
+                    sectionTitle={isFirstChapter ? section.title : ""}
+                    chapterTitle={chapter.title}
+                  />
+                  <ArticleWrapper
+                    data={chapter.articles}
+                    isLoggedin={isLoggedin}
+                    documentId={documentId}
+                  />
+                </div>
+              );
+            })}
           </div>
         ))}
       </div>

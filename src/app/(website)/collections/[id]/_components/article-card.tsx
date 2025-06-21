@@ -32,7 +32,7 @@ interface ApiRes {
   data: UserArticleMeta | null;
 }
 
-const ArticleCard = ({ data, index, isLoggedin, documentId }: Props) => {
+const ArticleCard = ({ data, isLoggedin, documentId }: Props) => {
   const [pending, startTransition] = useTransition();
   const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
   const [selectedColor, setSelectedColor] = useState<string>("");
@@ -168,7 +168,8 @@ const ArticleCard = ({ data, index, isLoggedin, documentId }: Props) => {
               onClick={() => setIsColorPickerOpen(true)}
               disabled={isLoading || pending || !isLoggedin}
             >
-              Artículo {index + 1} {!isLoggedin && <Lock className="ml-1" />}
+              Artículo {data.articleNumber}{" "}
+              {!isLoggedin && <Lock className="ml-1" />}
             </Button>
 
             {!isColorPickerOpen && !isCommentOpen && (

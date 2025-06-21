@@ -9,6 +9,7 @@ const ArticleHeader = ({ sectionTitle, chapterTitle }: Props) => {
       <h1 className="text-black font-bold leading-[120%] text-[25px] md:text-[30px] lg:text-[40px] text-center">
         {sectionTitle}
       </h1>
+
       <h3 className="text-[22px] md:text-[25px] ld:text-[32px] text-center leading-[120%] font-semibold">
         {chapterTitle}
       </h3>

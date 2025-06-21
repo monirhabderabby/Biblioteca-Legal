@@ -22,13 +22,7 @@ interface Props {
   documentId: string;
 }
 
-const ArticleViewer = ({
-  data,
-  index,
-  sectionId,
-  documentId,
-  chapterId,
-}: Props) => {
+const ArticleViewer = ({ data, sectionId, documentId, chapterId }: Props) => {
   const [open, setOpen] = useState(false);
   const [pending, startTransition] = useTransition();
 
@@ -49,7 +43,7 @@ const ArticleViewer = ({
       <Card className="shadow-none bg-transparent" key={data.id}>
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle>Artitlce {index + 1}</CardTitle>
+            <CardTitle>Artitlce {data.articleNumber}</CardTitle>
             <div className="flex items-center gap-2">
               <AddArticleModal
                 trigger={
