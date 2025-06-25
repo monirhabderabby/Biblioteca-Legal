@@ -92,6 +92,7 @@ export default function AddArticleModal({
       form.reset({
         content: initialData.content,
         chapterId: chapterId,
+        articleNumber: initialData.articleNumber,
       });
     }
   }, [open, initialData, form, chapterId]);
