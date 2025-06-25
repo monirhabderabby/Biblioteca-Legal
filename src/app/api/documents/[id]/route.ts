@@ -35,7 +35,8 @@ export async function GET(
   }
 
   try {
-    let sections;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let sections: any[] = [];
 
     if (articleNumberSearch) {
       // Specific article search for "Articulo <number>"
@@ -57,150 +58,290 @@ export async function GET(
         },
       });
 
-      if (!article) {
-        return NextResponse.json({
-          success: true,
-          message: "No article found for the specified article number",
-          data: [],
-        });
-      }
-
-      // Construct the response to match the expected structure
-      sections = [
-        {
-          ...article.chapter.section,
-          chapters: [
-            {
-              ...article.chapter,
-              articles: [article],
-            },
-          ],
-        },
-      ];
-    } else if (hasFullAccess) {
-      // Full access: fetch all data
-      sections = await prisma.section.findMany({
-        where: {
-          documentId: id,
-          ...(searchQuery && {
-            OR: [
-              { title: { contains: searchQuery, mode: "insensitive" } },
+      if (article) {
+        sections = [
+          {
+            ...article.chapter.section,
+            chapters: [
               {
-                chapters: {
-                  some: {
-                    title: { contains: searchQuery, mode: "insensitive" },
-                    articles: {
-                      some: {
-                        content: {
-                          contains: searchQuery,
-                          mode: "insensitive",
-                        },
-                      },
-                    },
-                  },
-                },
+                ...article.chapter,
+                articles: [article],
               },
             ],
-          }),
-        },
-        include: {
-          chapters: {
-            include: {
-              articles: true,
+          },
+        ];
+      }
+    } else if (searchQuery) {
+      // Sequential search: section title -> chapter title -> article content
+      if (hasFullAccess) {
+        // 1. Search in section title
+        sections = await prisma.section.findMany({
+          where: {
+            documentId: id,
+            title: { contains: searchQuery, mode: "insensitive" },
+          },
+          include: {
+            chapters: {
+              include: {
+                articles: true,
+              },
             },
           },
-        },
-        orderBy: {
-          createdAt: "asc",
-        },
-      });
-
-      // Filter chapters and articles if searchQuery exists
-      if (searchQuery) {
-        sections = sections.map((section) => {
-          const sectionMatches = section.title
-            .toLowerCase()
-            .includes(searchQuery);
-          let filteredChapters = section.chapters;
-
-          if (!sectionMatches) {
-            filteredChapters = filteredChapters.filter((chapter) =>
-              chapter.title.toLowerCase().includes(searchQuery)
-            );
-          }
-
-          return {
-            ...section,
-            chapters: filteredChapters,
-          };
+          orderBy: {
+            createdAt: "asc",
+          },
         });
 
-        sections = sections.filter((section) => section.chapters.length > 0);
-      }
-    } else {
-      // Limited access: fetch only 1 section, 1 chapter, 3 articles
-      const [firstSection] = await prisma.section.findMany({
-        where: {
-          documentId: id,
-          ...(searchQuery && {
-            OR: [
-              { title: { contains: searchQuery, mode: "insensitive" } },
-              {
-                chapters: {
-                  some: {
-                    title: { contains: searchQuery, mode: "insensitive" },
-                  },
+        // 2. If no sections found, search in chapter title
+        if (sections.length === 0) {
+          sections = await prisma.section.findMany({
+            where: {
+              documentId: id,
+              chapters: {
+                some: {
+                  title: { contains: searchQuery, mode: "insensitive" },
                 },
               },
-            ],
-          }),
-        },
-        include: {
-          chapters: {
-            where: searchQuery
-              ? {
-                  OR: [
-                    {
-                      title: {
+            },
+            include: {
+              chapters: {
+                where: {
+                  title: { contains: searchQuery, mode: "insensitive" },
+                },
+                include: {
+                  articles: true,
+                },
+              },
+            },
+            orderBy: {
+              createdAt: "asc",
+            },
+          });
+        }
+
+        // 3. If no sections found, search in article contentPlainText
+        if (sections.length === 0) {
+          sections = await prisma.section.findMany({
+            where: {
+              documentId: id,
+              chapters: {
+                some: {
+                  articles: {
+                    some: {
+                      contentPlainText: {
                         contains: searchQuery,
                         mode: "insensitive",
                       },
                     },
-                    {
-                      articles: {
-                        some: {
-                          content: {
-                            contains: searchQuery,
-                            mode: "insensitive",
-                          },
-                        },
+                  },
+                },
+              },
+            },
+            include: {
+              chapters: {
+                where: {
+                  articles: {
+                    some: {
+                      contentPlainText: {
+                        contains: searchQuery,
+                        mode: "insensitive",
                       },
                     },
-                  ],
-                }
-              : undefined,
-            take: 1,
-            include: {
-              articles: {
-                take: 3,
-                orderBy: {
-                  createdAt: "asc",
+                  },
+                },
+                include: {
+                  articles: {
+                    where: {
+                      contentPlainText: {
+                        contains: searchQuery,
+                        mode: "insensitive",
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            orderBy: {
+              createdAt: "asc",
+            },
+          });
+        }
+
+        // Filter out empty chapters
+        sections = sections
+          .map((section) => ({
+            ...section,
+            chapters: section.chapters.filter(
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (chapter: any) => chapter.articles.length > 0
+            ),
+          }))
+          .filter((section) => section.chapters.length > 0);
+      } else {
+        // Limited access: fetch only 1 section, 1 chapter, 3 articles
+        // 1. Search in section title
+        let firstSection = await prisma.section.findFirst({
+          where: {
+            documentId: id,
+            title: { contains: searchQuery, mode: "insensitive" },
+          },
+          include: {
+            chapters: {
+              take: 1,
+              include: {
+                articles: {
+                  take: 3,
+                  orderBy: {
+                    createdAt: "asc",
+                  },
                 },
               },
             },
           },
-        },
-        take: 1,
-        orderBy: {
-          createdAt: "asc",
-        },
-      });
-      sections = firstSection ? [firstSection] : [];
+          orderBy: {
+            createdAt: "asc",
+          },
+        });
+
+        // 2. If no section found, search in chapter title
+        if (!firstSection) {
+          firstSection = await prisma.section.findFirst({
+            where: {
+              documentId: id,
+              chapters: {
+                some: {
+                  title: { contains: searchQuery, mode: "insensitive" },
+                },
+              },
+            },
+            include: {
+              chapters: {
+                where: {
+                  title: { contains: searchQuery, mode: "insensitive" },
+                },
+                take: 1,
+                include: {
+                  articles: {
+                    take: 3,
+                    orderBy: {
+                      createdAt: "asc",
+                    },
+                  },
+                },
+              },
+            },
+            orderBy: {
+              createdAt: "asc",
+            },
+          });
+        }
+
+        // 3. If no section found, search in article contentPlainText
+        if (!firstSection) {
+          firstSection = await prisma.section.findFirst({
+            where: {
+              documentId: id,
+              chapters: {
+                some: {
+                  articles: {
+                    some: {
+                      contentPlainText: {
+                        contains: searchQuery,
+                        mode: "insensitive",
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            include: {
+              chapters: {
+                where: {
+                  articles: {
+                    some: {
+                      contentPlainText: {
+                        contains: searchQuery,
+                        mode: "insensitive",
+                      },
+                    },
+                  },
+                },
+                take: 1,
+                include: {
+                  articles: {
+                    where: {
+                      contentPlainText: {
+                        contains: searchQuery,
+                        mode: "insensitive",
+                      },
+                    },
+                    take: 3,
+                    orderBy: {
+                      createdAt: "asc",
+                    },
+                  },
+                },
+              },
+            },
+            orderBy: {
+              createdAt: "asc",
+            },
+          });
+        }
+
+        sections = firstSection ? [firstSection] : [];
+      }
+    } else {
+      // No search query: fetch all data based on access level
+      if (hasFullAccess) {
+        sections = await prisma.section.findMany({
+          where: {
+            documentId: id,
+          },
+          include: {
+            chapters: {
+              include: {
+                articles: true,
+              },
+            },
+          },
+          orderBy: {
+            createdAt: "asc",
+          },
+        });
+      } else {
+        const [firstSection] = await prisma.section.findMany({
+          where: {
+            documentId: id,
+          },
+          include: {
+            chapters: {
+              take: 1,
+              include: {
+                articles: {
+                  take: 3,
+                  orderBy: {
+                    createdAt: "asc",
+                  },
+                },
+              },
+            },
+          },
+          take: 1,
+          orderBy: {
+            createdAt: "asc",
+          },
+        });
+        sections = firstSection ? [firstSection] : [];
+      }
     }
 
     return NextResponse.json({
       success: true,
-      message: "Sections fetched successfully",
+      message:
+        sections.length > 0
+          ? "Sections fetched successfully"
+          : "No results found",
       data: sections,
     });
   } catch (error) {
