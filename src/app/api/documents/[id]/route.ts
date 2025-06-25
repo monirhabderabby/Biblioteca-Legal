@@ -13,6 +13,15 @@ export async function GET(
   const isLoggedin = !!cu;
   const searchQuery = searchParams.get("query")?.trim().toLowerCase();
 
+  let articleNumberSearch = null;
+
+  if (searchQuery) {
+    const articuloMatch = searchQuery.match(/^Articulo\s+(\d+)$/i);
+    if (articuloMatch) {
+      articleNumberSearch = parseInt(articuloMatch[1], 10);
+    }
+  }
+
   let hasFullAccess = false;
 
   // Check subscription status if user is logged in
@@ -29,21 +38,41 @@ export async function GET(
     let sections;
 
     if (hasFullAccess) {
-      // ✅ Full access: fetch all data
+      // Full access: fetch all data
       sections = await prisma.section.findMany({
         where: {
           documentId: id,
-          ...(searchQuery && {
-            OR: [
-              { title: { contains: searchQuery, mode: "insensitive" } },
-              {
-                chapters: {
+          ...(searchQuery &&
+            !articleNumberSearch && {
+              OR: [
+                { title: { contains: searchQuery, mode: "insensitive" } },
+                {
+                  chapters: {
+                    some: {
+                      title: { contains: searchQuery, mode: "insensitive" },
+                      articles: {
+                        some: {
+                          content: {
+                            contains: searchQuery,
+                            mode: "insensitive",
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              ],
+            }),
+          ...(articleNumberSearch && {
+            chapters: {
+              some: {
+                articles: {
                   some: {
-                    title: { contains: searchQuery, mode: "insensitive" },
+                    articleNumber: articleNumberSearch,
                   },
                 },
               },
-            ],
+            },
           }),
         },
         include: {
@@ -58,18 +87,24 @@ export async function GET(
         },
       });
 
-      // Filter chapters inside each section based on search query
+      // Filter chapters and articles if searchQuery exists
       if (searchQuery) {
         sections = sections.map((section) => {
           const sectionMatches = section.title
             .toLowerCase()
             .includes(searchQuery);
+          let filteredChapters = section.chapters;
 
-          const filteredChapters = section.chapters.filter(
-            (chapter) =>
-              sectionMatches ||
-              chapter.title.toLowerCase().includes(searchQuery)
-          );
+          if (!sectionMatches || articleNumberSearch) {
+            filteredChapters = filteredChapters.filter((chapter) => {
+              if (articleNumberSearch) {
+                return chapter.articles.some(
+                  (article) => article.articleNumber === articleNumberSearch
+                );
+              }
+              return chapter.title.toLowerCase().includes(searchQuery);
+            });
+          }
 
           return {
             ...section,
@@ -80,40 +115,67 @@ export async function GET(
         sections = sections.filter((section) => section.chapters.length > 0);
       }
     } else {
-      // 🔒 Limited access: fetch only 1 section, 1 chapter, 3 articles
+      // Limited access: fetch only 1 section, 1 chapter, 3 articles
       const [firstSection] = await prisma.section.findMany({
         where: {
           documentId: id,
-          ...(searchQuery && {
-            OR: [
-              { title: { contains: searchQuery, mode: "insensitive" } },
-              {
-                chapters: {
+          ...(searchQuery &&
+            !articleNumberSearch && {
+              OR: [
+                { title: { contains: searchQuery, mode: "insensitive" } },
+                {
+                  chapters: {
+                    some: {
+                      title: { contains: searchQuery, mode: "insensitive" },
+                    },
+                  },
+                },
+              ],
+            }),
+          ...(articleNumberSearch && {
+            chapters: {
+              some: {
+                articles: {
                   some: {
-                    title: { contains: searchQuery, mode: "insensitive" },
+                    articleNumber: articleNumberSearch,
                   },
                 },
               },
-            ],
+            },
           }),
         },
         include: {
           chapters: {
             where: searchQuery
               ? {
-                  OR: [
-                    { title: { contains: searchQuery, mode: "insensitive" } },
-                    {
-                      articles: {
-                        some: {
-                          content: {
-                            contains: searchQuery,
-                            mode: "insensitive",
+                  ...(articleNumberSearch
+                    ? {
+                        articles: {
+                          some: {
+                            articleNumber: articleNumberSearch,
                           },
                         },
-                      },
-                    },
-                  ],
+                      }
+                    : {
+                        OR: [
+                          {
+                            title: {
+                              contains: searchQuery,
+                              mode: "insensitive",
+                            },
+                          },
+                          {
+                            articles: {
+                              some: {
+                                content: {
+                                  contains: searchQuery,
+                                  mode: "insensitive",
+                                },
+                              },
+                            },
+                          },
+                        ],
+                      }),
                 }
               : undefined,
             take: 1,
@@ -132,7 +194,6 @@ export async function GET(
           createdAt: "asc",
         },
       });
-
       sections = firstSection ? [firstSection] : [];
     }
 

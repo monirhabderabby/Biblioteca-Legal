@@ -32,3 +32,20 @@ export function generatePassword(
 
   return prefix + password;
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function extractTextFromTipTap(content: any): string {
+  if (!content?.content) return "";
+
+  let text = "";
+  for (const node of content.content) {
+    if (node.type === "paragraph" && node.content) {
+      for (const child of node.content) {
+        if (child.text) {
+          text += child.text + " ";
+        }
+      }
+    }
+  }
+  return text.trim().toLowerCase();
+}
