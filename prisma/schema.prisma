@@ -193,9 +193,10 @@ model Chapter {
 }
 
 model Article {
-  id            String @id @default(auto()) @map("_id") @db.ObjectId
-  content       String
-  articleNumber Int
+  id               String @id @default(auto()) @map("_id") @db.ObjectId
+  content          String
+  contentPlainText String
+  articleNumber    Int
 
   chapterId String  @db.ObjectId
   chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)

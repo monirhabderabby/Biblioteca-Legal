@@ -34,18 +34,19 @@ export function generatePassword(
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function extractTextFromTipTap(content: any): string {
-  if (!content?.content) return "";
+export function extractTextFromTipTap(html: any): string {
+  if (!html) return "";
+  // Create a temporary DOM element to extract text
+  const tmp =
+    typeof window === "undefined"
+      ? // eslint-disable-next-line @typescript-eslint/no-require-imports
+        new (require("jsdom").JSDOM)(`<div>${html}</div>`).window.document.body
+      : document.createElement("div");
 
-  let text = "";
-  for (const node of content.content) {
-    if (node.type === "paragraph" && node.content) {
-      for (const child of node.content) {
-        if (child.text) {
-          text += child.text + " ";
-        }
-      }
-    }
+  if (typeof window !== "undefined") {
+    tmp.innerHTML = html;
+    return tmp.textContent || "";
   }
-  return text.trim().toLowerCase();
+
+  return tmp.textContent || "";
 }

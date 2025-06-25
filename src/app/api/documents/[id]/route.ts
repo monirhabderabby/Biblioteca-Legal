@@ -37,42 +37,70 @@ export async function GET(
   try {
     let sections;
 
-    if (hasFullAccess) {
+    if (articleNumberSearch) {
+      // Specific article search for "Articulo <number>"
+      const article = await prisma.article.findFirst({
+        where: {
+          articleNumber: articleNumberSearch,
+          chapter: {
+            section: {
+              documentId: id,
+            },
+          },
+        },
+        include: {
+          chapter: {
+            include: {
+              section: true,
+            },
+          },
+        },
+      });
+
+      if (!article) {
+        return NextResponse.json({
+          success: true,
+          message: "No article found for the specified article number",
+          data: [],
+        });
+      }
+
+      // Construct the response to match the expected structure
+      sections = [
+        {
+          ...article.chapter.section,
+          chapters: [
+            {
+              ...article.chapter,
+              articles: [article],
+            },
+          ],
+        },
+      ];
+    } else if (hasFullAccess) {
       // Full access: fetch all data
       sections = await prisma.section.findMany({
         where: {
           documentId: id,
-          ...(searchQuery &&
-            !articleNumberSearch && {
-              OR: [
-                { title: { contains: searchQuery, mode: "insensitive" } },
-                {
-                  chapters: {
-                    some: {
-                      title: { contains: searchQuery, mode: "insensitive" },
-                      articles: {
-                        some: {
-                          content: {
-                            contains: searchQuery,
-                            mode: "insensitive",
-                          },
+          ...(searchQuery && {
+            OR: [
+              { title: { contains: searchQuery, mode: "insensitive" } },
+              {
+                chapters: {
+                  some: {
+                    title: { contains: searchQuery, mode: "insensitive" },
+                    articles: {
+                      some: {
+                        content: {
+                          contains: searchQuery,
+                          mode: "insensitive",
                         },
                       },
                     },
                   },
                 },
-              ],
-            }),
-          ...(articleNumberSearch && {
-            chapters: {
-              some: {
-                articles: {
-                  some: {
-                    articleNumber: articleNumberSearch,
-                  },
-                },
               },
-            },
+            ],
           }),
         },
         include: {
@@ -95,15 +123,10 @@ export async function GET(
             .includes(searchQuery);
           let filteredChapters = section.chapters;
 
-          if (!sectionMatches || articleNumberSearch) {
-            filteredChapters = filteredChapters.filter((chapter) => {
-              if (articleNumberSearch) {
-                return chapter.articles.some(
-                  (article) => article.articleNumber === articleNumberSearch
-                );
-              }
-              return chapter.title.toLowerCase().includes(searchQuery);
-            });
+          if (!sectionMatches) {
+            filteredChapters = filteredChapters.filter((chapter) =>
+              chapter.title.toLowerCase().includes(searchQuery)
+            );
           }
 
           return {
@@ -119,63 +142,41 @@ export async function GET(
       const [firstSection] = await prisma.section.findMany({
         where: {
           documentId: id,
-          ...(searchQuery &&
-            !articleNumberSearch && {
-              OR: [
-                { title: { contains: searchQuery, mode: "insensitive" } },
-                {
-                  chapters: {
-                    some: {
-                      title: { contains: searchQuery, mode: "insensitive" },
-                    },
-                  },
-                },
-              ],
-            }),
-          ...(articleNumberSearch && {
-            chapters: {
-              some: {
-                articles: {
+          ...(searchQuery && {
+            OR: [
+              { title: { contains: searchQuery, mode: "insensitive" } },
+              {
+                chapters: {
                   some: {
-                    articleNumber: articleNumberSearch,
+                    title: { contains: searchQuery, mode: "insensitive" },
                   },
                 },
               },
-            },
+            ],
           }),
         },
         include: {
           chapters: {
             where: searchQuery
               ? {
-                  ...(articleNumberSearch
-                    ? {
-                        articles: {
-                          some: {
-                            articleNumber: articleNumberSearch,
+                  OR: [
+                    {
+                      title: {
+                        contains: searchQuery,
+                        mode: "insensitive",
+                      },
+                    },
+                    {
+                      articles: {
+                        some: {
+                          content: {
+                            contains: searchQuery,
+                            mode: "insensitive",
                           },
                         },
-                      }
-                    : {
-                        OR: [
-                          {
-                            title: {
-                              contains: searchQuery,
-                              mode: "insensitive",
-                            },
-                          },
-                          {
-                            articles: {
-                              some: {
-                                content: {
-                                  contains: searchQuery,
-                                  mode: "insensitive",
-                                },
-                              },
-                            },
-                          },
-                        ],
-                      }),
+                      },
+                    },
+                  ],
                 }
               : undefined,
             take: 1,

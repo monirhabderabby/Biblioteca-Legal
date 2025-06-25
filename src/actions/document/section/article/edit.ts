@@ -2,6 +2,7 @@
 
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
+import { extractTextFromTipTap } from "@/lib/utils";
 import { articleSchema, articleSchemaType } from "@/schemas/document/index";
 import { revalidatePath } from "next/cache";
 
@@ -41,6 +42,7 @@ export async function editArticle({
         content: parsedData.data.content,
         chapterId: parsedData.data.chapterId,
         articleNumber: parsedData.data.articleNumber,
+        contentPlainText: extractTextFromTipTap(parsedData.data.content),
       },
     });
 
