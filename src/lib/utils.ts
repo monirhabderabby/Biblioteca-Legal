@@ -32,3 +32,21 @@ export function generatePassword(
 
   return prefix + password;
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function extractTextFromTipTap(html: any): string {
+  if (!html) return "";
+  // Create a temporary DOM element to extract text
+  const tmp =
+    typeof window === "undefined"
+      ? // eslint-disable-next-line @typescript-eslint/no-require-imports
+        new (require("jsdom").JSDOM)(`<div>${html}</div>`).window.document.body
+      : document.createElement("div");
+
+  if (typeof window !== "undefined") {
+    tmp.innerHTML = html;
+    return tmp.textContent || "";
+  }
+
+  return tmp.textContent || "";
+}

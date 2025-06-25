@@ -48,6 +48,7 @@ export default function AddArticleModal({
     defaultValues: {
       content: initialData ? initialData.content : "",
       chapterId: initialData ? initialData.chapterId : chapterId,
+      articleNumber: initialData ? initialData?.articleNumber : 1,
     },
   });
 
@@ -91,6 +92,7 @@ export default function AddArticleModal({
       form.reset({
         content: initialData.content,
         chapterId: chapterId,
+        articleNumber: initialData.articleNumber,
       });
     }
   }, [open, initialData, form, chapterId]);
@@ -131,6 +133,7 @@ export default function AddArticleModal({
                       <Input
                         {...field}
                         type="number"
+                        value={field.value}
                         placeholder="Write Article number"
                         onChange={(e) => field.onChange(Number(e.target.value))}
                       />

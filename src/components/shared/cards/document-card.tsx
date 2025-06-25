@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Document } from "@prisma/client";
 import { Calendar, FileText } from "lucide-react";
 import moment from "moment";
+import "moment/locale/es"; // Import Spanish locale
 import Link from "next/link";
 
 interface Props {
@@ -28,7 +29,8 @@ const DocumentCard = ({ document }: Props) => {
       <div className="mt-[20px] flex items-center gap-x-[13px] text-black">
         <Calendar className="h-5 w-5" />
         <span className="font-poppins text-[12px]">
-          Actualizado: {moment(document?.createdAt).format("MMMM D, YYYY")}
+          Actualizado:{" "}
+          {moment(document?.createdAt).format("D [de] MMMM [de] YYYY")}
         </span>
       </div>
 
