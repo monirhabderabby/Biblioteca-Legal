@@ -195,7 +195,7 @@ model Chapter {
 model Article {
   id               String @id @default(auto()) @map("_id") @db.ObjectId
   content          String
-  contentPlainText String
+  contentPlainText String @default("")
   articleNumber    Int
 
   chapterId String  @db.ObjectId
