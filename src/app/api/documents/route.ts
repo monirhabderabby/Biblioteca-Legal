@@ -61,9 +61,7 @@ export async function GET(req: NextRequest) {
       where: whereClause,
       skip,
       take: pageSize,
-      orderBy: {
-        createdAt: "desc",
-      },
+      orderBy: [{ createdAt: "desc" }, { id: "desc" }],
     });
 
     return NextResponse.json({

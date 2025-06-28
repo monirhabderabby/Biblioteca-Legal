@@ -152,7 +152,8 @@ model Document {
 
   articleMeta UserArticleMeta[]
 
-  watchLists WatchLists[]
+  watchLists  WatchLists[]
+  publishedAt DateTime     @default(now())
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

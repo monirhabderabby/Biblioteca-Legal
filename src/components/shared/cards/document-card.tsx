@@ -30,7 +30,7 @@ const DocumentCard = ({ document }: Props) => {
         <Calendar className="h-5 w-5" />
         <span className="font-poppins text-[12px]">
           Actualizado:{" "}
-          {moment(document?.createdAt).format("D [de] MMMM [de] YYYY")}
+          {moment(document?.publishedAt).format("D [de] MMMM [de] YYYY")}
         </span>
       </div>
 

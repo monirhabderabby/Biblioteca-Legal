@@ -46,7 +46,7 @@ export async function createDocument(data: DocumentFormSchemaType) {
       name: parsed.data.name,
       short_description: parsed.data.short_description,
       law_number: parsed.data.law_number,
-      createdAt: parsed.data.publishedDate,
+      publishedAt: parsed.data.publishedDate,
       categories: categoryes,
     },
   });

@@ -74,7 +74,13 @@ const ManageDocumentCard = ({ document }: Props) => {
         <div className="mt-[20px] flex items-center gap-x-[13px] text-black">
           <Calendar className="h-5 w-5" />
           <span className="font-poppins text-[12px]">
-            Published: {moment(document?.createdAt).format("MMMM D, YYYY")}
+            Published: {moment(document?.publishedAt).format("MMMM D, YYYY")}
+          </span>
+        </div>
+        <div className="mt-[20px] flex items-center gap-x-[13px] text-black">
+          <Calendar className="h-5 w-5" />
+          <span className="font-poppins text-[12px]">
+            Created At: {moment(document?.createdAt).fromNow()}
           </span>
         </div>
 
