@@ -34,7 +34,7 @@ export async function createContact(data: ContactFormValues) {
   try {
     // Send the email using Resend
     await resend.emails.send({
-      from: `Contact Form <contact@bibliotecalegalhn.com>`,
+      from: `${name} <${email}>`,
       to: [settings.supportEmail],
       subject: "New Contact Form Submission",
       react: ContactFormSubmissionTemplate({
