@@ -17,7 +17,7 @@ const CollectionContainer = () => {
     queryKey: ["documents", searchQuery, page, category],
     queryFn: () =>
       fetch(
-        `/api/documents?search=${searchQuery}&category=${category}&limit=10 &page=${page}`
+        `/api/documents?search=${searchQuery}&category=${category}&limit=12 &page=${page}`
       ).then((res) => res.json()),
   });
 
