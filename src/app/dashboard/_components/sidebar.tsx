@@ -1,5 +1,6 @@
 "use client";
 
+import { logoutAction } from "@/actions/auth/logout";
 import AlertModal from "@/components/ui/alert-modal";
 import { Button } from "@/components/ui/button";
 import { logoSrc } from "@/helper/assets";
@@ -13,11 +14,11 @@ import {
   TableOfContents,
   Users,
 } from "lucide-react";
-import { signOut } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
+import { toast } from "sonner";
 
 const routes = [
   {
@@ -67,13 +68,20 @@ const routes = [
 const Sidebar = () => {
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   const pathname = usePathname();
 
   const onLogout = () => {
     setIsLoading(true);
-    signOut({
-      redirectTo: "/",
+    startTransition(() => {
+      logoutAction().then((res) => {
+        if (res && !res.success) {
+          console.log(res);
+          toast.error(res.message);
+          return;
+        }
+      });
     });
   };
 
@@ -142,7 +150,7 @@ const Sidebar = () => {
         isOpen={open}
         onClose={() => setOpen(false)}
         onConfirm={onLogout}
-        loading={isLoading}
+        loading={isPending || isLoading}
         title="¿Estás seguro que quieres cerrar sesión?"
         message=""
       />
