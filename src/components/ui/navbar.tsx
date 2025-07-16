@@ -2,16 +2,17 @@
 
 // Packages
 import { Menu } from "lucide-react";
-import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 
 // Components
+import { logoutAction } from "@/actions/auth/logout";
 import { logoSrc } from "@/helper/assets";
 import { cn } from "@/lib/utils";
 import { User } from "@prisma/client";
 import Image from "next/image";
+import { toast } from "sonner";
 import { Button } from "../ui/button";
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from "../ui/sheet";
 import FramerDropdown from "./framer-dropdown";
@@ -22,6 +23,7 @@ interface Props {
 }
 
 const Navbar = ({ isLoggedin, user }: Props) => {
+  const [isPending, startTransition] = useTransition();
   const [scrolling, setScrolling] = useState(false); // Track scrolling state for styling changes
 
   const pathname = usePathname(); // Get current route to highlight active menu
@@ -49,6 +51,17 @@ const Navbar = ({ isLoggedin, user }: Props) => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  const onLogout = async () => {
+    startTransition(() => {
+      logoutAction().then((res) => {
+        if (res && !res.success) {
+          toast.error(res.message);
+          return;
+        }
+      });
+    });
+  };
 
   return (
     <div
@@ -116,10 +129,11 @@ const Navbar = ({ isLoggedin, user }: Props) => {
                       <Button
                         onClick={async () => {
                           close(); // Close before signing out
-                          await signOut({ redirectTo: "/", redirect: true });
+                          await onLogout();
                         }}
                         className="cursor-pointer w-full text-primary hover:text-primary/90 border-none"
                         variant="outline"
+                        disabled={isPending}
                       >
                         Cerrar sesión
                       </Button>

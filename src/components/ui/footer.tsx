@@ -1,4 +1,4 @@
-import { Mail } from "lucide-react";
+import { Facebook, Instagram, Mail } from "lucide-react";
 import Image from "next/image";
 
 export default function Footer() {
@@ -80,6 +80,23 @@ export default function Footer() {
                 className="text-slate-300 hover:text-white transition-colors duration-200 text-sm"
               >
                 soporte@bibliotecalegalhn.com
+              </a>
+            </div>
+
+            <div className="mt-8 flex items-center gap-x-5">
+              <a
+                className="cursor-pointer"
+                href="https://www.facebook.com/people/Biblioteca-Legal/61577353097593"
+                target="_blank"
+              >
+                <Facebook className="w-4 h-4 text-slate-400 mt-2 hover:text-white transition-colors duration-200" />
+              </a>
+              <a
+                className="cursor-pointer"
+                href="https://www.instagram.com/bibliotecalegalhn"
+                target="_blank"
+              >
+                <Instagram className="w-4 h-4 text-slate-400 mt-2 hover:text-white transition-colors duration-200" />
               </a>
             </div>
           </div>
