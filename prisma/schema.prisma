@@ -52,6 +52,18 @@ model User {
   updatedAt DateTime @updatedAt
 }
 
+model UserQue {
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
+  first_name String
+  last_name  String
+  email      String @unique
+  customerId String
+  status     String @default("pending") // e.g., "pending", "approved", "rejected"
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model Device {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   userId    String   @db.ObjectId
