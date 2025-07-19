@@ -35,7 +35,8 @@ export async function makeSubscribe() {
     try {
       paddleCustomerId = await paddleCustomerCreate({
         email: user.email!,
-        customerName: `${user.first_name} ${user.last_name}`,
+        first_name: user.first_name || "",
+        last_name: user.last_name || "",
       });
 
       // Guardar paddleCustomerId en la base de datos

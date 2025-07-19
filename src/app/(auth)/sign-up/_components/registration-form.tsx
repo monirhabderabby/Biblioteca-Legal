@@ -43,7 +43,8 @@ export default function RegistrationForm() {
     startTransition(async () => {
       const customerId = await paddleCustomerCreate({
         email: values.email,
-        customerName: `${values.first_name} ${values.last_name}`,
+        first_name: values.first_name,
+        last_name: values.last_name,
       });
 
       if (customerId && priceId) {

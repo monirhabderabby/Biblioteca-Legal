@@ -81,19 +81,39 @@ export async function getCurrentUserSubscription(): Promise<{
 
 interface PaddleCustomerCreateProps {
   email: string;
-  customerName: string;
+  first_name: string;
+  last_name: string;
 }
 
 export const paddleCustomerCreate = async ({
   email,
-  customerName,
+  first_name,
+  last_name,
 }: PaddleCustomerCreateProps) => {
-  const customer = await paddle.customers.create({
-    email,
-    name: customerName,
+  const existingCustomerInQue = await prisma.userQue.findFirst({
+    where: {
+      email,
+    },
   });
 
-  return customer.id;
+  if (existingCustomerInQue) {
+    return existingCustomerInQue.customerId;
+  }
+  const customer = await paddle.customers.create({
+    email,
+    name: `${first_name} ${last_name}`,
+  });
+
+  const newCustomer = await prisma.userQue.create({
+    data: {
+      email,
+      first_name,
+      last_name,
+      customerId: customer.id,
+    },
+  });
+
+  return newCustomer.customerId;
 };
 
 export const getPaddleCustomerId = async (userId: string) => {
@@ -112,7 +132,8 @@ export const getPaddleCustomerId = async (userId: string) => {
   if (!user.paddleCustomerId) {
     paddleCustomerId = await paddleCustomerCreate({
       email: user.email as string,
-      customerName: `${user.first_name} ${user.last_name}`,
+      first_name: user.first_name as string,
+      last_name: user.last_name as string,
     });
 
     return paddleCustomerId;

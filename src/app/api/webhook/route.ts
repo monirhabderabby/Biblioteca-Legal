@@ -73,6 +73,12 @@ export async function POST(req: NextRequest) {
             },
           });
 
+          await prisma.userQue.delete({
+            where: {
+              email: user.data?.email,
+            },
+          });
+
           break;
         case EventName.SubscriptionActivated:
           // Why? > When the subscription becomes active (e.g., after payment or pause).
