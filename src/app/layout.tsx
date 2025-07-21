@@ -23,7 +23,10 @@ export async function generateMetadata(): Promise<Metadata> {
   const data = await prisma.setting.findFirst();
 
   return {
-    title: data?.siteName ?? "Biblioteca Legal - Legal Document Services",
+    title: {
+      default: "Biblioteca Legal",
+      template: `%s - Biblioteca Legal`,
+    },
     description:
       data?.description ??
       "Biblioteca Legal provides expert legal document services, including drafting, reviewing, and managing legal paperwork with accuracy and confidentiality.",
@@ -43,6 +46,9 @@ export async function generateMetadata(): Promise<Metadata> {
       "privacy policy drafting",
       "terms and conditions generator",
     ],
+    twitter: {
+      card: "summary_large_image",
+    },
   };
 }
 
