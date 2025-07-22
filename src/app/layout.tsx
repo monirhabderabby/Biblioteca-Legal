@@ -46,6 +46,17 @@ export async function generateMetadata(): Promise<Metadata> {
       "privacy policy drafting",
       "terms and conditions generator",
     ],
+    openGraph: {
+      images: [
+        "https://files.edgestore.dev/ln9m9j3kr2yibrue/staticFiled/_public/opengraph-image.webp",
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      images: [
+        "https://files.edgestore.dev/ln9m9j3kr2yibrue/staticFiled/_public/opengraph-image.webp",
+      ],
+    },
   };
 }
 
