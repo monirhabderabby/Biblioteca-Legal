@@ -1,6 +1,11 @@
 import ContentViewer from "@/app/dashboard/documents/[documentId]/[sectionId]/[chapterId]/_components/contentViwer";
 import HeaderSection from "@/components/shared/sections/header";
 import { prisma } from "@/lib/db";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Refund Policy",
+};
 
 const Page = async () => {
   const data = await prisma.refundPolicy.findFirst();
