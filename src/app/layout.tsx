@@ -46,9 +46,6 @@ export async function generateMetadata(): Promise<Metadata> {
       "privacy policy drafting",
       "terms and conditions generator",
     ],
-    twitter: {
-      card: "summary_large_image",
-    },
   };
 }
 
