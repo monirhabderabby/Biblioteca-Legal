@@ -9,6 +9,7 @@ import {
   FileStack,
   FileText,
   LayoutDashboard,
+  ListRestart,
   LogOut,
   Settings,
   TableOfContents,
@@ -56,6 +57,12 @@ const routes = [
     label: "Content",
     icon: TableOfContents,
     href: "/dashboard/content",
+  },
+  {
+    id: 7,
+    label: "WaitList",
+    icon: ListRestart,
+    href: "/dashboard/waitlist",
   },
   {
     id: 8,
