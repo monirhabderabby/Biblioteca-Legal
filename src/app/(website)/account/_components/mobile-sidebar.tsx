@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -6,13 +8,17 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { useState } from "react";
 import AccountSidebar from "./account-sidebar";
 
 const MobileSidebar = () => {
+  const [open, setOpen] = useState(false);
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button className="w-fit">Account Menu</Button>
+        <Button className="w-fit" onClick={() => setOpen((p) => !p)}>
+          Account Menu
+        </Button>
       </SheetTrigger>
 
       <SheetContent side="bottom">
@@ -20,7 +26,7 @@ const MobileSidebar = () => {
           <SheetTitle>Menus</SheetTitle>
         </SheetHeader>
 
-        <AccountSidebar />
+        <AccountSidebar onTabClick={() => setOpen((p) => !p)} />
       </SheetContent>
     </Sheet>
   );

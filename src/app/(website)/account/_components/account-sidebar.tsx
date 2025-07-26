@@ -8,7 +8,11 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { accountTablists } from "./data";
 
-const AccountSidebar = () => {
+interface Props {
+  onTabClick?: () => void;
+}
+
+const AccountSidebar = ({ onTabClick }: Props) => {
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -42,6 +46,7 @@ const AccountSidebar = () => {
                   }
                 )}
                 href={tab.path}
+                onClick={onTabClick && onTabClick}
               >
                 {/* <div className="border rounded-lg border-gray-400 p-1 bg-white">
                   {tab.icon}

@@ -9,11 +9,11 @@ const AccountLayout = ({ children }: { children: ReactNode }) => {
         <div className="hidden md:block md:col-span-1">
           <AccountSidebar />
         </div>
-        <div className="md:hidden  w-full">
+        <div className="md:hidden  w-full mb-5">
           <MobileSidebar />
         </div>
       </div>
-      <div className="col-span-6 md:col-span-5 md:px-4 lg:px-6">
+      <div className="col-span-6 md:col-span-5 md:px-4 lg:px-6 mb-10">
         <div>{children}</div>
       </div>
     </div>
