@@ -134,7 +134,7 @@ const HighlightCard = ({
         title={`Article ${data?.data.articleNumber}`}
         description=""
       >
-        <ScrollArea className="min-h-[200px] h-auto max-h-[400px]">
+        <ScrollArea className="min-h-[200px] h-auto lg:max-h-[400px]">
           {content}
         </ScrollArea>
       </ResponsiveDialog>

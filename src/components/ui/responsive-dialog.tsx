@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/drawer";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ReactNode } from "react";
+import { ScrollArea } from "./scroll-area";
 
 interface Props {
   title: string;
@@ -43,7 +44,7 @@ const ResponsiveDialog = ({
             <DrawerDescription>{description}</DrawerDescription>
           </DrawerHeader>
 
-          <div className="p-4 overflow-y-auto">{children}</div>
+          <ScrollArea className="p-4 h-[90vh]">{children}</ScrollArea>
         </DrawerContent>
       </Drawer>
     );
