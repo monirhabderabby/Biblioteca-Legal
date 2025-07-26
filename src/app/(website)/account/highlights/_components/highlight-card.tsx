@@ -2,7 +2,8 @@ import { removeBookmark } from "@/actions/article-meta/update";
 import ContentViewer from "@/app/dashboard/documents/[documentId]/[sectionId]/[chapterId]/_components/contentViwer";
 import AlertModal from "@/components/ui/alert-modal";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import ResponsiveDialog from "@/components/ui/responsive-dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { getBackgroundClass } from "@/lib/colors";
 import { cn } from "@/lib/utils";
 import { Article } from "@prisma/client";
@@ -27,13 +28,14 @@ interface ApiProps {
 
 const HighlightCard = ({
   articleId,
-  index,
+
   metaId,
   selectedColor,
   isBookmarked,
 }: Props) => {
   const [pending, startTransition] = useTransition();
   const [open, setOpen] = useState(false);
+  const [contentOpen, setContentOpen] = useState(false);
   const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery<ApiProps>({
@@ -87,19 +89,25 @@ const HighlightCard = ({
 
   return (
     <>
-      <Card
-        className={cn(`shadow-none w-full`, getBackgroundClass(selectedColor))}
+      <div
+        className={cn(
+          `shadow-none w-full rounded-[6px] `,
+          getBackgroundClass(selectedColor)
+        )}
       >
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center gap-2">
+        <div className="h-[60px] w-full flex items-center  justify-between p-5">
+          <div
+            className="flex items-center justify-between w-full cursor-pointer"
+            onClick={() => setContentOpen((p) => !p)}
+          >
+            <div className="flex items-center gap-2">
               {isBookmarked ? (
-                <Bookmark className="fill-primary" />
+                <Bookmark className="fill-primary h-5 w-5" />
               ) : (
-                <Bookmark />
+                <Bookmark className="h-5 w-5" />
               )}{" "}
-              Article {index + 1}
-            </CardTitle>
+              Article {data?.data.articleNumber}
+            </div>
             <Button
               variant="link"
               className="hover:text-red-500"
@@ -108,10 +116,10 @@ const HighlightCard = ({
               <Trash />
             </Button>
           </div>
-        </CardHeader>
+        </div>
 
-        <CardContent>{content}</CardContent>
-      </Card>
+        {/* <CardContent>{content}</CardContent> */}
+      </div>
 
       <AlertModal
         loading={pending}
@@ -119,6 +127,17 @@ const HighlightCard = ({
         onClose={() => setOpen(false)}
         onConfirm={onRemoveBookmark}
       />
+
+      <ResponsiveDialog
+        open={contentOpen}
+        onOpenChange={(p) => setContentOpen(p)}
+        title={`Article ${data?.data.articleNumber}`}
+        description=""
+      >
+        <ScrollArea className="min-h-[200px] h-auto max-h-[400px]">
+          {content}
+        </ScrollArea>
+      </ResponsiveDialog>
     </>
   );
 };

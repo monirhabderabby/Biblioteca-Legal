@@ -1,14 +1,39 @@
 "use client";
 
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { PaginationControls } from "@/components/ui/pagination-controls";
-import { UserArticleMeta } from "@prisma/client";
+import { Prisma, UserArticleMeta } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import { AlertTriangle, Loader2 } from "lucide-react";
 import { useState } from "react";
 import HighlightCard from "./highlight-card";
 
+type GroupedByDocument = {
+  documentId: string;
+  document: UserArticleMetaWithRelations["document"];
+  items: Omit<UserArticleMetaWithRelations, "document">[];
+};
+
+export type UserArticleMetaWithRelations = Prisma.UserArticleMetaGetPayload<{
+  include: {
+    article: true;
+    document: {
+      select: {
+        name: true;
+        short_description: true;
+      };
+    };
+  };
+}>;
+
 export type UserArticleMetaResponse = {
-  data: UserArticleMeta[];
+  data: UserArticleMetaWithRelations[];
   pagination: {
     total: number;
     page: number;
@@ -16,6 +41,31 @@ export type UserArticleMetaResponse = {
     totalPages: number;
   };
 };
+
+export function groupByDocumentId(
+  data: UserArticleMetaWithRelations[]
+): GroupedByDocument[] {
+  return Object.values(
+    data.reduce<Record<string, GroupedByDocument>>((acc, item) => {
+      const docId = item.documentId;
+
+      if (!acc[docId]) {
+        acc[docId] = {
+          documentId: docId,
+          document: item.document,
+          items: [],
+        };
+      }
+
+      // Push a copy of item without `document`
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { document, ...rest } = item;
+      acc[docId].items.push(rest);
+
+      return acc;
+    }, {})
+  );
+}
 
 const HighlightContainer = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -28,6 +78,8 @@ const HighlightContainer = () => {
         ),
     }
   );
+
+  const grouped = groupByDocumentId(data?.data ?? []);
 
   let content;
 
@@ -58,15 +110,28 @@ const HighlightContainer = () => {
     content = (
       <div className="pb-20 space-y-10">
         <div className="grid grid-cols-1 space-y-10">
-          {data.data.map((bookmark: UserArticleMeta, i: number) => (
-            <HighlightCard
-              key={bookmark.id}
-              articleId={bookmark.articleId}
-              index={i}
-              metaId={bookmark.id}
-              isBookmarked={bookmark.isBookmarked}
-              selectedColor={bookmark.selectedColor ?? "#f0f0f0"}
-            />
+          {grouped.map((doc: GroupedByDocument, i: number) => (
+            <Card className="shadow-none" key={doc.documentId}>
+              <CardHeader>
+                <CardTitle>{doc.document.name}</CardTitle>
+                <CardDescription>
+                  {doc.document.short_description}
+                </CardDescription>
+              </CardHeader>
+
+              <CardContent className="space-y-3">
+                {doc.items.map((bookmark: UserArticleMeta) => (
+                  <HighlightCard
+                    key={bookmark.id}
+                    articleId={bookmark.articleId}
+                    index={i}
+                    metaId={bookmark.id}
+                    isBookmarked={bookmark.isBookmarked}
+                    selectedColor={bookmark.selectedColor ?? "#f0f0f0"}
+                  />
+                ))}
+              </CardContent>
+            </Card>
           ))}
         </div>
         {data.pagination.total > 10 && (

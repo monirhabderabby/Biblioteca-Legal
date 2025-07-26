@@ -25,6 +25,12 @@ export async function GET(req: NextRequest) {
         take: limit,
         include: {
           article: true,
+          document: {
+            select: {
+              name: true,
+              short_description: true,
+            },
+          },
         },
         orderBy: {
           createdAt: "desc",
