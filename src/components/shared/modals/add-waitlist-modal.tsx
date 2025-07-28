@@ -21,6 +21,7 @@ import {
 } from "@/schemas/waitlist/waitlistSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { ReactNode, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -31,6 +32,8 @@ interface Props {
 export default function AddWaitlistDialog({ trigger }: Props) {
   const [open, setOpen] = useState(false);
   const [pending, startTransition] = useTransition();
+
+  const router = useRouter();
 
   const form = useForm<WaitlistSchemaType>({
     resolver: zodResolver(waitlistSchema),
@@ -48,6 +51,7 @@ export default function AddWaitlistDialog({ trigger }: Props) {
         toast.success(res.message);
         form.reset();
         setOpen(false);
+        router.refresh();
       });
     });
   }
