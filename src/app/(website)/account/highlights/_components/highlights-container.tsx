@@ -108,13 +108,15 @@ const HighlightContainer = () => {
     );
   } else if (data?.data && data.data.length > 0) {
     content = (
-      <div className="pb-20 space-y-10">
+      <div className="pb-20 ">
         <div className="grid grid-cols-1 space-y-10">
           {grouped.map((doc: GroupedByDocument, i: number) => (
             <Card className="shadow-none" key={doc.documentId}>
               <CardHeader>
-                <CardTitle>{doc.document.name}</CardTitle>
-                <CardDescription>
+                <CardTitle className="text-[14px] md:text-[16px]">
+                  {doc.document.name}
+                </CardTitle>
+                <CardDescription className="text-[12px] md:text-[14px]">
                   {doc.document.short_description}
                 </CardDescription>
               </CardHeader>

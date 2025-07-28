@@ -95,7 +95,7 @@ const HighlightCard = ({
           getBackgroundClass(selectedColor)
         )}
       >
-        <div className="h-[60px] w-full flex items-center  justify-between p-5">
+        <div className="h-[45px] md:h-[60px] w-full flex items-center  justify-between p-5">
           <div
             className="flex items-center justify-between w-full cursor-pointer"
             onClick={() => setContentOpen((p) => !p)}
@@ -106,12 +106,17 @@ const HighlightCard = ({
               ) : (
                 <Bookmark className="h-5 w-5" />
               )}{" "}
-              Article {data?.data.articleNumber}
+              <span className="text-[14px] md:text-[16px]">
+                Article {data?.data.articleNumber}
+              </span>
             </div>
             <Button
               variant="link"
               className="hover:text-red-500"
-              onClick={() => setOpen(true)}
+              onClick={(e) => {
+                e.stopPropagation();
+                setOpen(true);
+              }}
             >
               <Trash />
             </Button>
