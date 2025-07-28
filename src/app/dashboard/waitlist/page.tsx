@@ -1,7 +1,14 @@
-import AddWaitlistDialog from "@/components/shared/modals/add-waitlist-modal";
 import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/db";
+import dynamic from "next/dynamic";
 import WaitListContainer from "./_components/wait-list-container";
+
+const AddWaitlistDialog = dynamic(
+  () => import("@/components/shared/modals/add-waitlist-modal"),
+  {
+    ssr: false,
+  }
+);
 
 const Page = async () => {
   const userQue = await prisma.userQue.findMany();
