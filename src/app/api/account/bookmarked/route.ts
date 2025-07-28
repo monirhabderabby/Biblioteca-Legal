@@ -25,9 +25,12 @@ export async function GET(req: NextRequest) {
         take: limit,
         include: {
           article: true,
+          document: true,
         },
         orderBy: {
-          createdAt: "desc",
+          article: {
+            articleNumber: "asc",
+          },
         },
       }),
       prisma.userArticleMeta.count({
