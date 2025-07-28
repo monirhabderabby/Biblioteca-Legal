@@ -1,3 +1,5 @@
+import AddWaitlistDialog from "@/components/shared/modals/add-waitlist-modal";
+import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/db";
 import WaitListContainer from "./_components/wait-list-container";
 
@@ -10,6 +12,7 @@ const Page = async () => {
         <h1 className="text-primary font-semibold text-[32px] leading-[120%]">
           Waitlist
         </h1>
+        <AddWaitlistDialog trigger={<Button>Add New waitlist</Button>} />
       </div>
       <WaitListContainer data={userQue ?? []} />
     </div>
