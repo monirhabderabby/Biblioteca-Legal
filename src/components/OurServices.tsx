@@ -12,10 +12,10 @@ export default function OurServices() {
           <h2 className="text-blue-400 text-lg font-medium mb-4">
             Nuestros Servicios
           </h2>
-          <h3 className="text-white text-3xl sm:text-4xl lg:text-5xl font-bold mb-6">
+          <h3 className="text-white  text-[20px] md:text-4xl font-bold mb-6">
             Recursos Legales Integrales
           </h3>
-          <p className="text-gray-300 text-lg max-w-4xl mx-auto">
+          <p className="text-gray-300 text-[14px] md:text-lg max-w-4xl mx-auto">
             Descubre las herramientas y recursos diseñados para mejorar tu
             práctica legal y proporcionarte la información más actualizada.
           </p>
@@ -27,16 +27,16 @@ export default function OurServices() {
           <Card className="bg-transparent border-none shadow-none group hover:bg-white transition-all duration-300 ease-in-out">
             <CardContent className="p-8">
               <div className="mb-6 flex justify-between">
-                <h4 className="text-white group-hover:text-slate-800 text-2xl font-bold mb-4 transition-colors duration-300">
+                <h4 className="text-white group-hover:text-slate-800 text-xl md:text-2xl font-bold mb-4 transition-colors duration-300">
                   Biblioteca Jurídica
                 </h4>
-                <BookOpen className="w-12 h-12 text-white group-hover:text-slate-800 transition-colors duration-300" />
+                <BookOpen className="h-7 w-7 md:w-10 md:h-10 text-white group-hover:text-slate-800 transition-colors duration-300" />
               </div>
 
-              <p className="text-gray-300 group-hover:text-gray-600 text-lg font-medium mb-6 transition-colors duration-300">
+              <p className="text-gray-300 group-hover:text-gray-600 text-[14px] md:text-lg font-medium mb-6 transition-colors duration-300">
                 Accede a todos los documentos legales, leyes y decretos
               </p>
-              <p className="text-gray-300 group-hover:text-gray-600 text-lg font-medium mb-6 transition-colors duration-300">
+              <p className="text-gray-300 group-hover:text-gray-600 text-[14px] md:text-lg font-medium mb-6 transition-colors duration-300">
                 Nuestra colección integral incluye los documentos legales más
                 recientes, organizados y de fácil acceso.
               </p>
@@ -57,16 +57,16 @@ export default function OurServices() {
           <Card className="bg-transparent border-none shadow-none group hover:bg-white transition-all duration-300 ease-in-out">
             <CardContent className="p-8">
               <div className="mb-6 flex justify-between">
-                <h4 className="text-white group-hover:text-slate-800 text-2xl font-bold mb-4 transition-colors duration-300">
+                <h4 className="text-white group-hover:text-slate-800 text-xl md:text-2xl font-bold mb-4 transition-colors duration-300">
                   Actualizaciones Legales
                 </h4>
                 {/* <FileText className="w-12 h-12 text-white group-hover:text-slate-800 transition-colors duration-300" /> */}
               </div>
 
-              <p className="text-gray-300 group-hover:text-gray-600 text-lg font-medium mb-6 transition-colors duration-300">
+              <p className="text-gray-300 group-hover:text-gray-600 text-[14px] md:text-lg font-medium mb-6 transition-colors duration-300">
                 Mantente informado con los últimos desarrollos legales
               </p>
-              <p className="text-gray-300 group-hover:text-gray-600 text-lg font-medium mb-6 transition-colors duration-300">
+              <p className="text-gray-300 group-hover:text-gray-600 text-[14px] md:text-lg font-medium mb-6 transition-colors duration-300">
                 Recibe actualizaciones oportunas sobre nuevas leyes, enmiendas y
                 cambios legales importantes que afectan tu práctica.
               </p>
@@ -84,18 +84,18 @@ export default function OurServices() {
           <Card className="bg-transparent border-none shadow-none group hover:bg-white transition-all duration-300 ease-in-out">
             <CardContent className="p-8">
               <div className="mb-6 flex justify-between">
-                <h4 className="text-white group-hover:text-slate-800 text-2xl font-bold mb-4 transition-colors duration-300">
+                <h4 className="text-white group-hover:text-slate-800 text-xl md:text-2xl font-bold mb-4 transition-colors duration-300">
                   Búsqueda de Documentos
                 </h4>
 
-                <FileSearch className="w-12 h-12 text-white group-hover:text-slate-800 transition-colors duration-300" />
+                <FileSearch className="h-7 w-7 md:w-10 md:h-10 text-white group-hover:text-slate-800 transition-colors duration-300" />
               </div>
 
-              <p className="text-gray-300 group-hover:text-gray-600 text-lg font-medium mb-6 transition-colors duration-300">
+              <p className="text-gray-300 group-hover:text-gray-600 text-[14px] md:text-lg font-medium mb-6 transition-colors duration-300">
                 Encuentra documentos legales específicos de forma rápida y
                 eficiente
               </p>
-              <p className="text-gray-300 group-hover:text-gray-600 text-lg font-medium mb-6 transition-colors duration-300">
+              <p className="text-gray-300 group-hover:text-gray-600 text-[14px] md:text-lg font-medium mb-6 transition-colors duration-300">
                 Nuestras potentes herramientas de búsqueda te ayudan a localizar
                 exactamente lo que necesitas dentro de nuestra amplia colección.
               </p>
