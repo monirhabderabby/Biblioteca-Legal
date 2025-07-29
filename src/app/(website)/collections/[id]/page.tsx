@@ -5,6 +5,16 @@ import { notFound } from "next/navigation";
 import ArticleContainer from "./_components/article-container";
 import CollectionHeader from "./_components/collection-header";
 
+export async function generateStaticParams() {
+  const ids = await prisma.document.findMany({
+    select: {
+      id: true,
+    },
+  });
+
+  return ids;
+}
+
 const Page = async ({ params }: { params: { id: string } }) => {
   const document = await prisma.document.findUnique({
     where: {
