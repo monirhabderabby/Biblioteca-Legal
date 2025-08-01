@@ -1,7 +1,5 @@
 "use client";
 
-import useDebounce from "@/hooks/useDebounce";
-import { useArticleSearchStore } from "@/store/collections";
 import { Prisma } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
@@ -34,16 +32,12 @@ type ApiResponse<T = any> = {
 };
 
 const ArticleContainer = ({ documentId, isLoggedin }: Props) => {
-  const { query } = useArticleSearchStore();
-  const searchQuery = useDebounce(query, 500);
   const { data, isLoading, isError, error } = useQuery<
     ApiResponse<FullSectionResponse[]>
   >({
-    queryKey: ["article", documentId, searchQuery],
+    queryKey: ["article", documentId],
     queryFn: () =>
-      fetch(`/api/documents/${documentId}?query=${searchQuery}`).then((res) =>
-        res.json()
-      ),
+      fetch(`/api/documents/${documentId}`).then((res) => res.json()),
   });
 
   useEffect(() => {

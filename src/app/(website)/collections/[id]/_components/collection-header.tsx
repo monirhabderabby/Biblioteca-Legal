@@ -3,11 +3,13 @@
 import { removeWatchLater, watchLater } from "@/actions/watch-later";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import useDebounce from "@/hooks/useDebounce";
+import { extractNumber } from "@/lib/utils";
 import { useArticleSearchStore } from "@/store/collections";
 import { Document, WatchLists } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import { Check, Clock, Loader2 } from "lucide-react";
-import { useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { toast } from "sonner";
 
 interface apiProps {
@@ -22,8 +24,9 @@ interface Props {
 }
 
 const CollectionHeader = ({ document, hasFullAccess }: Props) => {
+  const [value, setvalue] = useState("");
   const [pending, startTransition] = useTransition();
-  const { query, setQuery } = useArticleSearchStore();
+  const { setQuery } = useArticleSearchStore();
 
   const { data, isLoading, refetch } = useQuery<apiProps>({
     queryKey: ["watchlist", document],
@@ -62,6 +65,15 @@ const CollectionHeader = ({ document, hasFullAccess }: Props) => {
     }
   };
 
+  const debouncesvalue = useDebounce(value, 1000);
+
+  useEffect(() => {
+    if (debouncesvalue) {
+      const number = extractNumber(value);
+      setQuery(number?.toString() ?? "");
+    }
+  }, [debouncesvalue, setQuery]);
+
   return (
     <div className=" mt-28 container flex flex-col justify-center items-center gap-y-6">
       <h1 className="font-bold text-[30px] md:text-[35px] lg:text-[40px] leading-[120%] text-center">
@@ -71,10 +83,12 @@ const CollectionHeader = ({ document, hasFullAccess }: Props) => {
       {hasFullAccess && (
         <>
           <Input
-            placeholder="Search by  section title or chapter title..."
+            placeholder="Search by article number..."
             className="max-w-[600px] mx-auto"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            value={value}
+            onChange={(e) => {
+              setvalue(e.target.value);
+            }}
           />
 
           <Button

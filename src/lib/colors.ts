@@ -6,6 +6,7 @@ export const getBackgroundClass = (colorName: string) => {
     pink: "bg-pink-100",
     orange: "bg-orange-100",
     white: "bg-white",
+    highlighted: "bg-yellow-50 border-yellow-400",
   };
   return colors[colorName] || "bg-white";
 };

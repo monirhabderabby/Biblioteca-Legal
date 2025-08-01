@@ -24,6 +24,7 @@ interface Props {
   index: number;
   isLoggedin: boolean;
   documentId: string;
+  highlightedArticle?: number | null;
 }
 
 interface ApiRes {
@@ -32,7 +33,12 @@ interface ApiRes {
   data: UserArticleMeta | null;
 }
 
-const ArticleCard = ({ data, isLoggedin, documentId }: Props) => {
+const ArticleCard = ({
+  data,
+  isLoggedin,
+  documentId,
+  highlightedArticle,
+}: Props) => {
   const [pending, startTransition] = useTransition();
   const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
   const [selectedColor, setSelectedColor] = useState<string>("");
@@ -157,7 +163,9 @@ const ArticleCard = ({ data, isLoggedin, documentId }: Props) => {
       <Card
         className={cn(
           "rounded-lg shadow-sm border transition-colors duration-300 relative",
-          getBackgroundClass(selectedColor),
+          highlightedArticle === data.articleNumber
+            ? getBackgroundClass("highlighted")
+            : getBackgroundClass(selectedColor),
           isColorPickerOpen && "z-10"
         )}
       >
