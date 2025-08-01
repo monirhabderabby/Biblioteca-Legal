@@ -50,3 +50,8 @@ export function extractTextFromTipTap(html: any): string {
 
   return tmp.textContent || "";
 }
+
+export function extractNumber(input: string): number | null {
+  const match = input.match(/\d+/);
+  return match ? parseInt(match[0], 10) : null;
+}
