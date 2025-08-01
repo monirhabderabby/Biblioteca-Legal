@@ -31,27 +31,32 @@ const ArticleContainer = ({
   const articleRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
-    const index = parseInt(searchQuery.trim(), 10);
+    const searchNumber = parseInt(searchQuery.trim(), 10);
 
-    if (!isNaN(index) && index >= 1 && index <= articles.length) {
-      const target = articleRefs.current[index - 1];
+    if (!isNaN(searchNumber)) {
+      const targetIndex = articles.findIndex(
+        (article) => article.articleNumber === searchNumber
+      );
 
-      if (target) {
-        // Scroll with offset (header = 80px)
-        const yOffset = -80;
-        const y =
-          target.getBoundingClientRect().top + window.pageYOffset + yOffset;
-        window.scrollTo({ top: y, behavior: "smooth" });
+      if (targetIndex !== -1) {
+        const target = articleRefs.current[targetIndex];
 
-        // Trigger highlight
-        setHighlightedIndex(index - 1);
+        if (target) {
+          // Scroll with offset (header = 80px)
+          const yOffset = -80;
+          const y =
+            target.getBoundingClientRect().top + window.pageYOffset + yOffset;
+          window.scrollTo({ top: y, behavior: "smooth" });
 
-        // Remove highlight after 1.2s
-        const timeout = setTimeout(() => {
-          setHighlightedIndex(null);
-        }, 1200);
+          // Trigger highlight
+          setHighlightedIndex(searchNumber); // highlight by articleNumber now
 
-        return () => clearTimeout(timeout);
+          const timeout = setTimeout(() => {
+            setHighlightedIndex(null);
+          }, 1200);
+
+          return () => clearTimeout(timeout);
+        }
       }
     }
   }, [searchQuery, articles]);
@@ -70,7 +75,7 @@ const ArticleContainer = ({
                 articleRefs.current[i] = el;
               }}
               className={`transition-colors duration-700 rounded-md  ${
-                highlightedIndex === i
+                highlightedIndex === article.articleNumber
                   ? "bg-yellow-50 border-yellow-400"
                   : "bg-white"
               }`}
