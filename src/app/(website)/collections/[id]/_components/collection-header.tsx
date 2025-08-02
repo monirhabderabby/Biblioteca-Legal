@@ -29,7 +29,7 @@ const CollectionHeader = ({ document, hasFullAccess }: Props) => {
   const { setQuery } = useArticleSearchStore();
 
   const { data, isLoading, refetch } = useQuery<apiProps>({
-    queryKey: ["watchlist", document],
+    queryKey: ["watchlist", document.id],
     queryFn: () =>
       fetch(`/api/watch-later/${document.id}`).then((res) => res.json()),
   });
@@ -47,7 +47,9 @@ const CollectionHeader = ({ document, hasFullAccess }: Props) => {
           }
 
           // handle success
-          refetch();
+          else if (res.success) {
+            refetch();
+          }
         });
       });
     } else {
@@ -69,7 +71,7 @@ const CollectionHeader = ({ document, hasFullAccess }: Props) => {
 
   useEffect(() => {
     if (debouncesvalue) {
-      const number = extractNumber(value);
+      const number = extractNumber(debouncesvalue);
       setQuery(number?.toString() ?? "");
     }
   }, [debouncesvalue, setQuery]);

@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 interface Props {
   sectionTitle: string;
   chapterTitle: string;
@@ -17,4 +19,4 @@ const ArticleHeader = ({ sectionTitle, chapterTitle }: Props) => {
   );
 };
 
-export default ArticleHeader;
+export default memo(ArticleHeader);
