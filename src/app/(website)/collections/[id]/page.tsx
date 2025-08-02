@@ -5,6 +5,8 @@ import { notFound } from "next/navigation";
 import ArticleContainer from "./_components/article-container";
 import CollectionHeader from "./_components/collection-header";
 
+export const revalidate = 3600;
+
 export async function generateStaticParams() {
   const ids = await prisma.document.findMany({
     select: {
@@ -36,7 +38,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
   if (!document) notFound();
 
   return (
-    <div className="">
+    <div>
       <CollectionHeader document={document} hasFullAccess={hasFullAccess} />
 
       <ArticleContainer documentId={params.id} isLoggedin={!!cu} />

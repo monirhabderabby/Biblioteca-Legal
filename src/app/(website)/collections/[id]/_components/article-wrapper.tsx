@@ -1,7 +1,8 @@
 import { useArticleSearchStore } from "@/store/collections";
 import { Article } from "@prisma/client";
 import dynamic from "next/dynamic";
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
+import { useInView } from "react-intersection-observer";
 const ArticleCard = dynamic(() => import("./article-card"), {
   ssr: false,
 });
@@ -53,29 +54,36 @@ const ArticleWrapper = ({ data, isLoggedin, documentId }: Props) => {
 
   return (
     <div className="space-y-5">
-      {data?.map((item, i) => (
-        <div
-          key={item.id}
-          ref={(el) => {
-            articleRefs.current[i] = el;
-          }}
-          className={`transition-colors duration-700 rounded-md  ${
-            highlightedArticle === item.articleNumber
-              ? "bg-yellow-50 border-yellow-400"
-              : "bg-white"
-          }`}
-        >
-          <ArticleCard
-            data={item}
-            index={i}
-            isLoggedin={isLoggedin}
-            documentId={documentId}
-            highlightedArticle={highlightedArticle}
-          />
-        </div>
-      ))}
+      {data?.map((item, i) => {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        const { ref, inView } = useInView({
+          triggerOnce: true,
+          rootMargin: "200px",
+        });
+
+        return (
+          <div
+            key={item.id}
+            ref={(el) => {
+              ref(el); // use the ref for inView tracking
+              articleRefs.current[i] = el;
+            }}
+            className={`...`}
+          >
+            {inView && (
+              <ArticleCard
+                data={item}
+                index={i}
+                isLoggedin={isLoggedin}
+                documentId={documentId}
+                highlightedArticle={highlightedArticle}
+              />
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 };
 
-export default ArticleWrapper;
+export default memo(ArticleWrapper);

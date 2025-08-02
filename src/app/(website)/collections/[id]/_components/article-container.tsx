@@ -38,11 +38,15 @@ const ArticleContainer = ({ documentId, isLoggedin }: Props) => {
     queryKey: ["article", documentId],
     queryFn: () =>
       fetch(`/api/documents/${documentId}`).then((res) => res.json()),
+    staleTime: 1000 * 60 * 60, // 1 hour
+    retry: 2, // Retry twice on failure
   });
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, []);
+    if (documentId) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [documentId]);
 
   let content;
 

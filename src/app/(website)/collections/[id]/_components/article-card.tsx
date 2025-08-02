@@ -14,7 +14,7 @@ import { Article, UserArticleMeta } from "@prisma/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
 import { Bookmark, Lock, MessageSquare } from "lucide-react";
-import { useEffect, useRef, useState, useTransition } from "react";
+import { memo, useEffect, useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
 import ColorPicker from "./tool/color-picker";
 import CommentPopover from "./tool/comment-provider";
@@ -250,4 +250,4 @@ const ArticleCard = ({
   );
 };
 
-export default ArticleCard;
+export default memo(ArticleCard);
