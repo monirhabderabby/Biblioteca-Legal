@@ -8,12 +8,22 @@
 
 ---
 
-## 🔍 Features
+## 🚀 Key Features
 
-- Structured and searchable legal content  
-- Clean, user-friendly web interface  
-- Responsive design for mobile and desktop  
-- Document viewing and download support  
+* **Structured & Searchable Legal Content** – Advanced search, categorized laws, and fast retrieval.
+* **Responsive Design** – Optimized for mobile, tablet, and desktop.
+* **Document Viewing** – Clean in-browser reader with zoom & navigation.
+* **Smart Reading Tool** – Save documents, highlight articles in color, bookmark sections, and add personal notes.
+* **Access Plans** – Individual and company subscriptions.
+
+---
+
+## 🛠 Admin Panel
+
+* Visitor activity tracking
+* User, document, company, and category management
+* Content publishing tools
+* Waitlist viewer for unpaid signups
 
 ---
 
