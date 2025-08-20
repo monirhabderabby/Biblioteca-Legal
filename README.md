@@ -27,15 +27,19 @@
 
 ---
 
-## 🖼️ Screenshots
+## 🖼 Screenshots
 
-> _A few glimpses of the Biblioteca Legal platform:_
+| Home Page | Packages Page |
+|-----------|---------------|
+| ![Home](https://files.edgestore.dev/w83fbai02qyxofbq/Biblioteca/_public/home%20mockup.png) | ![Collections](https://files.edgestore.dev/ln9m9j3kr2yibrue/promotional/_public/collections%20page_p.webp) |
 
-| Home Page | Collections |
-|----------|---------------|
-| ![Home Screenshot](https://files.edgestore.dev/ln9m9j3kr2yibrue/staticFiled/_public/opengraph-image.webp) | ![Collections Screenshot](https://files.edgestore.dev/ln9m9j3kr2yibrue/promotional/_public/collections%20page_p.webp) |
+| Biblioteca Legal |
+|------------|
+| ![Platform]((https://files.edgestore.dev/ln9m9j3kr2yibrue/staticFiled/_public/opengraph-image.webp) |
 
-> 📌 _You can add more screenshots as needed by uploading them and updating the URLs._
+| Admin Dashboard | Invoice |
+|-----------------|---------|
+| ![Subscription](https://files.edgestore.dev/w83fbai02qyxofbq/Biblioteca/_public/subscription%20mockup.png) | ![Article](https://files.edgestore.dev/w83fbai02qyxofbq/Biblioteca/_public/article.png) |
 
 ---
 
