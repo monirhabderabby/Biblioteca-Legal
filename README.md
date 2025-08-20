@@ -27,15 +27,16 @@
 
 ---
 
+
 ## 🖼 Screenshots
 
 | Home Page | Packages Page |
 |-----------|---------------|
-| ![Home](https://files.edgestore.dev/w83fbai02qyxofbq/Biblioteca/_public/home%20mockup.png) | ![Collections](https://files.edgestore.dev/ln9m9j3kr2yibrue/promotional/_public/collections%20page_p.webp) |
+| ![Platform](https://files.edgestore.dev/ln9m9j3kr2yibrue/staticFiled/_public/opengraph-image.webp) | ![Collections](https://files.edgestore.dev/ln9m9j3kr2yibrue/promotional/_public/collections%20page_p.webp) |
 
 | Biblioteca Legal |
 |------------|
-| ![Platform]((https://files.edgestore.dev/ln9m9j3kr2yibrue/staticFiled/_public/opengraph-image.webp) |
+| ![Home](https://files.edgestore.dev/w83fbai02qyxofbq/Biblioteca/_public/home%20mockup.png) |
 
 | Admin Dashboard | Invoice |
 |-----------------|---------|
