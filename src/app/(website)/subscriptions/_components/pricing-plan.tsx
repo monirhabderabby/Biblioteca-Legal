@@ -2,9 +2,9 @@
 import CompanyContactModal from "@/components/shared/modals/compnay-contact-modal";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useLocalizedPrice } from "@/hooks/use-localized-price";
 import { Check, X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 
 interface Sub {
   currentPeriodStart: Date;
@@ -21,20 +21,12 @@ interface Props {
   note?: string;
 }
 
-const countryToCurrency: Record<string, string> = {
-  BD: "BDT",
-  HN: "HNL",
-  US: "USD",
-  IN: "INR",
-  MX: "MXN",
-};
-
 export default function PricingComparison({
   subscription,
   price: usdAmount,
   note,
 }: Props) {
-  const [price, setPrice] = useState<string>(`$${usdAmount}`);
+  const price = useLocalizedPrice(usdAmount); // use hook
   const router = useRouter();
   const features = [
     { name: "Acceso ilimitado a documentos", starter: true, business: true },
@@ -52,36 +44,6 @@ export default function PricingComparison({
     { name: "Acceso multiusuario", starter: false, business: true },
     { name: "Paquetes de precios escalonados", starter: false, business: true },
   ];
-
-  useEffect(() => {
-    async function detectLocationAndConvert() {
-      try {
-        // Browser থেকে IP detect (CORS-free API)
-        const ipRes = await fetch("https://ipwhois.app/json/");
-        const ipData = await ipRes.json();
-        console.log("Client IPWhois response:", ipData);
-
-        // const userCurrencyCode = ipData.currency_code || "USD";
-        const userCurrencyRate = ipData.currency_rates || 1; // USD → local rate
-
-        // Local currency detect
-        const targetCurrency = countryToCurrency[ipData.country_code] || "USD";
-        console.log("countryToCurrency", countryToCurrency);
-
-        if (targetCurrency !== "USD") {
-          const localAmount = (usdAmount * userCurrencyRate).toFixed(2);
-          setPrice(formatPrice(localAmount, targetCurrency));
-        } else {
-          setPrice(formatPrice(usdAmount.toString(), "USD"));
-        }
-      } catch (err) {
-        console.error("Location detection error:", err);
-        setPrice(`$${usdAmount}`);
-      }
-    }
-
-    detectLocationAndConvert();
-  }, [usdAmount]);
 
   const now = new Date();
 
@@ -173,20 +135,4 @@ export default function PricingComparison({
       </div>
     </div>
   );
-}
-
-function formatPrice(amount: string, currencyCode: string): string {
-  const num = Number(amount);
-  const formattedAmount = num % 1 === 0 ? num.toString() : num.toFixed(2);
-
-  const currencySymbols: Record<string, string> = {
-    USD: "$",
-    HNL: "L",
-    BDT: "৳",
-    INR: "₹",
-    MXN: "$",
-  };
-
-  const symbol = currencySymbols[currencyCode] || currencyCode;
-  return `${symbol}${formattedAmount}`;
 }

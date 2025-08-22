@@ -66,6 +66,7 @@
     "sharp": "^0.34.2",
     "sonner": "^2.0.3",
     "striptags": "^3.2.0",
+    "swr": "^2.3.6",
     "tailwind-merge": "^3.3.0",
     "tailwindcss-animate": "^1.0.7",
     "tiptap-extension-resize-image": "^1.2.2",

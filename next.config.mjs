@@ -12,8 +12,12 @@ const nextConfig = {
       },
       {
         hostname: "github.com",
-        protocol: "https"
-      }
+        protocol: "https",
+      },
+      {
+        hostname: "upload.wikimedia.org",
+        protocol: "https",
+      },
     ],
   },
 };

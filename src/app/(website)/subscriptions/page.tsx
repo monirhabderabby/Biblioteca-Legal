@@ -28,7 +28,7 @@ const Page = async () => {
         subscription={currentSubscription?.subscription}
         sub_type={currentSubscription?.type as "user" | "company"}
         price={usdAmount}
-        note={`(Approx USD $${usdAmount})`} // চাইলে reference USD টেক্সট দেখাতে পারেন
+        note={`(USD $${usdAmount})`} // চাইলে reference USD টেক্সট দেখাতে পারেন
       />
 
       {!isLoggedin && <CTA />}

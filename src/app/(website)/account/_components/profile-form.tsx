@@ -156,7 +156,10 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ user }) => {
                     className="h-full w-full rounded-full relative flex justify-center items-center"
                   >
                     <Image
-                      src={field.value || "/default-profile.jpg"}
+                      src={
+                        field.value ||
+                        "https://upload.wikimedia.org/wikipedia/commons/b/b5/Windows_10_Default_Profile_Picture.svg"
+                      }
                       alt="perfil"
                       fill
                       className="rounded-full object-cover text-tourHub-green-dark bg-gray-100"
