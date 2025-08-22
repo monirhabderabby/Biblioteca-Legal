@@ -61,18 +61,15 @@ export default function PricingComparison({
         const ipData = await ipRes.json();
         console.log("Client IPWhois response:", ipData);
 
-        const userCountry = ipData.country_code || "US";
-        const targetCurrency = countryToCurrency[userCountry] || "USD";
+        // const userCurrencyCode = ipData.currency_code || "USD";
+        const userCurrencyRate = ipData.currency_rates || 1; // USD → local rate
+
+        // Local currency detect
+        const targetCurrency = countryToCurrency[ipData.country_code] || "USD";
+        console.log("countryToCurrency", countryToCurrency);
 
         if (targetCurrency !== "USD") {
-          // Currency conversion
-          const rateRes = await fetch(
-            `https://api.exchangerate.host/latest?base=USD&symbols=${targetCurrency}`
-          );
-          const rateData = await rateRes.json();
-          const rate = rateData.rates[targetCurrency] || 1;
-
-          const localAmount = (usdAmount * rate).toFixed(2);
+          const localAmount = (usdAmount * userCurrencyRate).toFixed(2);
           setPrice(formatPrice(localAmount, targetCurrency));
         } else {
           setPrice(formatPrice(usdAmount.toString(), "USD"));
