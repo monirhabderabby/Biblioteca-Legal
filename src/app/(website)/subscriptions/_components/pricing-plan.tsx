@@ -56,15 +56,16 @@ export default function PricingComparison({
   useEffect(() => {
     async function detectLocationAndConvert() {
       try {
-        // Browser থেকে IP detect
-        const ipRes = await fetch("https://ipapi.co/json/");
+        // Browser থেকে IP detect (CORS-free API)
+        const ipRes = await fetch("https://ipwhois.app/json/");
         const ipData = await ipRes.json();
-        console.log("Client IPAPI response:", ipData);
+        console.log("Client IPWhois response:", ipData);
 
-        const userCountry = ipData.country || "US";
+        const userCountry = ipData.country_code || "US";
         const targetCurrency = countryToCurrency[userCountry] || "USD";
 
         if (targetCurrency !== "USD") {
+          // Currency conversion
           const rateRes = await fetch(
             `https://api.exchangerate.host/latest?base=USD&symbols=${targetCurrency}`
           );
