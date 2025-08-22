@@ -17,6 +17,7 @@ interface Props {
   subscription?: Sub;
   sub_type: "user" | "company";
   price: string;
+  note?: string;
 }
 
 export default function PricingComparison({ subscription, price }: Props) {
