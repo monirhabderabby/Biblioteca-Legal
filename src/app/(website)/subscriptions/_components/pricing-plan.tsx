@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Check, X } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 interface Sub {
   currentPeriodStart: Date;
@@ -16,11 +17,24 @@ interface Sub {
 interface Props {
   subscription?: Sub;
   sub_type: "user" | "company";
-  price: string;
+  price: number;
   note?: string;
 }
 
-export default function PricingComparison({ subscription, price }: Props) {
+const countryToCurrency: Record<string, string> = {
+  BD: "BDT",
+  HN: "HNL",
+  US: "USD",
+  IN: "INR",
+  MX: "MXN",
+};
+
+export default function PricingComparison({
+  subscription,
+  price: usdAmount,
+  note,
+}: Props) {
+  const [price, setPrice] = useState<string>(`$${usdAmount}`);
   const router = useRouter();
   const features = [
     { name: "Acceso ilimitado a documentos", starter: true, business: true },
@@ -38,6 +52,38 @@ export default function PricingComparison({ subscription, price }: Props) {
     { name: "Acceso multiusuario", starter: false, business: true },
     { name: "Paquetes de precios escalonados", starter: false, business: true },
   ];
+
+  useEffect(() => {
+    async function detectLocationAndConvert() {
+      try {
+        // Browser থেকে IP detect
+        const ipRes = await fetch("https://ipapi.co/json/");
+        const ipData = await ipRes.json();
+        console.log("Client IPAPI response:", ipData);
+
+        const userCountry = ipData.country || "US";
+        const targetCurrency = countryToCurrency[userCountry] || "USD";
+
+        if (targetCurrency !== "USD") {
+          const rateRes = await fetch(
+            `https://api.exchangerate.host/latest?base=USD&symbols=${targetCurrency}`
+          );
+          const rateData = await rateRes.json();
+          const rate = rateData.rates[targetCurrency] || 1;
+
+          const localAmount = (usdAmount * rate).toFixed(2);
+          setPrice(formatPrice(localAmount, targetCurrency));
+        } else {
+          setPrice(formatPrice(usdAmount.toString(), "USD"));
+        }
+      } catch (err) {
+        console.error("Location detection error:", err);
+        setPrice(`$${usdAmount}`);
+      }
+    }
+
+    detectLocationAndConvert();
+  }, [usdAmount]);
 
   const now = new Date();
 
@@ -63,6 +109,7 @@ export default function PricingComparison({ subscription, price }: Props) {
               <span className="text-4xl font-bold text-primary">{price}</span>
               <span className="text-gray-500 ml-1">/mes</span>
             </div>
+            {note && <p className="text-sm text-gray-500 mt-1">{note}</p>}
           </CardHeader>
           <CardContent className="space-y-6">
             <Button
@@ -128,4 +175,20 @@ export default function PricingComparison({ subscription, price }: Props) {
       </div>
     </div>
   );
+}
+
+function formatPrice(amount: string, currencyCode: string): string {
+  const num = Number(amount);
+  const formattedAmount = num % 1 === 0 ? num.toString() : num.toFixed(2);
+
+  const currencySymbols: Record<string, string> = {
+    USD: "$",
+    HNL: "L",
+    BDT: "৳",
+    INR: "₹",
+    MXN: "$",
+  };
+
+  const symbol = currencySymbols[currencyCode] || currencyCode;
+  return `${symbol}${formattedAmount}`;
 }
