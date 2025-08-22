@@ -22,6 +22,7 @@ async function getExchangeRate(to: string) {
       `https://api.exchangerate.host/latest?base=USD&symbols=${to}`,
       { cache: "no-store" } // always fresh
     );
+    console.log("currency convert response", res.json());
     const data = await res.json();
     return data.rates[to] || 1;
   } catch (e) {
@@ -37,6 +38,7 @@ async function getUserCountry() {
       cache: "no-store",
     });
     const data = await res.json();
+    console.log("ipapi response", data);
     return data.country || "US";
   } catch (e) {
     console.error("IP detection error:", e);
@@ -67,6 +69,8 @@ const Page = async () => {
   } else {
     displayPrice = formatPrice(usdAmount.toString(), "USD");
   }
+
+  console.log("displayPrice", displayPrice);
 
   return (
     <div>
