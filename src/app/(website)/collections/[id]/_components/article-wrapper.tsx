@@ -2,7 +2,6 @@ import { useArticleSearchStore } from "@/store/collections";
 import { Article } from "@prisma/client";
 import dynamic from "next/dynamic";
 import { memo, useEffect, useRef, useState } from "react";
-import { useInView } from "react-intersection-observer";
 const ArticleCard = dynamic(() => import("./article-card"), {
   ssr: false,
 });
@@ -56,29 +55,26 @@ const ArticleWrapper = ({ data, isLoggedin, documentId }: Props) => {
     <div className="space-y-5">
       {data?.map((item, i) => {
         // eslint-disable-next-line react-hooks/rules-of-hooks
-        const { ref, inView } = useInView({
-          triggerOnce: true,
-          rootMargin: "200px",
-        });
+        // const { ref, } = useInView({
+        //   triggerOnce: true,
+        //   rootMargin: "200px",
+        // });
 
         return (
           <div
             key={item.id}
             ref={(el) => {
-              ref(el); // use the ref for inView tracking
               articleRefs.current[i] = el;
             }}
             className={`...`}
           >
-            {inView && (
-              <ArticleCard
-                data={item}
-                index={i}
-                isLoggedin={isLoggedin}
-                documentId={documentId}
-                highlightedArticle={highlightedArticle}
-              />
-            )}
+            <ArticleCard
+              data={item}
+              index={i}
+              isLoggedin={isLoggedin}
+              documentId={documentId}
+              highlightedArticle={highlightedArticle}
+            />
           </div>
         );
       })}

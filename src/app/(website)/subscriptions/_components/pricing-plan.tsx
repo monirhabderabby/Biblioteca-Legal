@@ -2,6 +2,7 @@
 import CompanyContactModal from "@/components/shared/modals/compnay-contact-modal";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useLocalizedPrice } from "@/hooks/use-localized-price";
 import { Check, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -16,10 +17,16 @@ interface Sub {
 interface Props {
   subscription?: Sub;
   sub_type: "user" | "company";
-  price: string;
+  price: number;
+  note?: string;
 }
 
-export default function PricingComparison({ subscription, price }: Props) {
+export default function PricingComparison({
+  subscription,
+  price: usdAmount,
+  note,
+}: Props) {
+  const price = useLocalizedPrice(usdAmount); // use hook
   const router = useRouter();
   const features = [
     { name: "Acceso ilimitado a documentos", starter: true, business: true },
@@ -62,6 +69,7 @@ export default function PricingComparison({ subscription, price }: Props) {
               <span className="text-4xl font-bold text-primary">{price}</span>
               <span className="text-gray-500 ml-1">/mes</span>
             </div>
+            {note && <p className="text-sm text-gray-500 mt-1">{note}</p>}
           </CardHeader>
           <CardContent className="space-y-6">
             <Button
