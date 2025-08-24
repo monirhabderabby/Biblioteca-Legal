@@ -10,7 +10,7 @@ const page = () => {
   return (
     <div>
       <HeaderSection
-        imageUrl="https://files.edgestore.dev/ln9m9j3kr2yibrue/staticFiled/_public/about%20us.webp"
+        imageUrl="/about/banner.webp"
         title="Sobre Nosotros"
         description=""
       />
@@ -39,7 +39,7 @@ const page = () => {
             <div className="w-full md:w-1/2 flex justify-center">
               <div className="relative w-full max-w-[684px] h-[542px]">
                 <Image
-                  src="/about1.png"
+                  src="/about/about1.png"
                   alt="Estatua de la Dama de la Justicia"
                   fill
                   className="object-cover rounded-[16px]"
@@ -64,7 +64,7 @@ const page = () => {
             <div className="w-full md:w-1/2 order-2 md:order-1">
               <div className="relative w-full max-w-[684px] h-[542px]">
                 <Image
-                  src="/about2.png"
+                  src="/about/about2.png"
                   alt="Balanza de la justicia y mazo"
                   fill
                   className="object-cover rounded-[16px]"

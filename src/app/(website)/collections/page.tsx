@@ -14,7 +14,7 @@ const Page = async () => {
   return (
     <div>
       <HeaderSection
-        imageUrl="https://files.edgestore.dev/ln9m9j3kr2yibrue/staticFiled/_public/86f8cacd-d2d6-42df-a1bd-569b2c5e047c.webp"
+        imageUrl="/collections/banner.webp"
         title="Colección de Documentos Legales"
         description="Explore nuestra colección actualizada de leyes, decretos y documentos legales"
       />

@@ -15,8 +15,7 @@ export default async function Home() {
       <div
         className="h-screen md:h-[60vh] lg:h-screen  w-full flex justify-start items-center bg-cover md:bg-right-top"
         style={{
-          backgroundImage:
-            "url(https://files.edgestore.dev/ln9m9j3kr2yibrue/staticFiled/_public/b878d4e8-03ef-4945-963b-b8f95ddbfb03.webp)",
+          backgroundImage: "url(/home/banner.webp)",
         }}
       >
         <div className="container">

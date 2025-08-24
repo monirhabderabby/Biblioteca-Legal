@@ -5,7 +5,7 @@ const Page = () => {
   return (
     <div>
       <HeaderSection
-        imageUrl="https://files.edgestore.dev/ln9m9j3kr2yibrue/staticFiled/_public/registration%20page.webp"
+        imageUrl="/auth/registration.webp"
         title="Crea tu cuenta"
         description="Únete a nuestra plataforma para acceder a recursos legales completos"
       />

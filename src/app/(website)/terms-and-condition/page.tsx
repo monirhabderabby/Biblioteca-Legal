@@ -25,7 +25,7 @@ const Page = async () => {
   return (
     <div>
       <HeaderSection
-        imageUrl="https://files.edgestore.dev/ln9m9j3kr2yibrue/staticFiled/_public/terms%20and%20condition.webp"
+        imageUrl="/terms.webp"
         title="Términos y Condiciones"
         description=""
       />

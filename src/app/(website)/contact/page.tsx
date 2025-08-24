@@ -10,7 +10,7 @@ const Page = async () => {
   return (
     <div>
       <HeaderSection
-        imageUrl="https://files.edgestore.dev/ln9m9j3kr2yibrue/staticFiled/_public/6a97120d-8c08-4f98-97b9-a2d269864fc7.webp"
+        imageUrl="/contact/contact.webp"
         title="Ponte en Contacto"
         description="Estamos aquí para ayudarte con cualquier pregunta sobre nuestros recursos legales"
       />
