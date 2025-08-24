@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { SmoothCollapse } from "@/provider/smooth-collapse";
 import { generalFormSchema, GeneralFormType } from "@/schemas/site";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Setting } from "@prisma/client";
@@ -224,18 +225,20 @@ export default function GeneralForm({ initialData }: Props) {
                   )}
                 />
               </div>
-              <div className="flex justify-end space-x-[30px] pt-[50px]">
-                {isUpdateReady && (
-                  <Button
-                    type="submit"
-                    className="px-4 py-2  text-white rounded-md"
-                    disabled={pending}
-                  >
-                    {pending ? "Saving" : "Save"}{" "}
-                    {pending && <Loader2 className="animate-spin" />}
-                  </Button>
-                )}
-              </div>
+              <SmoothCollapse isOpen={isUpdateReady}>
+                <div className="flex justify-end space-x-[30px] pt-[50px]">
+                  {isUpdateReady && (
+                    <Button
+                      type="submit"
+                      className="px-4 py-2  text-white rounded-md"
+                      disabled={pending}
+                    >
+                      {pending ? "Saving" : "Save"}{" "}
+                      {pending && <Loader2 className="animate-spin" />}
+                    </Button>
+                  )}
+                </div>
+              </SmoothCollapse>
             </CardContent>
           </Card>
         </form>

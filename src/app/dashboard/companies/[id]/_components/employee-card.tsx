@@ -60,7 +60,7 @@ export default function EmployeeCard({
             <div className="flex items-start space-x-4">
               <Avatar className="h-12 w-12">
                 <AvatarImage
-                  src={profileImage || "/placeholder.svg"}
+                  src={profileImage || "/placeholder.jpg"}
                   alt={`${firstName} ${lastName}`}
                 />
                 <AvatarFallback>{initials}</AvatarFallback>

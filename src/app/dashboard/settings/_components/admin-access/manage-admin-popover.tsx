@@ -95,7 +95,7 @@ const ManageAdminPopover = () => {
             <div className="flex items-center gap-2">
               <Avatar className="h-8 w-8">
                 <AvatarImage
-                  src={user.image || "/placeholder.svg"}
+                  src={user.image || "/placeholder.jpg"}
                   alt={user.first_name}
                 />
                 <AvatarFallback>
