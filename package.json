@@ -58,7 +58,6 @@
     "next-auth": "^5.0.0-beta.28",
     "nextjs-toploader": "^3.8.16",
     "openai": "^4.103.0",
-    "plaiceholder": "^3.0.0",
     "react": "^18",
     "react-day-picker": "^8.10.1",
     "react-dom": "^18",
