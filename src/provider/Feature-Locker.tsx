@@ -19,7 +19,7 @@ const FeatureLocker = ({ children }: Props) => {
             Renueva tu suscripción para acceder a todas las funciones.
           </p>
           <Button>
-            <Link href="/pricing">Renovar Suscripción</Link>
+            <Link href="/subscriptions">Renovar Suscripción</Link>
           </Button>
         </div>
       </div>
