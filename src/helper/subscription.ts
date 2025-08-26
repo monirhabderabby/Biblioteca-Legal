@@ -4,80 +4,85 @@
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
 import { paddle } from "@/lib/paddle";
+import { CompanySubscription, UserSubscription } from "@prisma/client";
 
-interface Sub {
-  currentPeriodStart: Date;
-  currentPeriodEnd: Date;
-  sub_id?: string;
-  isActive: boolean;
-  userId: string;
-}
+// Define interfaces for type safety
 
-export async function getCurrentUserSubscription(): Promise<{
-  type: "user" | "company";
-  subscription: Sub;
-} | null> {
+export async function getCurrentUserSubscription() {
   const cu = await auth();
+  if (!cu?.user.id) return null;
 
-  if (!cu?.user?.id) {
-    return null; // Not logged in
+  const userId = cu.user.id.toString();
+
+  // 1. Check if the user has a personal subscription
+  const userSubscription = await prisma.userSubscription.findUnique({
+    where: { userId },
+  });
+
+  // 2. If not, check if the user's company has a subscription
+  // (assuming User has companyId field)
+  let companySubscription = null;
+  if (!userSubscription) {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { companyId: true },
+    });
+
+    if (user?.companyId) {
+      companySubscription = await prisma.companySubscription.findUnique({
+        where: { companyId: user.companyId },
+      });
+    }
   }
 
-  // 1. Try fetching the user's personal active subscription
-  const userSubscription = await prisma.userSubscription.findFirst({
-    where: {
-      userId: cu.user.id,
-      isActive: true,
-    },
-  });
+  // No subscription at all
+  if (!userSubscription && !companySubscription) return null;
+
+  const now = new Date();
 
   if (userSubscription) {
+    // Check if subscription is active (paid)
+    const hasPaidAccess =
+      userSubscription.isActive &&
+      userSubscription.currentPeriodEnd &&
+      userSubscription.currentPeriodEnd > now;
+
+    // Check if trial is active
+    const hasTrialAccess =
+      userSubscription.isTrialActive &&
+      userSubscription.trialEnd &&
+      userSubscription.trialEnd > now;
+
+    const hasAccess = hasPaidAccess || hasTrialAccess;
+
     return {
-      type: "user",
-      subscription: {
-        currentPeriodStart: userSubscription.currentPeriodStart,
-        currentPeriodEnd: userSubscription.currentPeriodEnd,
-        sub_id: userSubscription.sub_id,
-        isActive: userSubscription.isActive,
-        userId: userSubscription.userId,
-      },
+      subscription: userSubscription,
+      hasAccess,
+      subType: "user" as const,
     };
   }
-
-  // 2. Check if the user belongs to a company
-  const user = await prisma.user.findUnique({
-    where: { id: cu.user.id },
-    select: {
-      companyId: true,
-    },
-  });
-
-  if (!user?.companyId) {
-    return null; // Not part of a company, and no personal sub
-  }
-
-  // 3. Try fetching the company’s active subscription
-  const companySubscription = await prisma.companySubscription.findFirst({
-    where: {
-      companyId: user.companyId,
-    },
-  });
 
   if (companySubscription) {
+    const hasAccess =
+      companySubscription.isActive &&
+      companySubscription.currentPeriodEnd &&
+      companySubscription.currentPeriodEnd > now;
+
     return {
-      type: "company",
-      subscription: {
-        currentPeriodStart: companySubscription.currentPeriodStart,
-        currentPeriodEnd: companySubscription.currentPeriodEnd,
-        isActive: companySubscription.isActive,
-        sub_id: undefined,
-        userId: cu.user.id,
-      },
+      subscription: companySubscription,
+      hasAccess,
+      subType: "company" as const,
     };
   }
-
-  return null; // No valid subscription found
 }
+
+export type CurrentSubscription = Awaited<
+  Promise<{
+    subscription: UserSubscription | CompanySubscription;
+    hasAccess: boolean;
+    subType: "user" | "company";
+  } | null>
+>;
 
 interface PaddleCustomerCreateProps {
   email: string;

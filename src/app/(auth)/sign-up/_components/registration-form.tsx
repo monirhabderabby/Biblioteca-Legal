@@ -25,7 +25,10 @@ if (!priceId) {
   throw new Error("Price ID is not defined in environment variables.");
 }
 
-export default function RegistrationForm() {
+interface Props {
+  freeTrial?: number;
+}
+export default function RegistrationForm({ freeTrial }: Props) {
   const [isRedirecting, setRedirecting] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [paddle, setPaddle] = useState<Paddle>();
@@ -227,7 +230,11 @@ export default function RegistrationForm() {
           />
         </div>
         <div className="pt-[30px]">
-          <SubmitButton isLoading={isLoading}>Registrarse</SubmitButton>
+          <SubmitButton isLoading={isLoading}>
+            {freeTrial && freeTrial > 0
+              ? `Comenzar prueba gratuita de ${freeTrial} días`
+              : "Registrarse"}
+          </SubmitButton>
         </div>
       </form>
     </Form>

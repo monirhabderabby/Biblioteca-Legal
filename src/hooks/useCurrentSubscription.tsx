@@ -1,18 +1,12 @@
 import { getCurrentUserSubscription } from "@/helper/subscription";
+import { CompanySubscription, UserSubscription } from "@prisma/client";
 import { useEffect, useState } from "react";
-
-interface Sub {
-  currentPeriodStart: Date;
-  currentPeriodEnd: Date;
-  sub_id?: string;
-  isActive: boolean;
-  userId: string;
-}
 
 export function useCurrentUserSubscription() {
   const [subscription, setSubscription] = useState<{
     type: "user" | "company";
-    subscription: Sub;
+    subscription: UserSubscription | CompanySubscription;
+    hasFullAccess: boolean;
   } | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
@@ -24,7 +18,15 @@ export function useCurrentUserSubscription() {
       try {
         const cs = await getCurrentUserSubscription();
         if (isMounted) {
-          setSubscription(cs);
+          if (cs) {
+            setSubscription({
+              type: cs.subType,
+              subscription: cs.subscription,
+              hasFullAccess: !!cs.hasAccess,
+            });
+          } else {
+            setSubscription(null);
+          }
         }
       } catch (err) {
         if (isMounted) {

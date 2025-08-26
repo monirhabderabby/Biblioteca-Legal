@@ -6,23 +6,17 @@ import { useLocalizedPrice } from "@/hooks/use-localized-price";
 import { Check, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-interface Sub {
-  currentPeriodStart: Date;
-  currentPeriodEnd: Date;
-  sub_id?: string;
-  isActive: boolean;
-  userId: string;
-}
-
 interface Props {
-  subscription?: Sub;
   sub_type: "user" | "company";
   price: number;
   note?: string;
+  isActive: true | false;
+  currentPeriodEnd?: Date;
 }
 
 export default function PricingComparison({
-  subscription,
+  isActive,
+  currentPeriodEnd,
   price: usdAmount,
   note,
 }: Props) {
@@ -48,9 +42,9 @@ export default function PricingComparison({
   const now = new Date();
 
   const isSubscribed =
-    subscription?.isActive && new Date(subscription.currentPeriodEnd) > now;
+    isActive && currentPeriodEnd && new Date(currentPeriodEnd) > now;
 
-  const userButtonLabel = !subscription
+  const userButtonLabel = !false
     ? "Comenzar"
     : isSubscribed
       ? "Suscrito"

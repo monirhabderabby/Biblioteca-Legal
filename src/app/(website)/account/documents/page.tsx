@@ -1,7 +1,9 @@
 import { auth } from "@/auth";
 import DocumentCard from "@/components/shared/cards/document-card";
 import { Button } from "@/components/ui/button";
+import { getCurrentUserSubscription } from "@/helper/subscription";
 import { prisma } from "@/lib/db";
+import FeatureLocker from "@/provider/Feature-Locker";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -19,6 +21,10 @@ const Page = async () => {
       document: true,
     },
   });
+
+  const cs = await getCurrentUserSubscription();
+
+  const hasFullAccess = cs?.hasAccess;
 
   let content;
   if (watchLists.length === 0) {
@@ -68,7 +74,7 @@ const Page = async () => {
         </p>
       </div>
 
-      {content}
+      {hasFullAccess ? content : <FeatureLocker>{content}</FeatureLocker>}
     </div>
   );
 };

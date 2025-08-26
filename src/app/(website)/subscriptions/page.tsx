@@ -8,7 +8,7 @@ import PricingComparison from "./_components/pricing-plan";
 const Page = async () => {
   const cu = await auth();
   const isLoggedin = !!cu;
-  const currentSubscription = await getCurrentUserSubscription();
+  const cs = await getCurrentUserSubscription();
 
   // Paddle থেকে USD price আনছি
   const response = await paddle.prices.get(process.env.NEXT_PUBLIC_PRICE_ID!);
@@ -25,8 +25,9 @@ const Page = async () => {
 
       {/* এখানে number (usdAmount) পাঠানো হলো */}
       <PricingComparison
-        subscription={currentSubscription?.subscription}
-        sub_type={currentSubscription?.type as "user" | "company"}
+        isActive={cs?.hasAccess ?? false}
+        sub_type={cs?.subType as "user" | "company"}
+        currentPeriodEnd={cs?.subscription.currentPeriodEnd}
         price={usdAmount}
         note={`(USD $${usdAmount})`} // চাইলে reference USD টেক্সট দেখাতে পারেন
       />

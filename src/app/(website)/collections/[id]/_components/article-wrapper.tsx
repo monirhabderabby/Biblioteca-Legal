@@ -10,9 +10,15 @@ interface Props {
   data: Article[];
   isLoggedin: boolean;
   documentId: string;
+  hasFullAccess: boolean;
 }
 
-const ArticleWrapper = ({ data, isLoggedin, documentId }: Props) => {
+const ArticleWrapper = ({
+  data,
+  isLoggedin,
+  documentId,
+  hasFullAccess,
+}: Props) => {
   const { query } = useArticleSearchStore();
   const [highlightedArticle, setHighlightedArticle] = useState<number | null>(
     null
@@ -74,6 +80,7 @@ const ArticleWrapper = ({ data, isLoggedin, documentId }: Props) => {
               isLoggedin={isLoggedin}
               documentId={documentId}
               highlightedArticle={highlightedArticle}
+              hasFullAccess={hasFullAccess}
             />
           </div>
         );

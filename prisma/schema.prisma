@@ -267,14 +267,17 @@ model CompanySubscription {
 }
 
 model UserSubscription {
-  id                 String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId             String   @unique @db.ObjectId
-  txn_id             String   @unique
-  sub_id             String   @unique
-  isActive           Boolean  @default(false)
+  id                 String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId             String    @unique @db.ObjectId
+  txn_id             String    @unique
+  sub_id             String    @unique
+  isActive           Boolean   @default(false)
   currentPeriodStart DateTime
   currentPeriodEnd   DateTime
-  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  trialStart         DateTime? // Start of the trial period
+  trialEnd           DateTime? // End of the trial period
+  isTrialActive      Boolean   @default(false) // Indicates if trial is active
+  user               User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

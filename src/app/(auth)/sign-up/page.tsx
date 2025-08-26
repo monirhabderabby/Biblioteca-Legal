@@ -1,7 +1,13 @@
 import HeaderSection from "@/components/shared/sections/header";
+import { paddle } from "@/lib/paddle";
 import RegistrationForm from "./_components/registration-form";
 
-const Page = () => {
+const Page = async () => {
+  const price = await paddle.prices.get(process.env.NEXT_PUBLIC_PRICE_ID!);
+  const trialPeriod = price.trialPeriod; // in seconds or as object
+  // Convert to days if necessary
+  const days = trialPeriod?.interval === "day" ? trialPeriod.frequency : null;
+
   return (
     <div>
       <HeaderSection
@@ -19,7 +25,7 @@ const Page = () => {
             Completa el siguiente formulario para crear tu cuenta
           </p>
         </div>
-        <RegistrationForm />
+        <RegistrationForm freeTrial={days!} />
       </div>
     </div>
   );

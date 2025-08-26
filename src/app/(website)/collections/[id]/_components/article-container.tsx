@@ -11,6 +11,7 @@ import SignInToContinue from "./sign-in-to-continue";
 interface Props {
   documentId: string;
   isLoggedin: boolean;
+  hasFullAccess: boolean;
 }
 
 // Define the full nested response type
@@ -31,7 +32,7 @@ type ApiResponse<T = any> = {
   data: T | null;
 };
 
-const ArticleContainer = ({ documentId, isLoggedin }: Props) => {
+const ArticleContainer = ({ documentId, isLoggedin, hasFullAccess }: Props) => {
   const { data, isLoading, isError, error } = useQuery<
     ApiResponse<FullSectionResponse[]>
   >({
@@ -82,6 +83,7 @@ const ArticleContainer = ({ documentId, isLoggedin }: Props) => {
                     data={chapter.articles}
                     isLoggedin={isLoggedin}
                     documentId={documentId}
+                    hasFullAccess={hasFullAccess}
                   />
                 </div>
               );

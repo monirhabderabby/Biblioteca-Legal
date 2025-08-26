@@ -27,7 +27,7 @@ const Page = async () => {
   if (!user) redirect("/login");
 
   const cs = await getCurrentUserSubscription();
-  const subType = cs?.type;
+  const subType = cs?.subType;
   const now = new Date();
   const isActive = cs?.subscription.isActive;
   const currentPeriodEnd = cs?.subscription.currentPeriodEnd;

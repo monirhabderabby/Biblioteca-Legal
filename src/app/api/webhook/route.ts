@@ -10,7 +10,6 @@ export async function POST(req: NextRequest) {
   const rawRequestBody = await req.text();
   const paddleSignature = req.headers.get("paddle-signature");
 
-  // (Optional) Check if header and secret key are present and return error if not
   if (!paddleSignature) {
     console.error("Paddle-Signature not present in request headers");
     return NextResponse.json({ message: "Invalid request" }, { status: 400 });
@@ -25,143 +24,125 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    if (paddleSignature) {
-      // The `unmarshal` function will validate the integrity of the webhook and return an entity
-      const eventData = await paddle.webhooks.unmarshal(
-        rawRequestBody,
-        secretKey,
-        paddleSignature
-      );
+    const eventData = await paddle.webhooks.unmarshal(
+      rawRequestBody,
+      secretKey,
+      paddleSignature
+    );
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const data: any = eventData.data;
-      const startsAt = data.currentBillingPeriod.startsAt;
-      const endsAt = data.currentBillingPeriod.endsAt;
-      const txnId = data.transactionId;
-      const subscriptionId = data.id;
-      const formValues = data.customData.user;
-      const customerId = data.customerId;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const data: any = eventData.data;
+    const startsAt = data.currentBillingPeriod?.startsAt;
+    const endsAt = data.currentBillingPeriod?.endsAt;
+    const txnId = data.transactionId;
+    const subscriptionId = data.id;
+    const formValues = data.customData?.user;
+    const customerId = data.customerId;
+    const status = data.status; // "trialing", "active", "paused", "canceled"
 
-      switch (eventData.eventType) {
-        case EventName.SubscriptionCreated:
-          // WHY? > When a customer starts a subscription
-          // When ? > To create the user’s subscription record in your system (e.g., store plan, status, billing dates).
-          console.log("webhook called for subscription created");
+    switch (eventData.eventType) {
+      case EventName.SubscriptionCreated:
+        console.log("➡️ Subscription created");
 
-          const user = await registeruser(formValues, customerId);
-          const userId = user.data?.id;
+        // Create user in DB
+        const user = await registeruser(formValues, customerId);
+        const userId = user.data?.id;
+        if (!userId) return;
 
-          if (!userId) return;
-          await prisma.userSubscription.upsert({
-            where: {
-              userId: userId,
-            },
-            create: {
-              userId: userId,
-              currentPeriodStart: startsAt,
-              currentPeriodEnd: endsAt,
-              txn_id: txnId,
-              sub_id: subscriptionId,
-              isActive: true,
-            },
-            update: {
-              currentPeriodStart: startsAt,
-              currentPeriodEnd: endsAt,
-              txn_id: txnId,
-              sub_id: subscriptionId,
-              isActive: true,
-            },
-          });
+        await prisma.userSubscription.upsert({
+          where: { userId },
+          create: {
+            userId,
+            currentPeriodStart: startsAt,
+            currentPeriodEnd: endsAt,
+            txn_id: txnId,
+            sub_id: subscriptionId,
+            isActive: status === "active",
+            isTrialActive: status === "trialing",
+            trialStart: status === "trialing" ? startsAt : null,
+            trialEnd: status === "trialing" ? endsAt : null,
+          },
+          update: {
+            currentPeriodStart: startsAt,
+            currentPeriodEnd: endsAt,
+            txn_id: txnId,
+            sub_id: subscriptionId,
+            isActive: status === "active",
+            isTrialActive: status === "trialing",
+            trialStart: status === "trialing" ? startsAt : null,
+            trialEnd: status === "trialing" ? endsAt : null,
+          },
+        });
 
+        // Clean up queued user
+        if (user.data?.email) {
           await prisma.userQue.delete({
-            where: {
-              email: user.data?.email,
-            },
+            where: { email: user.data.email },
           });
+        }
+        break;
 
-          break;
-        case EventName.SubscriptionActivated:
-          // Why? > When the subscription becomes active (e.g., after payment or pause).
-          // When ? > To unlock access to paid features. Can also be used to confirm that the subscription is live.
+      case EventName.SubscriptionActivated:
+        console.log("➡️ Subscription activated (trial ended, now paid)");
+        await prisma.userSubscription.update({
+          where: { sub_id: subscriptionId },
+          data: { isActive: true, isTrialActive: false },
+        });
+        break;
 
-          console.log("webhook called for subscription activated");
+      case EventName.SubscriptionCanceled:
+        console.log("➡️ Subscription canceled");
+        await prisma.userSubscription.updateMany({
+          where: { sub_id: subscriptionId },
+          data: { isActive: false, isTrialActive: false },
+        });
+        break;
 
-          break;
+      case EventName.SubscriptionPaused:
+        console.log("➡️ Subscription paused");
+        await prisma.userSubscription.updateMany({
+          where: { sub_id: subscriptionId },
+          data: { isActive: false, isTrialActive: false },
+        });
+        break;
 
-        case EventName.SubscriptionCanceled:
-          console.log("webhook called for subscription canceled");
-          const subscription = await prisma.userSubscription.findUnique({
-            where: {
-              sub_id: subscriptionId,
-            },
-          });
-          if (!subscription) break;
-          await prisma.userSubscription.update({
-            where: { userId: subscription.userId },
-            data: { isActive: false },
-          });
+      case EventName.SubscriptionResumed:
+        console.log("➡️ Subscription resumed");
+        await prisma.userSubscription.updateMany({
+          where: { sub_id: subscriptionId },
+          data: { isActive: true, isTrialActive: false },
+        });
+        break;
 
-          break;
+      case EventName.SubscriptionUpdated:
+        console.log("➡️ Subscription updated");
+        await prisma.userSubscription.update({
+          where: { sub_id: subscriptionId },
+          data: {
+            currentPeriodStart: startsAt,
+            currentPeriodEnd: endsAt,
+            txn_id: txnId,
+            isActive: status === "active",
+            isTrialActive: status === "trialing",
+            trialStart: status === "trialing" ? startsAt : null,
+            trialEnd: status === "trialing" ? endsAt : null,
+          },
+        });
+        break;
 
-        case EventName.SubscriptionPaused:
-          console.log("webhook called for subscription paused");
-          await prisma.userSubscription.update({
-            where: {
-              userId,
-            },
-            data: {
-              isActive: false,
-            },
-          });
-          break;
+      case EventName.SubscriptionPastDue:
+        console.log("➡️ Subscription past due (payment failed)");
+        await prisma.userSubscription.updateMany({
+          where: { sub_id: subscriptionId },
+          data: { isActive: false, isTrialActive: false },
+        });
+        break;
 
-        case EventName.SubscriptionResumed:
-          console.log("webhook called for subscription resumed");
-          await prisma.userSubscription.update({
-            where: {
-              userId,
-            },
-            data: {
-              isActive: true,
-            },
-          });
-          break;
-        case EventName.SubscriptionUpdated:
-          console.log("webhook called for subscription updated");
-          console.log("subscription updated called");
-          await prisma.userSubscription.update({
-            where: {
-              sub_id: subscriptionId,
-            },
-            data: {
-              isActive: true,
-              currentPeriodEnd: endsAt,
-              currentPeriodStart: startsAt,
-              txn_id: txnId,
-            },
-          });
-          break;
-
-        case EventName.SubscriptionPastDue:
-          await prisma.userSubscription.update({
-            where: {
-              sub_id: subscriptionId,
-            },
-            data: {
-              isActive: false,
-            },
-          });
-
-          break;
-
-        default:
-          console.log(eventData.eventType);
-      }
-    } else {
-      console.log("Signature missing in header");
+      default:
+        console.log(`Unhandled event: ${eventData.eventType}`);
     }
   } catch (error) {
-    console.log(error);
+    console.error("Webhook error:", error);
   }
 
   return NextResponse.json({ success: true });

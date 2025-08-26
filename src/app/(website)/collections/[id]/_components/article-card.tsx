@@ -25,6 +25,7 @@ interface Props {
   isLoggedin: boolean;
   documentId: string;
   highlightedArticle?: number | null;
+  hasFullAccess: boolean;
 }
 
 interface ApiRes {
@@ -38,6 +39,7 @@ const ArticleCard = ({
   isLoggedin,
   documentId,
   highlightedArticle,
+  hasFullAccess,
 }: Props) => {
   const [pending, startTransition] = useTransition();
   const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
@@ -165,7 +167,7 @@ const ArticleCard = ({
           "rounded-lg shadow-sm border transition-colors duration-300 relative",
           highlightedArticle === data.articleNumber
             ? getBackgroundClass("highlighted")
-            : getBackgroundClass(selectedColor),
+            : hasFullAccess && getBackgroundClass(selectedColor),
           isColorPickerOpen && "z-10"
         )}
       >
@@ -174,13 +176,13 @@ const ArticleCard = ({
             <Button
               className="bg-[#1E2A384D]/30 hover:bg-[#1E2A384D]/40 w-fit text-black"
               onClick={() => setIsColorPickerOpen(true)}
-              disabled={isLoading || pending || !isLoggedin}
+              disabled={isLoading || pending || !isLoggedin || !hasFullAccess}
             >
               Artículo {data.articleNumber}{" "}
-              {!isLoggedin && <Lock className="ml-1" />}
+              {(!isLoggedin || !hasFullAccess) && <Lock className="ml-1" />}
             </Button>
 
-            {!isColorPickerOpen && !isCommentOpen && (
+            {!isColorPickerOpen && !isCommentOpen && hasFullAccess && (
               <div className="flex items-center gap-x-3">
                 {articleMeta?.data?.isBookmarked && (
                   <Button

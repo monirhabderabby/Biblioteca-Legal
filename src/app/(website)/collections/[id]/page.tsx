@@ -38,20 +38,19 @@ const Page = async ({ params }: { params: { id: string } }) => {
 
   const cs = await getCurrentUserSubscription();
 
-  const isActive = cs?.subscription.isActive ?? false;
-  const currentPeriodEnd = cs?.subscription.currentPeriodEnd;
-
-  const now = new Date();
-  const hasFullAccess =
-    isActive && !!currentPeriodEnd && currentPeriodEnd > now && !!cu;
+  const hasFullAccess = cs?.hasAccess;
 
   if (!document) notFound();
 
   return (
     <div>
-      <CollectionHeader document={document} hasFullAccess={hasFullAccess} />
+      <CollectionHeader document={document} hasFullAccess={hasFullAccess!} />
 
-      <ArticleContainer documentId={params.id} isLoggedin={!!cu} />
+      <ArticleContainer
+        documentId={params.id}
+        isLoggedin={!!cu}
+        hasFullAccess={hasFullAccess!}
+      />
     </div>
   );
 };
