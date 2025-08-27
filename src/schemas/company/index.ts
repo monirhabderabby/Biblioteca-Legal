@@ -37,3 +37,20 @@ export const companyContactSchema = z.object({
 });
 
 export type CompanyContactSchemaType = z.infer<typeof companyContactSchema>;
+
+// Bulk Employee Upload Schema
+// Zod schema for file upload validation
+export const excelUploadSchema = z.object({
+  file: z
+    .instanceof(File)
+    .refine((file) => file.size <= 5000000, "File size should be less than 5MB")
+    .refine(
+      (file) =>
+        file.type ===
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
+        file.name.endsWith(".xlsx"),
+      "Only XLSX files are allowed"
+    ),
+});
+
+export type ExcelUploadSchemaType = z.infer<typeof excelUploadSchema>;

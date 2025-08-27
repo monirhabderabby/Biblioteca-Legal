@@ -172,3 +172,116 @@ export async function addEmployee(data: EmployeeAddSchemaType) {
     };
   }
 }
+
+interface BulkUploadResult {
+  successCount: number;
+  failed: { row: number; email?: string; error: string }[];
+}
+
+export async function addEmployeesBulk(
+  employees: Array<{
+    email: string;
+    first_name: string;
+    last_name: string;
+    companyId: string;
+  }>
+): Promise<{ success: boolean; results: BulkUploadResult }> {
+  const cu = await auth();
+
+  if (!cu || cu.user.role !== "admin") {
+    return {
+      success: false,
+      results: {
+        successCount: 0,
+        failed: [{ row: 0, error: "Unauthorized access." }],
+      },
+    };
+  }
+
+  let successCount = 0;
+  const failed: BulkUploadResult["failed"] = [];
+
+  for (let i = 0; i < employees.length; i++) {
+    const row = employees[i];
+    const parsedData = employeeAdd.safeParse(row);
+
+    if (!parsedData.success) {
+      failed.push({
+        row: i + 1,
+        email: row.email,
+        error: parsedData.error.message,
+      });
+      continue;
+    }
+
+    const { email, companyId, first_name, last_name } = parsedData.data;
+
+    try {
+      const company = await prisma.company.findFirst({
+        where: { id: companyId },
+      });
+      if (!company) {
+        failed.push({ row: i + 1, email, error: "Company not found." });
+        continue;
+      }
+
+      let user = await prisma.user.findUnique({ where: { email } });
+
+      if (!user) {
+        const password = generatePassword();
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        user = await prisma.user.create({
+          data: {
+            email,
+            password: hashedPassword,
+            first_name,
+            last_name,
+            companyId,
+            emailVerified: new Date(),
+          },
+        });
+
+        // send email
+        await resend.emails.send({
+          from: "Biblioteca Legal <support@bibliotecalegalhn.com>",
+          to: [email],
+          subject: "Welcome to Biblioteca Legal - Your Account is Ready",
+          react: WelcomeEmail({
+            companyName: company.name,
+            email,
+            employeeName: `${first_name} ${last_name}`,
+            password,
+            websiteUrl: process.env.AUTH_URL,
+          }),
+        });
+      } else if (user.companyId && user.companyId !== companyId) {
+        failed.push({
+          row: i + 1,
+          email,
+          error: `User already part of another company.`,
+        });
+        continue;
+      } else {
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { companyId },
+        });
+      }
+
+      successCount++;
+      revalidatePath(`/dashboard/companies/${companyId}`);
+    } catch (error) {
+      console.error(`Error processing row ${i + 1} (${row.email}):`, error);
+      failed.push({ row: i + 1, email: row.email, error: "Unexpected error" });
+    }
+  }
+
+  return {
+    success: true,
+    results: {
+      successCount,
+      failed,
+    },
+  };
+}

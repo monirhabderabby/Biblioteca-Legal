@@ -1,6 +1,7 @@
 import AddEmployeeModal from "@/components/shared/modals/add-company-employee-modal";
 import { Button } from "@/components/ui/button";
 import { User } from "@prisma/client";
+import Link from "next/link";
 import EmployeeCard from "./employee-card";
 
 interface Props {
@@ -15,10 +16,24 @@ const EmployeeContainer = ({ users, companyId }: Props) => {
           Employee Lists ({users.length})
         </h1>
 
-        <AddEmployeeModal
-          trigger={<Button>Add Employee</Button>}
-          companyId={companyId}
-        />
+        <div className="flex  gap-5">
+          <AddEmployeeModal
+            trigger={<Button>Add Employee</Button>}
+            companyId={companyId}
+          />
+          <Button
+            variant="outline"
+            className="text-primary hover:text-primary/80 hover:bg-primary/5"
+            asChild
+          >
+            <Link
+              href={`/dashboard/companies/${companyId}/bulk-upload`}
+              className="w-full"
+            >
+              Bulk Upload
+            </Link>
+          </Button>
+        </div>
       </div>
 
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5 mt-10">
