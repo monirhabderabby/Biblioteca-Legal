@@ -2,7 +2,7 @@ import ContactForm from "@/app/(website)/contact/_components/contact-form.";
 import Image from "next/image";
 import contactImage from "../../public/home/contact.webp";
 
-const HomeContact = async () => {
+const HomeContact = () => {
   return (
     <section className="flex container flex-col lg:flex-row items-center justify-between gap-10 px-4 lg:px-16 py-10">
       {/* Izquierda: Imagen */}

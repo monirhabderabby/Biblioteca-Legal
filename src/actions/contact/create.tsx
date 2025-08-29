@@ -5,6 +5,9 @@ import { prisma } from "@/lib/db";
 import { resend } from "@/lib/resend";
 import { contactFormSchema, ContactFormValues } from "@/schemas/contact";
 
+// Optional: in-memory or Redis cache for settings
+let cachedSettings: { supportEmail: string } | null = null;
+
 export async function createContact(data: ContactFormValues) {
   // Fetch settings from the database
   const settings = await prisma.setting.findFirst();
@@ -31,6 +34,18 @@ export async function createContact(data: ContactFormValues) {
   const { name, email, message } = parsedData.data;
   const submittedAt = new Date();
 
+  // Fetch settings with caching
+  if (!cachedSettings) {
+    const settings = await prisma.setting.findFirst();
+    if (!settings?.supportEmail) {
+      return {
+        success: false,
+        message: "Cannot process request at this time.",
+      };
+    }
+    cachedSettings = { supportEmail: settings.supportEmail };
+  }
+
   try {
     // Send the email using Resend
     await resend.emails.send({
@@ -48,10 +63,7 @@ export async function createContact(data: ContactFormValues) {
 
     return {
       success: true,
-      message:
-        "Thank you for contacting us, " +
-        name +
-        ". Your message has been successfully sent.",
+      message: `Thank you ${name}, your message has been sent.`,
     };
   } catch (error) {
     console.error("Email sending error:", error);

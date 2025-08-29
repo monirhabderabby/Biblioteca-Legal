@@ -15,6 +15,10 @@ export default function ResearchTools() {
   const { query, setQuery } = useCollectionSearchStore();
   const router = useRouter();
 
+  const handleSearchEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && query !== "") router.push("/collections");
+  };
+
   const tabContent: Record<TabKey, JSX.Element> = {
     legislation: (
       <div className="space-y-6">
@@ -24,11 +28,7 @@ export default function ResearchTools() {
             placeholder="Buscar legislación"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && query !== "") {
-                router.push("/collections");
-              }
-            }}
+            onKeyDown={handleSearchEnter}
           />
         </div>
       </div>
@@ -41,11 +41,7 @@ export default function ResearchTools() {
             placeholder="Buscar jurisprudencia"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && query !== "") {
-                router.push("/collections");
-              }
-            }}
+            onKeyDown={handleSearchEnter}
           />
         </div>
       </div>
@@ -58,11 +54,7 @@ export default function ResearchTools() {
             placeholder="Buscar doctrina"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && query !== "") {
-                router.push("/collections");
-              }
-            }}
+            onKeyDown={handleSearchEnter}
           />
         </div>
       </div>

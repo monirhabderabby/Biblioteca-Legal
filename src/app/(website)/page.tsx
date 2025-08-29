@@ -1,10 +1,14 @@
 import { auth } from "@/auth";
 import HomeContact from "@/components/HomeContact";
-import OurServices from "@/components/OurServices";
 import ResearchTools from "@/components/ResearchTools";
 import CTA from "@/components/shared/sections/cta";
 import { Button } from "@/components/ui/button";
+import dynamic from "next/dynamic";
 import Link from "next/link";
+
+const OurServices = dynamic(() => import("@/components/OurServices"), {
+  ssr: false,
+});
 
 export default async function Home() {
   const cu = await auth();
