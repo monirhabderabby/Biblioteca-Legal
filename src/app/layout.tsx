@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import AppProvider from "@/provider/AppProvider";
 import type { Metadata } from "next";
 import { Poppins, Raleway } from "next/font/google";
+import Script from "next/script";
 import NextTopLoader from "nextjs-toploader";
 import { Toaster } from "sonner";
 import "./globals.css";
@@ -67,6 +68,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5685390714020326"
+          crossOrigin="anonymous"
+        ></Script>
+        <meta
+          name="google-adsense-account"
+          content="ca-pub-5685390714020326"
+        ></meta>
+      </head>
       <body className={cn(raleway.className, poppins.variable, "")}>
         <AppProvider>{children}</AppProvider>
         <Toaster richColors position="bottom-right" />
