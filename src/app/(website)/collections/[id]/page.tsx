@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import AdSenseUnit from "@/components/AdsenseUnit";
 import { getCurrentUserSubscription } from "@/helper/subscription";
 import { prisma } from "@/lib/db";
 import { cache } from "@/lib/redis/cache";
@@ -46,11 +47,16 @@ const Page = async ({ params }: { params: { id: string } }) => {
     <div>
       <CollectionHeader document={document} hasFullAccess={hasFullAccess!} />
 
+      {/* Only show Ads if the user does NOT have full access */}
+      {!hasFullAccess && <AdSenseUnit slot="6259496363" />}
+
       <ArticleContainer
         documentId={params.id}
         isLoggedin={!!cu}
         hasFullAccess={hasFullAccess!}
       />
+
+      {!hasFullAccess && <AdSenseUnit slot="6259496363" />}
     </div>
   );
 };
