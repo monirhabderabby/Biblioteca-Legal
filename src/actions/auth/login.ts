@@ -12,10 +12,10 @@ interface Props {
   ipAddress: string;
 }
 
-export async function loginAction({ data, userAgent, ipAddress }: Props) {
+export async function loginAction({ data }: Props) {
   const { success, data: parsedData, error } = loginFormSchema.safeParse(data);
 
-  const deviceId = cookies().get("device_id")?.value || crypto.randomUUID();
+  // const deviceId = cookies().get("device_id")?.value || crypto.randomUUID();
 
   if (!success) {
     return {
@@ -50,7 +50,7 @@ export async function loginAction({ data, userAgent, ipAddress }: Props) {
   // 3. Validate password
   const isPasswordValid = await bcrypt.compare(
     parsedData.password,
-    user.password
+    user.password,
   );
 
   if (!isPasswordValid) {
@@ -60,43 +60,43 @@ export async function loginAction({ data, userAgent, ipAddress }: Props) {
     };
   }
 
-  const userDevices = await prisma.device.findMany({
-    where: { userId: user.id },
-  });
+  // const userDevices = await prisma.device.findMany({
+  //   where: { userId: user.id },
+  // });
 
-  const isKnownDevice = userDevices.some((d) => d.deviceId === deviceId);
+  // const isKnownDevice = userDevices.some((d) => d.deviceId === deviceId);
 
-  // Enforce maximum of 2 devices
-  if (!isKnownDevice && userDevices.length >= 2) {
-    return {
-      success: false,
-      message: "You can only log in from up to 2 devices.",
-    };
-  }
+  // // Enforce maximum of 2 devices
+  // if (!isKnownDevice && userDevices.length >= 2) {
+  //   return {
+  //     success: false,
+  //     message: "You can only log in from up to 2 devices.",
+  //   };
+  // }
 
-  // Register new device if unknown
-  if (!isKnownDevice) {
-    try {
-      await prisma.device.create({
-        data: {
-          userId: user.id,
-          deviceId,
-          userAgent: userAgent ?? "unknown",
-          ipAddress: ipAddress ?? "unknown",
-        },
-      });
+  // // Register new device if unknown
+  // if (!isKnownDevice) {
+  //   try {
+  //     await prisma.device.create({
+  //       data: {
+  //         userId: user.id,
+  //         deviceId,
+  //         userAgent: userAgent ?? "unknown",
+  //         ipAddress: ipAddress ?? "unknown",
+  //       },
+  //     });
 
-      // Set persistent device_id cookie
-      cookies().set("device_id", deviceId, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        maxAge: 60 * 60 * 24 * 365, // 1 year
-        path: "/",
-      });
-    } catch (err) {
-      console.error("Failed to save device info:", err);
-    }
-  }
+  //     // Set persistent device_id cookie
+  //     cookies().set("device_id", deviceId, {
+  //       httpOnly: true,
+  //       secure: process.env.NODE_ENV === "production",
+  //       maxAge: 60 * 60 * 24 * 365, // 1 year
+  //       path: "/",
+  //     });
+  //   } catch (err) {
+  //     console.error("Failed to save device info:", err);
+  //   }
+  // }
 
   // 5. Sign in with next-auth
   try {
@@ -110,7 +110,7 @@ export async function loginAction({ data, userAgent, ipAddress }: Props) {
     await manejarCookiesRecordarme(
       !!data.rememberMe,
       data.rememberMe ? data.email : undefined,
-      data.rememberMe ? data.password : undefined
+      data.rememberMe ? data.password : undefined,
     );
 
     return {
@@ -138,7 +138,7 @@ export async function loginAction({ data, userAgent, ipAddress }: Props) {
 export async function manejarCookiesRecordarme(
   recordarme: boolean,
   email?: string,
-  password?: string
+  password?: string,
 ) {
   const opcionesCookie = {
     sameSite: "strict" as const,
