@@ -19,7 +19,7 @@ export async function generateStaticParams() {
       });
       return res;
     },
-    86400
+    86400,
   ); // cache 1 day
   return ids;
 }
@@ -32,7 +32,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
         where: { id: params.id },
       });
     },
-    86400
+    86400,
   ); // 1 hour cache
 
   const cu = await auth();
@@ -44,19 +44,23 @@ const Page = async ({ params }: { params: { id: string } }) => {
   if (!document) notFound();
 
   return (
-    <div>
-      <CollectionHeader document={document} hasFullAccess={hasFullAccess!} />
+    <div className="flex items-start container mt-28">
+      <div>
+        <CollectionHeader document={document} hasFullAccess={hasFullAccess!} />
 
-      {/* Only show Ads if the user does NOT have full access */}
-      {!hasFullAccess && <AdSenseUnit slot="6259496363" />}
+        {/* Only show Ads if the user does NOT have full access */}
 
-      <ArticleContainer
-        documentId={params.id}
-        isLoggedin={!!cu}
-        hasFullAccess={hasFullAccess!}
-      />
+        <ArticleContainer
+          documentId={params.id}
+          isLoggedin={!!cu}
+          hasFullAccess={hasFullAccess!}
+        />
 
-      {!hasFullAccess && <AdSenseUnit slot="6259496363" />}
+        {!hasFullAccess && <AdSenseUnit slot="6259496363" />}
+      </div>
+      <div className="w-[300px] h-[600px] bg-red-500 sticky top-28 flex justify-center items-center">
+        Google Will Inject ads here
+      </div>
     </div>
   );
 };
