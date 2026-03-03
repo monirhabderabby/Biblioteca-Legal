@@ -77,7 +77,7 @@ const CollectionHeader = ({ document, hasFullAccess }: Props) => {
   }, [debouncesvalue, setQuery]);
 
   return (
-    <div className=" mt-28 container flex flex-col justify-center items-center gap-y-6">
+    <div className="  container flex flex-col justify-center items-center gap-y-6">
       <h1 className="font-bold text-[30px] md:text-[35px] lg:text-[40px] leading-[120%] text-center">
         {document.name}
       </h1>
