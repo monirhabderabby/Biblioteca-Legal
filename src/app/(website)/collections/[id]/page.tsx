@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import AdSenseUnit from "@/components/AdsenseUnit";
+import { adsSLot } from "@/constants";
 import { getCurrentUserSubscription } from "@/helper/subscription";
 import { prisma } from "@/lib/db";
 import { cache } from "@/lib/redis/cache";
@@ -9,7 +10,6 @@ import CollectionHeader from "./_components/collection-header";
 
 export const revalidate = 86400;
 
-// Cache static params to reduce DB queries
 export async function generateStaticParams() {
   const ids = await cache(
     "document_ids",
@@ -19,8 +19,8 @@ export async function generateStaticParams() {
       });
       return res;
     },
-    86400
-  ); // cache 1 day
+    86400,
+  );
   return ids;
 }
 
@@ -32,31 +32,51 @@ const Page = async ({ params }: { params: { id: string } }) => {
         where: { id: params.id },
       });
     },
-    86400
-  ); // 1 hour cache
+    86400,
+  );
 
   const cu = await auth();
-
   const cs = await getCurrentUserSubscription();
-
   const hasFullAccess = cs?.hasAccess;
+  const showAds = !hasFullAccess; // logged-out + free users both see ads
 
   if (!document) notFound();
 
   return (
-    <div>
+    <div className="max-w-7xl mx-auto px-4">
       <CollectionHeader document={document} hasFullAccess={hasFullAccess!} />
 
-      {/* Only show Ads if the user does NOT have full access */}
-      {!hasFullAccess && <AdSenseUnit slot="6259496363" />}
+      {/* ── AD SLOT 1: Top banner — below header, above content ── */}
+      {showAds && (
+        <div className="w-full my-4 flex justify-center">
+          <AdSenseUnit slot={adsSLot} format="horizontal" />
+        </div>
+      )}
 
-      <ArticleContainer
-        documentId={params.id}
-        isLoggedin={!!cu}
-        hasFullAccess={hasFullAccess!}
-      />
+      {/* ── Main layout: content + sidebar ── */}
+      <div className="flex gap-6 items-start">
+        {/* ── Article content ── */}
+        <div className="flex-1 min-w-0">
+          <ArticleContainer
+            documentId={params.id}
+            isLoggedin={!!cu}
+            hasFullAccess={hasFullAccess!}
+            /* Pass showAds so ArticleContainer can inject between-section ads */
+            showAds={showAds}
+          />
+        </div>
 
-      {!hasFullAccess && <AdSenseUnit slot="6259496363" />}
+        {/* ── AD SLOT 3: Sticky sidebar ── */}
+        {showAds && (
+          <aside className="hidden lg:block w-[300px] shrink-0">
+            <div className="sticky top-24 space-y-6">
+              <AdSenseUnit slot={adsSLot} format="vertical" />
+              {/* Second sidebar unit lower down */}
+              <AdSenseUnit slot={adsSLot} format="vertical" />
+            </div>
+          </aside>
+        )}
+      </div>
     </div>
   );
 };
