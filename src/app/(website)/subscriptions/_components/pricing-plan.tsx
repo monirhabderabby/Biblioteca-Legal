@@ -37,6 +37,7 @@ export default function PricingComparison({
     },
     { name: "Acceso multiusuario", starter: false, business: true },
     { name: "Paquetes de precios escalonados", starter: false, business: true },
+    { name: "Sin anuncios", starter: true, business: true },
   ];
 
   const now = new Date();
