@@ -1,17 +1,19 @@
 "use client";
 
+import AdSenseUnit from "@/components/AdsenseUnit";
+import { adsSLot } from "@/constants";
 import { Prisma } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { useEffect } from "react";
 import ArticleHeader from "./article-header";
 import ArticleWrapper from "./article-wrapper";
-import SignInToContinue from "./sign-in-to-continue";
 
 interface Props {
   documentId: string;
   isLoggedin: boolean;
   hasFullAccess: boolean;
+  showAds?: boolean;
 }
 
 // Define the full nested response type
@@ -32,7 +34,12 @@ type ApiResponse<T = any> = {
   data: T | null;
 };
 
-const ArticleContainer = ({ documentId, isLoggedin, hasFullAccess }: Props) => {
+const ArticleContainer = ({
+  documentId,
+  isLoggedin,
+  hasFullAccess,
+  showAds = false,
+}: Props) => {
   const { data, isLoading, isError, error } = useQuery<
     ApiResponse<FullSectionResponse[]>
   >({
@@ -67,40 +74,45 @@ const ArticleContainer = ({ documentId, isLoggedin, hasFullAccess }: Props) => {
     );
   } else {
     content = (
-      <div className=" space-y-[100px] mb-[100px]">
-        {data.data.map((section) => (
-          <div key={section.id} className="space-y-[80px]">
-            {section.chapters.map((chapter, cId) => {
-              const isFirstChapter = cId === 0;
+      <div className="space-y-[100px] mb-[100px]">
+        {data.data.map((section, sectionIndex) => (
+          <>
+            <div key={section.id} className="space-y-[80px]">
+              {section.chapters.map((chapter, cId) => {
+                const isFirstChapter = cId === 0;
 
-              return (
-                <div key={chapter.id}>
-                  <ArticleHeader
-                    sectionTitle={isFirstChapter ? section.title : ""}
-                    chapterTitle={chapter.title}
-                  />
-                  <ArticleWrapper
-                    data={chapter.articles}
-                    isLoggedin={isLoggedin}
-                    documentId={documentId}
-                    hasFullAccess={hasFullAccess}
-                  />
+                return (
+                  <div key={chapter.id}>
+                    <ArticleHeader
+                      sectionTitle={isFirstChapter ? section.title : ""}
+                      chapterTitle={chapter.title}
+                    />
+                    <ArticleWrapper
+                      data={chapter.articles}
+                      isLoggedin={isLoggedin}
+                      documentId={documentId}
+                      hasFullAccess={hasFullAccess}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Inject ad after every 2nd section, never after the last */}
+            {showAds &&
+              sectionIndex % 2 === 1 &&
+              sectionIndex < (data.data?.length ?? 0) - 1 && (
+                <div key={`ad-${sectionIndex}`} className="w-full">
+                  <AdSenseUnit slot={adsSLot} />
                 </div>
-              );
-            })}
-          </div>
+              )}
+          </>
         ))}
       </div>
     );
   }
 
-  return (
-    <div className="container min-h-[calc(100vh-600px)]">
-      {content}
-
-      {!isLoggedin && <SignInToContinue />}
-    </div>
-  );
+  return <div className="container min-h-[calc(100vh-600px)]">{content}</div>;
 };
 
 export default ArticleContainer;
